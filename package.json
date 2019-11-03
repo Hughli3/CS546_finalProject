@@ -1,0 +1,19 @@
+{
+  "name": "cs546-final",
+  "version": "1.0.0",
+  "description": "CS546 final project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hughli3/CS546_finalProject.git"
+  },
+  "author": "Que Yong 10445274 Xinyu Chen 10454941 Zheng Li 10452502 Yanzhe Wu 10455306",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hughli3/CS546_finalProject/issues"
+  },
+  "homepage": "https://github.com/Hughli3/CS546_finalProject#readme"
+}
