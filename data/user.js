@@ -12,7 +12,7 @@ function checkaString (name){
       }
 }
 //========================================
-async function createANewUser(username, password, name){
+async function createANewUser(username, password, name, avatarId){
     if (!username) throw "Your input username is not exist.";
     if (!password) throw "Your input password is not exist.";
     if (!name) throw "Your input name is not exist.";
@@ -25,16 +25,19 @@ async function createANewUser(username, password, name){
     let newUser = {
         username: username,
         password: Md5password,
-        name:name
+        name:name,
+        avatarId:avatarId,
+        dogs:[]
     }
 
     const insertInfo = await usersCollection.insertOne(newUser);
     if (insertInfo.insertedCount === 0) throw "Could not create a new user";
-    else return True
+    else return get(id)
     // const newId = insertInfo.insertedId;
 
     // const theNewUser =  await this.get(ObjectId(newId).toString());
     // return theNewUser;
+    
 }
 
 async function updateTheUser(id, newName){
@@ -56,7 +59,7 @@ async function updateTheUser(id, newName){
         throw "Could not update user successfully";
       }
   
-    return await get(id);
+    return await this.get(ObjectId(newId).toString());
 }
 
 async function deleteTheUser(id){
@@ -98,19 +101,49 @@ async function changePassword(id, newPassword){
         throw "Could not update user password successfully";
       }
   
-    return await get(id);
+    return await getUser(id);
 }
 
-async function getUser(){
-
+async function getUser(id){
+  if (!id) throw "Your input id is not exist.";
+  checkaString(id);
+  const parsedId = ObjectId.createFromHexString(id);
+  const usersCollection = await users();
+  const userInfo = await usersCollection.findOne({ _id: parsedId });
+  if (userInfo == null) {+1
+        throw "Could not find user successfully";
+  }
+  return userInfo
 }
 
+async function updateProfilephoto(id, avatarId){
+  if (!id) throw "Your input id is not exist.";
+  if (!avatarId) throw "Your input photo is not exist.";
+  checkaString(id);
+  checkaString(avatarId);
+  const parsedId = ObjectId.createFromHexString(id);
+
+  const usersCollection = await users();
+
+  const updateUserPhoto = {
+    avatarId: avatarId
+    };
+   
+  const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPhoto});
+
+  if (updateInfo.modifiedCount === 0) {
+      throw "Could not update user password successfully";
+    }
+
+  return await getUser(id);
+}
 
 module.exports = {
     createANewUser,
     updateTheUser,
     deleteTheUser,
     changePassword,
-    getUser
+    getUser,
+    updateProfilephoto
   }
   
