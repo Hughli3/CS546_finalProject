@@ -55,13 +55,58 @@ const insertInfo = await dogsCollection.insertOne(newDog);
 
 }
 
-async function updateTheDog(){
+async function updateTheDog(id, newDogData){
+  if (!id) throw "Your input id is not exist.";
+  checkaString(id);
 
+  const dogsCollection = await dogs();
+  let updateDog = {}
+
+  if (!dogName){
+    updateDog.dogName = newDogData.dogName;
+  }
+
+  if (!gender){
+    updateDog.gender = newDogData.gender;
+  }
+
+  if (!dataOfBirth){
+    updateDog.height = newDogData.height;
+  }
+
+  if (!weight){
+    updateDog.weight = newDogData.weight;
+  }
+
+  if (!type){
+    updateDog.type = newDogData.type;
+  }
+
+  parsedId = ObjectId.createFromHexString(id);
+
+
+  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$set: updateDog});
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not update the dog successfully";
+  }
+  return await this.getDog(ObjectId(id).toString());
 }
 
 
 async function deleteTheDog(){
+  if (!id) throw "Your input id is not exist.";
+  checkaString(id);
+  parsedId = ObjectId.createFromHexString(id);
+  if (!id) throw "Your input id is not exist.";
+  const dogsCollection = await dogs();
+  const removedData = await dogsCollection.findOne({ _id: parsedId });
+  const deletionInfo = await dogsCollection.removeOne({ _id: parsedId });
 
+  if (deletionInfo.deletedCount === 0) {
+    throw `Could not delete dog with id of ${id}`;
+  }
+
+  return removedData
 }
 
 
@@ -75,10 +120,19 @@ async function getAllDogs(){
 }
 
 
-async function getDog(){
+async function getDog(id){
+  if (!id || id === undefined || id === '' ){
+    throw `${id || "Provided string"} is not vaild.`;
+  }
 
+  id = ObjectId.createFromHexString(id);
+  const dogsCollection = await dogs();
+
+  const dog = await dogsCollection.findOne({_id: id});
+  if (dog == null) thorw `Could not find dog with the id of ${id}`;
+
+  return dog
 }
-
 
 async function addPhotos(){
 

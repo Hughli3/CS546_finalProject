@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/Hughli3/CS546_finalProject/issues"
   },
-  "homepage": "https://github.com/Hughli3/CS546_finalProject#readme"
+  "homepage": "https://github.com/Hughli3/CS546_finalProject#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "mongodb": "^3.3.4"
+  }
 }
