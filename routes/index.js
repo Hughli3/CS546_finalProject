@@ -1,10 +1,18 @@
+const dogData = require("../data/dogs");
+
 const constructorMethod = (app) => {
   app.get('', async (req, res) => {
     res.render('home', {title: "Home"});
   });
 
   app.get('/dogs', async (req, res) => {
-    res.render('dogs/dogs', {title: "All Dogs"});
+    try{
+      let dogs = await dogData.getAllDogs();
+      res.render('dogs/dogs', {title: "All Dogs", dogs: dogs});
+    } catch (e) {
+        res.json(e);
+        return;
+    }
   });
 
   app.get('/login', async (req, res) => {
@@ -24,7 +32,16 @@ const constructorMethod = (app) => {
   });
   
   app.get('/dog/:id', async (req, res) => {
-    res.render('dogs/single_dog', {title: "Single Dog"});
+    let dogId = req.params.id;
+
+    try{
+        let dog = await dogData.getDog(dogId);
+        res.render('dogs/single_dog', {title: "Single Dog", dog: dog});
+    } catch (e) {
+        res.json(e);
+        return;
+    }
+
   });
 
 

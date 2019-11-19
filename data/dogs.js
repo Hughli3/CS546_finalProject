@@ -36,7 +36,7 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   }
 
   const insertInfo = await dogsCollection.insertOne(dog);
-  if (insertInfo.insertedCount === 0) throw "Could not create a new user";
+  if (insertInfo.insertedCount === 0) throw "Could not create a new use";
   const newId = insertInfo.insertedId;
   return await getDog(newId);
 }
