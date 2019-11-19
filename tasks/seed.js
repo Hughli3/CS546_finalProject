@@ -5,18 +5,28 @@ const main = async () => {
     const db = await dbConnection();
     await db.dropDatabase();
 
-    aDog = {
-        name: 'Painting', 
+    let dog = {
+        name: "Paintin", 
         gender: "Male", 
-        dataOfBirth: new Date('2012/12/25').format("yyyy-MM-dd"), 
-        height: 33.00, 
-        weight: 43.00, 
-        type:'samoye', 
-        avatarId:null
+        dataOfBirth: "2011-10-19", 
+        heightWeight: [
+            {height: 40, weight: 50, date: "2016-10-19"},
+            {height: 30, weight: 60, date: "2012-10-19"},
+            {height: 10, weight: 20, date: "2013-10-19"}
+        ],
+        type: "samoye", 
+        avatarId: null
     }
 
-    const dogOne = await dogData.createADog(aDog);
-    const id = dogO._id;
+    const dogOne = await dogData.createADog(
+        dog.name,
+        dog.gender,
+        dog.dataOfBirth,
+        dog.heightWeight,
+        dog.type,
+        dog.avatarId
+    );
+    
     console.log(dogOne);
 
     await db.serverConfig.close();

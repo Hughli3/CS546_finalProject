@@ -1,64 +1,65 @@
-//========================================
-// Requires
 const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
-const { ObjectId } = require("mongodb");
+const ObjectId = require('mongodb').ObjectID;
 
-//========================================
-// Check input
-function isValidString (name){
-    if (!name || name === undefined || name === '' || name.constructor !== String){
-        throw `${name || "Provided string"} is not a string.`
-      }
-}
+async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId){
+  if (!name) throw "name is undefinded";
+  if (typeof name != "string") throw "name is not a string";
 
-function isValidNumber(number){
-  if (number.constructor != Number || number === NaN){
-    throw `${number || "Provided number"} is not a number.`
+  if (!gender) throw "gender is undefinded";
+  if (typeof gender != "string") throw "gender is not a string";
+
+  if (!dateOfBirth) throw "dateOfBirth is undefinded";  
+  dateOfBirth = Date.parse(dateOfBirth);
+  if (isNaN(dateOfBirth)) throw "dateOfBirth is invalid";
+  dateOfBirth = new Date(dateOfBirth);
+
+  isValidHeightWeight(heightWeight);
+
+  if (!type) throw "type is undefinded";
+  if (typeof type != "string") throw "type is not a string";
+
+  // if (!avatarId) throw "avatar is undefinded";
+  // if (!ObjectId.isValid(avatarId)) throw "avatarId is invalid";
+  // if (typeof avatarId != "string") avatarId = avatarId.toString();
+
+  const dogsCollection = await dogs();
+  let dog = {
+    dogName: name,
+    gender: gender,
+    dateOfBirth: dateOfBirth,
+    heightWeight: heightWeight,
+    type: type, 
+    avatarId: avatarId,
+    photos: [],
+    comments: []
   }
+
+  const insertInfo = await dogsCollection.insertOne(dog);
+  if (insertInfo.insertedCount === 0) throw "Could not create a new user";
+  const newId = insertInfo.insertedId;
+  return await getDog(newId);
 }
 
-function isValidDate(data){
-  if (number.constructor != Date){
-    throw `${date || "Provided number"} is not a date.`
-  }
+async function getAllDogs(){
+  const dogsCollection = await dogs();
+  const allDogs = dogsCollection.find().toArray();
+  if (!allDogs) throw 'no dog found';
+
+  return allDogs;
 }
 
-//========================================
+async function getDog(id){
+  if (!id) throw "id is undefinded";
+  if (!ObjectId.isValid(id)) throw "id is invalid";
+  if (typeof id != "string") id = id.toString();
+  id = ObjectId.createFromHexString(id);
 
-async function createADog(name, gender, dataOfBirth, height, weight, type, avatarId){
-if (name) throw `Your input name is not exist`;
-if (gender) throw `Your input name is not exist`;
-if (dataOfBirth) throw `Your input name is not exist`;
-if (height) throw `Your input name is not exist`;
-if (weight) throw `Your input name is not exist`;
-if (type) throw `Your input name is not exist`;
-if (avatarId) throw `Your input name is not exist`;
-isValidString (name);
-isValidString (gender);
-isValidString (type);
-isValidDate(dataOfBirth)
-isValidString (imageId);
-isValidNumber(height);
-checkNumber(weight);
+  const dogsCollection = await dogs();
+  const dog = await dogsCollection.findOne({_id: id});
+  if (!dog) throw 'dog not found';
 
-const dogsCollection = await dogs();
-
-let newDog = {
-  dogName: name,
-  gender: gender,
-  dataOfBirth:dataOfBirth, 
-  height: height, 
-  weight: weight, 
-  type:type, 
-  avatarId: avatarId,
-  photos:[],
-  comments:[]
-}
-const insertInfo = await dogsCollection.insertOne(newDog);
-    if (insertInfo.insertedCount === 0) throw "Could not create a new user";
-    else return getDog(id)
-
+  return dog
 }
 
 async function updateTheDog(id, newDogData){
@@ -90,7 +91,6 @@ async function updateTheDog(id, newDogData){
 
   parsedId = ObjectId.createFromHexString(id);
 
-
   const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$set: updateDog});
   if (updateInfo.modifiedCount === 0) {
     throw "Could not update the dog successfully";
@@ -120,33 +120,9 @@ async function updateProfilePhotoOfTheDog(){
 
 }
 
-
-async function getAllDogs(){
-  const dogsCollection = await dogs();
-  allDogs = dogsCollection.find().toArray();
-
-  return allDogs;
-}
-
-
-async function getDog(id){
-  if (!id || id === undefined || id === '' ){
-    throw `${id || "Provided string"} is not vaild.`;
-  }
-
-  id = ObjectId.createFromHexString(id);
-  const dogsCollection = await dogs();
-
-  const dog = await dogsCollection.findOne({_id: id});
-  if (dog == null) thorw `Could not find dog with the id of ${id}`;
-
-  return dog
-}
-
 async function addPhotos(){
 
 }
-
 
 module.exports = {
   createADog,
@@ -156,4 +132,22 @@ module.exports = {
   getAllDogs,
   getDog,
   addPhotos
+}
+
+function isValidHeightWeight (heightWeight) {
+  if (!heightWeight) throw "heightWeight is undefinded";
+  for (let hw of heightWeight) {
+    if (!hw.height) throw "height is undefinded";
+    if (typeof hw.height != "number") throw "height is not of the proper type";
+    if (hw.height < 0 ) throw "height is not a positive number";
+
+    if (!hw.weight) throw "weight is undefinded";
+    if (typeof hw.weight != "number") throw "weight is not of the proper type";
+    if (hw.weight < 0 ) throw "weight is not a positive number";
+
+    if (!hw.date) throw "date is undefinded";
+    hw.date = Date.parse(hw.date);
+    if (isNaN(hw.date)) throw "date is invalid";
+    hw.date = new Date(hw.date);
+  }
 }
