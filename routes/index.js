@@ -19,9 +19,15 @@ const constructorMethod = (app) => {
     res.render('profile', {title: "Profile"});
   });
 
+  app.get('/dog/add', async (req, res) => {
+    res.render('dogs/add_dog', {title: "Add a Dog"});
+  });
+  
   app.get('/dog/:id', async (req, res) => {
     res.render('dogs/single_dog', {title: "Single Dog"});
   });
+
+
 
   app.use('*', (req, res) => {
     res.status(404).json({error: 'Not found'});
