@@ -135,6 +135,7 @@ module.exports = {
 }
 
 function isValidHeightWeight (heightWeight) {
+  // The heightWeight contains height, weight, date. The date is the scale date of height and weight.
   if (!heightWeight) throw "heightWeight is undefinded";
   for (let hw of heightWeight) {
     if (!hw.height) throw "height is undefinded";
