@@ -23,6 +23,7 @@ async function createANewUser(username, password, name, avatarId){
 
     const usersCollection = await users();
     const Md5password =  md5(password);
+    // TODO change it to bcryptjs
     let newUser = {
         username: username.toLowerCase(),
         // username should be lower case
@@ -82,6 +83,7 @@ async function deleteTheUser(id){
 
     // TODO remove dogId and avatarId
     return await get(id);
+    //// TODO this is wrong
 }
 
 async function changePassword(id, newPassword){
