@@ -7,7 +7,7 @@ const bcryptjs = require("bcryptjs");
 
 //========================================
 // Check input
-function isValidName (name){
+function isString (name){
     if (name.constructor !== String){
         throw `${name || "Provided string"} is not a string.`
       }
@@ -17,9 +17,9 @@ async function createANewUser(username, password, name, avatarId){
     if (!username) throw "Your input username is not exist.";
     if (!password) throw "Your input password is not exist.";
     if (!name) throw "Your input name is not exist.";
-    isValidName(username);
-    isValidName(password);
-    isValidName(name);
+    isString(username);
+    isString(password);
+    isString(name);
 
     const usersCollection = await users();
     const Md5password =  md5(password);
@@ -45,8 +45,8 @@ async function createANewUser(username, password, name, avatarId){
 async function updateTheUser(id, newName){
     if (!id) throw "Your input id is not exist.";
     if (!newName) throw "Your input name is not exist.";
-    isValidName(id);
-    isValidName(newName);
+    isString(id);
+    isString(newName);
     const parsedId = ObjectId.createFromHexString(id);
 
     const usersCollection = await users();
@@ -66,7 +66,7 @@ async function updateTheUser(id, newName){
 
 async function deleteTheUser(id){
     if (!id) throw "Your input id is not exist.";
-    isValidName(id);
+    isString(id);
     const parsedId = ObjectId.createFromHexString(id);
 
     const usersCollection = await users();
@@ -87,8 +87,8 @@ async function deleteTheUser(id){
 async function changePassword(id, newPassword){
     if (!id) throw "Your input id is not exist.";
     if (!newPassword) throw "Your input password is not exist.";
-    isValidName(id);
-    isValidName(newPassword);
+    isString(id);
+    isString(newPassword);
     const parsedId = ObjectId.createFromHexString(id);
 
     const usersCollection = await users();
@@ -108,7 +108,7 @@ async function changePassword(id, newPassword){
 
 async function getUser(id){
   if (!id) throw "Your input id is not exist.";
-  isValidName(id);
+  isString(id);
   const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({ _id: parsedId });
@@ -121,8 +121,8 @@ async function getUser(id){
 async function updateProfilephoto(id, avatarId){
   if (!id) throw "Your input id is not exist.";
   if (!avatarId) throw "Your input photo is not exist.";
-  isValidName(id);
-  isValidName(avatarId);
+  isString(id);
+  isString(avatarId);
   const parsedId = ObjectId.createFromHexString(id);
 
   const usersCollection = await users();
