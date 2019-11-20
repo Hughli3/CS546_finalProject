@@ -81,8 +81,8 @@ async function updateTheDog(id, newDogData){
     updateDog.height = newDogData.height;
   }
 
-  if (!weight){
-    updateDog.weight = newDogData.weight;
+  if (!heightWeight){
+    updateDog.heightWeight = newDogData.heightWeight;
   }
 
   if (!type){
