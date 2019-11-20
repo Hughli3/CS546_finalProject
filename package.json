@@ -1,27 +1,21 @@
 {
-  "name": "cs546-final",
+  "name": "lab8",
   "version": "1.0.0",
-  "description": "CS546 final project",
+  "description": "lab 7",
   "main": "index.js",
   "scripts": {
-    "seed": "node ./tasks/seed.js",
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Hughli3/CS546_finalProject.git"
-  },
-  "author": "Que Yong 10445274 Xinyu Chen 10454941 Zheng Li 10452502 Yanzhe Wu 10455306",
+  "keywords": [
+    "lab8"
+  ],
+  "author": "Yong Que 10445274",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Hughli3/CS546_finalProject/issues"
-  },
-  "homepage": "https://github.com/Hughli3/CS546_finalProject#readme",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "axios": "^0.19.0",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
-    "mongodb": "^3.3.4"
+    "handlebars": "^4.5.1",
+    "multer": "^1.4.2"
   }
 }
