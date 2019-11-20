@@ -29,7 +29,7 @@ router.post("/update", upload.single('avatar'), async (req, res) => {
     }
 });
 
-router.get("/:name", async (req, res) => {
+router.delete("/:name", async (req, res) => {
     // console.log(req.params.name)
     if(!fs.existsSync("./public/images/"+req.params.name)){
         console.log("file is not exists");
