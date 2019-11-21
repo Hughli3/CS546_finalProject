@@ -27,6 +27,7 @@ router.post("/update", upload.single('avatar'), async (req, res) => {
 
         res.render('posts/index', {img:fileName});
     }
+    res.redirect('/');
 });
 
 router.delete("/:name", async (req, res) => {
@@ -39,6 +40,7 @@ router.delete("/:name", async (req, res) => {
         console.log("file is removed");
         console.log(fs.existsSync("./public/images/"+req.params.name));
     }
+    res.redirect('/');
 });
 
 module.exports = router;
