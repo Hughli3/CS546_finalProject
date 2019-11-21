@@ -12,9 +12,11 @@ router.get("/", async (req, res) => {
 router.post("/update", upload.single('avatar'), async (req, res) => {  
     if(!req.file) {
         console.log('no file input');
+        res.redirect('/');
     } else if(req.file.mimetype.split("/")[0] != "image") {
         fs.unlinkSync(req.file.path)
         console.log("type error, image only");
+        res.redirect('/');
     } else {
         let suffix = "."+req.file.originalname.split('.').pop()
         let oldPath = req.file.path
@@ -27,7 +29,6 @@ router.post("/update", upload.single('avatar'), async (req, res) => {
 
         res.render('posts/index', {img:fileName});
     }
-    res.redirect('/');
 });
 
 router.delete("/:name", async (req, res) => {
