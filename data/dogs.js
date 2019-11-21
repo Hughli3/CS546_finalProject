@@ -1,8 +1,34 @@
 const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
+const users = mongoCollections.users;
 const ObjectId = require('mongodb').ObjectID;
 
-async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId){
+
+
+// ======================================================
+function isValidHeightWeight (heightWeight) {
+  // The heightWeight contains height, weight, date. The date is the scale date of height and weight.
+  if (!heightWeight) throw "heightWeight is undefinded";
+  for (let hw of heightWeight) {
+    if (!hw.height) throw "height is undefinded";
+    if (typeof hw.height != "number") throw "height is not of the proper type";
+    if (hw.height < 0 ) throw "height is not a positive number";
+
+    if (!hw.weight) throw "weight is undefinded";
+    if (typeof hw.weight != "number") throw "weight is not of the proper type";
+    if (hw.weight < 0 ) throw "weight is not a positive number";
+
+    if (!hw.date) throw "date is undefinded";
+    hw.date = Date.parse(hw.date);
+    if (isNaN(hw.date)) throw "date is invalid";
+    hw.date = new Date(hw.date);
+  }
+}
+
+
+// ======================================================
+async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId, owner){
+  
   if (!name) throw "name is undefinded";
   if (typeof name != "string") throw "name is not a string";
 
@@ -23,7 +49,7 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   // if (!ObjectId.isValid(avatarId)) throw "avatarId is invalid";
   // if (typeof avatarId != "string") avatarId = avatarId.toString();
 
-  const dogsCollection = await dogs();
+  
   let dog = {
     dogName: name,
     gender: gender,
@@ -32,12 +58,25 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
     type: type, 
     avatarId: avatarId,
     photos: [],
-    comments: []
-  }
+    comments: [],
+    owner:owner
 
+  }
+  
+  const usersCollection = await users();
+  parsedOwner = ObjectId.createFromHexString(dog.owner);
+  const user = await usersCollection.find({_id:parsedOwner});
+  if (user == null) thorw `Could not find the user with the id of ${parsedOwner}`;
+
+  // After check the user exist then create the dog
+  const dogsCollection = await dogs();
   const insertInfo = await dogsCollection.insertOne(dog);
   if (insertInfo.insertedCount === 0) throw "Could not create a new use";
   const newId = insertInfo.insertedId;
+
+  const updateInfo = await usersCollection.updateOne({ _id: parsedOwner }, {$addToSet: {dogs: ObjectId(newId).toString()}});
+  if (updateInfo.modifiedCount === 0) throw "Could not add the dog to the user";
+
   return await getDog(newId);
 }
 
@@ -50,6 +89,7 @@ async function getAllDogs(){
 }
 
 async function getDog(id){
+  // TODO Get the dog owner name
   if (!id) throw "id is undefinded";
   if (!ObjectId.isValid(id)) throw "id is invalid";
   if (typeof id != "string") id = id.toString();
@@ -134,21 +174,3 @@ module.exports = {
   addPhotos
 }
 
-function isValidHeightWeight (heightWeight) {
-  // The heightWeight contains height, weight, date. The date is the scale date of height and weight.
-  if (!heightWeight) throw "heightWeight is undefinded";
-  for (let hw of heightWeight) {
-    if (!hw.height) throw "height is undefinded";
-    if (typeof hw.height != "number") throw "height is not of the proper type";
-    if (hw.height < 0 ) throw "height is not a positive number";
-
-    if (!hw.weight) throw "weight is undefinded";
-    if (typeof hw.weight != "number") throw "weight is not of the proper type";
-    if (hw.weight < 0 ) throw "weight is not a positive number";
-
-    if (!hw.date) throw "date is undefinded";
-    hw.date = Date.parse(hw.date);
-    if (isNaN(hw.date)) throw "date is invalid";
-    hw.date = new Date(hw.date);
-  }
-}
