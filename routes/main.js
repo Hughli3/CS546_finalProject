@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs') 
 
 const multer = require('multer');
-const upload = multer({dest: __dirname + '/uploads/images'});
+const upload = multer({dest: './public/images'});
 
 router.get("/", async (req, res) => {
     res.render('posts/index');
@@ -20,7 +20,7 @@ router.post("/update", upload.single('avatar'), async (req, res) => {
     } else {
         let suffix = "."+req.file.originalname.split('.').pop()
         let oldPath = req.file.path
-        let newPath = oldPath.replace("routes\\uploads","public") + suffix
+        let newPath = req.file.path + suffix
 
         let fileName = req.file.filename + suffix
         //在数据库中存文件名，然后直接在模板中调用名字就行。
