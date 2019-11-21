@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs') 
 
 const multer = require('multer');
-const upload = multer({dest: './public/images'});
+const upload = multer({dest:'./public/images'});
 
 router.get("/", async (req, res) => {
     res.render('posts/index');
