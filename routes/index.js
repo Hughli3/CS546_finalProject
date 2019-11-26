@@ -1,7 +1,8 @@
 const dogData = require("../data/dogs");
+const usersData = require("../data/user");
 
 const constructorMethod = (app) => {
-  app.get('', async (req, res) => {
+  app.get('/', async (req, res) => {
     res.render('home', {title: "Home"});
   });
 
@@ -17,6 +18,50 @@ const constructorMethod = (app) => {
 
   app.get('/login', async (req, res) => {
     res.render('login', {title: "Login"});
+  });
+
+  router.post('/login', async (req, res) => {
+
+    try {
+      let username = req.body.username.toLowerCase();
+      let password = req.body.password;
+      
+      let authentication = false;
+      let ifIsUser = false;
+
+      for (let i = 0; i < usersData.length; i++){
+        if (usersData[i]["username"] == username){
+          ifIsUser = true;
+          index = i;
+          break
+        }
+      }
+
+      if(ifIsUser === false){
+
+        req.session.ifFirst = false;
+        res.status(401).render("layout/login", {
+          title: "Login page",
+          ifLoginFailed: true
+          //TODO
+          // This mean user login failed
+        });
+        // use return to stop the code
+      }
+      
+      authentication = await bcrypt.compare(id,password);
+      if (authentication === true){
+        req.session.user = usersData._id;
+        res.redirect("/");
+      }else{
+
+        req.session.ifFirst = false;
+        res.redirect("/login");
+      }
+        // res.status(200)
+    } catch (e) {
+      res.status(404).json({error: e});
+    }
   });
 
   app.get('/signup', async (req, res) => {
@@ -44,10 +89,9 @@ const constructorMethod = (app) => {
 
   });
 
-
-
-  app.use('*', (req, res) => {
-    res.status(404).json({error: 'Not found'});
+  app.use("*", (req, res) => {
+    res.redirect("/");
+    
   });
 };
 

@@ -153,12 +153,28 @@ async function updateProfilephoto(id, avatarId){
   return await getUser(id);
 }
 
+async function comparepassword(id, password){
+  if (!id) throw "Your input id is not exist.";
+  if (!password) throw "Your input password is not exist.";
+
+  const parsedId = ObjectId.createFromHexString(id);
+  const usersCollection = await users();
+
+  let userInfo = usersCollection.findOne({_id:parsedId});
+
+ 
+  comparePassword = await bcrypt.compare(password, userInfo.password);
+
+  return comparepassword
+}
+
 module.exports = {
     createANewUser,
     updateTheUser,
     deleteTheUser,
     changePassword,
     getUser,
-    updateProfilephoto
+    updateProfilephoto,
+    comparepassword
   }
   
