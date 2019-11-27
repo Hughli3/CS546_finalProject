@@ -20,7 +20,7 @@ const constructorMethod = (app) => {
     res.render('login', {title: "Login"});
   });
 
-  router.post('/login', async (req, res) => {
+  app.post('/login', async (req, res) => {
 
     try {
       let username = req.body.username.toLowerCase();
@@ -73,7 +73,7 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/add', async (req, res) => {
-    res.render('dogs/add_dog', {title: "Add a Dog"});
+    res.render('dogs/add', {title: "Add a Dog"});
   });
   
   app.get('/dog/:id', async (req, res) => {
