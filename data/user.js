@@ -2,9 +2,10 @@
 // Requires
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
+const dogs = mongoCollections.dogs;
 const { ObjectId } = require("mongodb");
 const bcryptjs = require("bcryptjs");
-
+const saltRounds = 5;
 //========================================
 // Check input
 function isString (name){
@@ -20,14 +21,15 @@ async function createANewUser(username, password, name, avatarId){
     isString(username);
     isString(password);
     isString(name);
-
+   
+    
     const usersCollection = await users();
-    const Md5password =  md5(password);
+    const bcryptjsPassword = await bcrypt.hash(password, saltRounds);
     // TODO change it to bcryptjs
     let newUser = {
         username: username.toLowerCase(),
         // username should be lower case
-        password: Md5password,
+        password: bcryptjsPassword,
         name:name,
         avatarId:avatarId,
         dogs:[]
@@ -73,14 +75,23 @@ async function deleteTheUser(id){
     const usersCollection = await users();
 
 
-     
+    const removedData = await usersCollection.findOne({ _id: parsedId });
     const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
 
     if (deletionInfo.deletedCount === 0) {
         throw `Could not delete user with id of ${id}`;
       }
   
-
+      const dogsCollection = await dogs();
+      for (let j = 0; j < removedData.dogs.length; j++){
+        dogsId = removedData.dogs[j]
+        parsedDogId = ObjectId.createFromHexString(dogsId);
+        let dogdeletionInfo = await dogsCollection.removeOne({ _id: postParsedId});
+        if (dogdeletionInfo.deletedCount === 0) {
+          throw `Could not delete dog with id of ${dogdeletionInfo.id}`;
+        }
+    }
+    
     // TODO remove dogId and avatarId
     return await get(id);
     //// TODO this is wrong
@@ -92,11 +103,11 @@ async function changePassword(id, newPassword){
     isString(id);
     isString(newPassword);
     const parsedId = ObjectId.createFromHexString(id);
-
+    const newbcryptjsPassword = await bcrypt.hash(newPassword, saltRounds);
     const usersCollection = await users();
 
     const updateUserPassword = {
-        password: newPassword
+        password: newbcryptjsPassword
       };
      
     const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPassword});
@@ -114,7 +125,7 @@ async function getUser(id){
   const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({ _id: parsedId });
-  if (userInfo == null) {+1
+  if (userInfo == null) {
         throw "Could not find user successfully";
   }
   return userInfo
@@ -142,12 +153,28 @@ async function updateProfilephoto(id, avatarId){
   return await getUser(id);
 }
 
+async function comparepassword(id, password){
+  if (!id) throw "Your input id is not exist.";
+  if (!password) throw "Your input password is not exist.";
+
+  const parsedId = ObjectId.createFromHexString(id);
+  const usersCollection = await users();
+
+  let userInfo = usersCollection.findOne({_id:parsedId});
+
+ 
+  comparePassword = await bcrypt.compare(password, userInfo.password);
+
+  return comparepassword
+}
+
 module.exports = {
     createANewUser,
     updateTheUser,
     deleteTheUser,
     changePassword,
     getUser,
-    updateProfilephoto
+    updateProfilephoto,
+    comparepassword
   }
   
