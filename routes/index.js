@@ -20,7 +20,7 @@ const constructorMethod = (app) => {
     res.render('login', {title: "Login"});
   });
 
-  router.post('/login', async (req, res) => {
+  app.post('/login', async (req, res) => {
 
     try {
       let username = req.body.username.toLowerCase();
@@ -73,11 +73,15 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/add', async (req, res) => {
+<<<<<<< HEAD
     let allDogs = dogData.getAllDogs();
 
     res.render('dogs/add_dog', {title: "All dogs",dog:allDogs});
     // TODO
 
+=======
+    res.render('dogs/add', {title: "Add a Dog"});
+>>>>>>> 000515956bfa61630ab46833434e8fd0356eabe8
   });
   
   app.get('/dog/:id', async (req, res) => {

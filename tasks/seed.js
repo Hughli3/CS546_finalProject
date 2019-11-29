@@ -45,9 +45,10 @@ const main = async () => {
         dog.avatarId,
         dog.owner
     );
-    
+
     console.log(dogOne);
 
+    dogOne.dateOfBirth
     await db.serverConfig.close();
 }
 
