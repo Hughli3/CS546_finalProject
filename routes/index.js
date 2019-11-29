@@ -25,7 +25,7 @@ const constructorMethod = (app) => {
     try {
       let username = req.body.username.toLowerCase();
       let password = req.body.password;
-      
+
       let authentication = false;
       let ifIsUser = false;
 
@@ -48,7 +48,7 @@ const constructorMethod = (app) => {
         });
         // use return to stop the code
       }
-      
+
       authentication = await bcrypt.compare(id,password);
       if (authentication === true){
         req.session.user = usersData._id;
@@ -73,17 +73,15 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/add', async (req, res) => {
-<<<<<<< HEAD
+
     let allDogs = dogData.getAllDogs();
 
     res.render('dogs/add_dog', {title: "All dogs",dog:allDogs});
     // TODO
 
-=======
-    res.render('dogs/add', {title: "Add a Dog"});
->>>>>>> 000515956bfa61630ab46833434e8fd0356eabe8
+
   });
-  
+
   app.get('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
 
@@ -120,7 +118,7 @@ const constructorMethod = (app) => {
 
   app.use("*", (req, res) => {
     res.redirect("/");
-    
+
   });
 };
 
