@@ -24,7 +24,7 @@ async function createANewUser(username, password, name, avatarId){
    
     
     const usersCollection = await users();
-    const bcryptjsPassword = await bcrypt.hash(password, saltRounds);
+    const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
     // TODO change it to bcryptjs
     let newUser = {
         username: username.toLowerCase(),
@@ -103,7 +103,7 @@ async function changePassword(id, newPassword){
     isString(id);
     isString(newPassword);
     const parsedId = ObjectId.createFromHexString(id);
-    const newbcryptjsPassword = await bcrypt.hash(newPassword, saltRounds);
+    const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);
     const usersCollection = await users();
 
     const updateUserPassword = {
@@ -161,7 +161,6 @@ async function comparepassword(id, password){
   const usersCollection = await users();
 
   let userInfo = usersCollection.findOne({_id:parsedId});
-
  
   comparePassword = await bcrypt.compare(password, userInfo.password);
 

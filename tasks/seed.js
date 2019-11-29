@@ -1,9 +1,26 @@
 const dbConnection = require('../config/mongoConnection');
 const dogData = require('../data/dogs');
+const userData = require('../data/user');
+const bcryptjs = require("bcryptjs");
+const saltRounds = 5;
 
 const main = async () => {
     const db = await dbConnection();
     await db.dropDatabase();
+
+    let originPasswrd = testtest;
+    password = bcryptjs.hash(originPasswrd, saltRounds);
+    
+    let user = {
+        username: testuser,
+        password:password,
+        name, test,
+        avatarId:null
+    }
+
+    const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
+
+    console.log(userOne);
 
     let dog = {
         name: "Paintin", 
@@ -15,7 +32,8 @@ const main = async () => {
             {height: 10, weight: 20, date: "2013-10-19"}
         ],
         type: "samoye", 
-        avatarId: null
+        avatarId: null,
+        owner:userOne._id
     }
 
     const dogOne = await dogData.createADog(
@@ -24,7 +42,8 @@ const main = async () => {
         dog.dataOfBirth,
         dog.heightWeight,
         dog.type,
-        dog.avatarId
+        dog.avatarId,
+        dog.owner
     );
     
     console.log(dogOne);

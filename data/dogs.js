@@ -139,13 +139,20 @@ async function updateTheDog(id, newDogData){
 }
 
 
-async function deleteTheDog(){
+async function deleteTheDog(id){
   if (!id) throw "Your input id is not exist.";
   isValidString(id);
   parsedId = ObjectId.createFromHexString(id);
   if (!id) throw "Your input id is not exist.";
   const dogsCollection = await dogs();
   const removedData = await dogsCollection.findOne({ _id: parsedId });
+
+  const usersCollection = await users();
+  const deleteDogInUserList = usersCollection.removeOne({_id:removedData.owner});
+  if (deleteDogInUserList == null){
+    throw `Could not delete the dog in the user dog ${id} list`;
+  }
+
   const deletionInfo = await dogsCollection.removeOne({ _id: parsedId });
 
   if (deletionInfo.deletedCount === 0) {

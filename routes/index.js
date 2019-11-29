@@ -73,7 +73,11 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/add', async (req, res) => {
-    res.render('dogs/add_dog', {title: "Add a Dog"});
+    let allDogs = dogData.getAllDogs();
+
+    res.render('dogs/add_dog', {title: "All dogs",dog:allDogs});
+    // TODO
+
   });
   
   app.get('/dog/:id', async (req, res) => {
@@ -86,6 +90,27 @@ const constructorMethod = (app) => {
         res.json(e);
         return;
     }
+
+  });
+
+  app.post('/dog/add', async (req, res) => {
+    let name= req.body.name;
+    let gender = req.body.gender;
+    let dataOfBirth = req.body.dataOfBirth;
+    let height = req.body.height;
+    let weight = req.body.weight;
+    let dateOfHeightWeight = req.body.date;
+    let type = req.body.type;;
+    let avatarId =  null;
+
+    let dog = await dogData.createADog(name, gender, dataOfBirth,{
+      height:height,
+      weight:weight,
+      date:dateOfHeightWeight
+    },type,avatarId
+    )
+
+    res.render('dogs/add_dog', {title: "Add a Dog",dog:dog});
 
   });
 
