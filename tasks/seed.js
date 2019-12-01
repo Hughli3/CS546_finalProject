@@ -23,13 +23,18 @@ const main = async () => {
     console.log(userOne);
 
     let dog = {
-        name: "Paintin", 
+        name: "Painting", 
         gender: "Male", 
-        dataOfBirth: "2011-10-19", 
+        dataOfBirth: "2018-03-19", 
+        // format should be day month year
         heightWeight: [
-            {height: 40, weight: 50, date: "2016-10-19"},
-            {height: 30, weight: 60, date: "2012-10-19"},
-            {height: 10, weight: 20, date: "2013-10-19"}
+            
+            {height: 40, weight: 50, date: "2019-10-30"},
+            {height: 36, weight: 55, date: "2019-03-05"},
+            {height: 34, weight: 54, date: "2019-01-25"},
+            {height: 32, weight: 57, date: "2019-01-01"},
+            {height: 30, weight: 55, date: "2018-10-25"},
+            {height: 25, weight: 56, date: "2018-07-19"}
         ],
         type: "samoye", 
         avatarId: null,
@@ -45,9 +50,14 @@ const main = async () => {
         dog.avatarId,
         dog.owner
     );
-
+    
     console.log(dogOne);
 
+  
+    let aheightWeight = {height: 15, weight: 20, date: "2018-05-26"}
+    let id = dogOne._id.toString()
+    const updateDog = await dogData.updateHeightWeightOfDog(id, aheightWeight);
+    console.log(updateDog);
     dogOne.dateOfBirth
     await db.serverConfig.close();
 }
