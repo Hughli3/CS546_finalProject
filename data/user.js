@@ -37,7 +37,7 @@ async function createANewUser(username, password, name, avatarId){
 
     const insertInfo = await usersCollection.insertOne(newUser);
     if (insertInfo.insertedCount === 0) throw "Could not create a new user";
-    else return get(id)
+    else return getUser(insertInfo.insertedId.toString())
     // const newId = insertInfo.insertedId;
 
     // const theNewUser =  await this.get(ObjectId(newId).toString());

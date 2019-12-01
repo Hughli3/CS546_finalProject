@@ -8,14 +8,14 @@ const main = async () => {
     const db = await dbConnection();
     await db.dropDatabase();
 
-    let originPasswrd = testtest;
-    password = bcryptjs.hash(originPasswrd, saltRounds);
+    let originPasswrd = "testtest";
+    
     
     let user = {
-        username: testuser,
-        password:password,
-        name, test,
-        avatarId:null
+        username: 'testuser',
+        password:originPasswrd,
+        name: 'test',
+        avatarId: null
     }
 
     const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
@@ -33,7 +33,7 @@ const main = async () => {
         ],
         type: "samoye", 
         avatarId: null,
-        owner:userOne._id
+        owner:userOne._id.toString()
     }
 
     const dogOne = await dogData.createADog(

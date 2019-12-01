@@ -43,7 +43,11 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   isValidHeightWeight(heightWeight);
 
   if (!type) throw "type is undefinded";
-  if (typeof type != "string") throw "type is not a string";
+  if (typeof type != "string") throw "owner is not a string";
+
+  if (!owner) throw "type is undefinded";
+  if (typeof owner != "string") throw "owner is not a string";
+
 
   // if (!avatarId) throw "avatar is undefinded";
   // if (!ObjectId.isValid(avatarId)) throw "avatarId is invalid";
