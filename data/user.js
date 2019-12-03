@@ -3,6 +3,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const dogs = mongoCollections.dogs;
+const commments = mongoCollections.comments;
 const { ObjectId } = require("mongodb");
 const bcryptjs = require("bcryptjs");
 const saltRounds = 5;
@@ -32,7 +33,9 @@ async function createANewUser(username, password, name, avatarId){
         password: bcryptjsPassword,
         name:name,
         avatarId:avatarId,
-        dogs:[]
+        dogs:[],
+        commments:[]
+
     }
 
     const insertInfo = await usersCollection.insertOne(newUser);
@@ -86,9 +89,19 @@ async function deleteTheUser(id){
       for (let j = 0; j < removedData.dogs.length; j++){
         dogsId = removedData.dogs[j]
         parsedDogId = ObjectId.createFromHexString(dogsId);
-        let dogdeletionInfo = await dogsCollection.removeOne({ _id: postParsedId});
-        if (dogdeletionInfo.deletedCount === 0) {
-          throw `Could not delete dog with id of ${dogdeletionInfo.id}`;
+        let dogDeletionInfo = await dogsCollection.removeOne({ _id: postParsedId});
+        if (dogDeletionInfo.deletedCount === 0) {
+          throw `Could not delete dog with id of ${dogDeletionInfo.id}`;
+        }
+    }
+
+    const commmentsCollection = await commments();
+      for (let j = 0; j < removedData.commments.length; j++){
+        commmentId = removedData.commments[j]
+        commmentParsedId = ObjectId.createFromHexString(commmentId);
+        let commmentDeletionInfo = await commmentsCollection.removeOne({ _id: commmentParsedId});
+        if (commmentDeletionInfo.deletedCount === 0) {
+          throw `Could not delete dog with id of ${commmentDeletionInfo.id}`;
         }
     }
     

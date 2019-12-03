@@ -1,8 +1,7 @@
 const dbConnection = require('../config/mongoConnection');
 const dogData = require('../data/dogs');
 const userData = require('../data/user');
-const bcryptjs = require("bcryptjs");
-const saltRounds = 5;
+
 
 const main = async () => {
     const db = await dbConnection();

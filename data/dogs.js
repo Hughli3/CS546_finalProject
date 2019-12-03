@@ -9,6 +9,7 @@ const ObjectId = require('mongodb').ObjectID;
 function isValidHeightWeight (heightWeight) {
   // The heightWeight contains height, weight, date. The date is the scale date of height and weight.
   if (!heightWeight) throw "heightWeight is undefinded";
+
   for (let hw of heightWeight) {
     if (!hw.height) throw "height is undefinded";
     if (typeof hw.height != "number") throw "height is not of the proper type";
@@ -25,6 +26,11 @@ function isValidHeightWeight (heightWeight) {
   }
 }
 
+function isString (name){
+  if (name.constructor !== String){
+      throw `${name || "Provided string"} is not a string.`
+    }
+}
 
 // ======================================================
 async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId, owner){
@@ -36,9 +42,15 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   if (typeof gender != "string") throw "gender is not a string";
 
   if (!dateOfBirth) throw "dateOfBirth is undefinded";  
-  dateOfBirth = Date.parse(dateOfBirth);
+  dateOfBirth = new Date(dateOfBirth).getTime()
   if (isNaN(dateOfBirth)) throw "dateOfBirth is invalid";
   dateOfBirth = new Date(dateOfBirth);
+  console.log(dateOfBirth.toString());
+  console.log(dateOfBirth);
+  /*
+Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970-1-1 00:00:00 UTC 到该日期对象（该日期对象的UTC时间）的毫秒数，
+如果该字符串无法识别，或者一些情况下，包含了不合法的日期数值（如：2015-02-31），则返回值为NaN。
+*/
 
   isValidHeightWeight(heightWeight);
 
@@ -108,28 +120,28 @@ async function getDog(id){
 
 async function updateTheDog(id, newDogData){
   if (!id) throw "Your input id is not exist.";
-  isValidString(id);
+  isString(id);
 
   const dogsCollection = await dogs();
   let updateDog = {}
 
-  if (!dogName){
+  if (newDogData.dogName){
     updateDog.dogName = newDogData.dogName;
   }
 
-  if (!gender){
+  if (newDogData.gender){
     updateDog.gender = newDogData.gender;
   }
 
-  if (!dataOfBirth){
+  if (newDogData.dateOfBirth){
     updateDog.height = newDogData.height;
   }
 
-  if (!heightWeight){
-    updateDog.heightWeight = newDogData.heightWeight;
-  }
-
-  if (!type){
+  // if (newDogData.heightWeight){
+  //   updateDog.heightWeight = newDogData.heightWeight;
+  // }
+  // isValidHeightWeight(newDogData.heightWeight);
+  if (newDogData.type){
     updateDog.type = newDogData.type;
   }
 
@@ -139,13 +151,13 @@ async function updateTheDog(id, newDogData){
   if (updateInfo.modifiedCount === 0) {
     throw "Could not update the dog successfully";
   }
-  return await this.getDog(ObjectId(id).toString());
+  return await this.getDog(id);
 }
 
 
 async function deleteTheDog(id){
   if (!id) throw "Your input id is not exist.";
-  isValidString(id);
+  isString(id);
   parsedId = ObjectId.createFromHexString(id);
   if (!id) throw "Your input id is not exist.";
   const dogsCollection = await dogs();
@@ -175,6 +187,33 @@ async function addPhotos(){
 
 }
 
+async function updateHeightWeightOfDog(id, newHeightWeight){
+  if (!id) throw "Your input id is not exist.";
+  isString(id);
+  // if (!newHeightWeight) throw "Your input is not exist.";
+  const dogsCollection = await dogs();
+  // if (!newHeightWeight.height) throw "height is undefinded";
+  //   if (typeof newHeightWeight.height != "number") throw "height is not of the proper type";
+  //   if (newHeightWeight.height < 0 ) throw "height is not a positive number";
+
+  //   if (!newHeightWeight.weight) throw "weight is undefinded";
+  //   if (typeof newHeightWeight.weight != "number") throw "weight is not of the proper type";
+  //   if (newHeightWeight.weight < 0 ) throw "weight is not a positive number";
+
+  //   if (!newHeightWeight.date) throw "date is undefinded";
+  //   newHeightWeight.date = new Date(newHeightWeight.date).getTime()
+  //   if (isNaN(newHeightWeight.date)) throw "date is invalid";
+  //   newHeightWeight.date = new Date(newHeightWeight.date);
+
+  parsedId = ObjectId.createFromHexString(id);
+
+  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$addToSet: {heightWeight: newHeightWeight}});
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not update the dog successfully";
+  }
+  return await this.getDog(id);
+}
+
 module.exports = {
   createADog,
   updateTheDog,
@@ -182,6 +221,7 @@ module.exports = {
   updateProfilePhotoOfTheDog,
   getAllDogs,
   getDog,
-  addPhotos
+  addPhotos,
+  updateHeightWeightOfDog
 }
 
