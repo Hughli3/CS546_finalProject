@@ -1,6 +1,8 @@
 const dogData = require("../data/dogs");
 const usersData = require("../data/user");
 const imgData = require("../data/img");
+const multer  = require('multer');
+const upload = multer({dest:'./public/images'});
 const fs = require("fs");
 
 const constructorMethod = (app) => {
@@ -124,7 +126,7 @@ const constructorMethod = (app) => {
   });
 
   // update Photo Example
-  app.post("/update", check.single('avatar'), async (req, res) => {  
+  app.post("/update", upload.single('avatar'), async (req, res) => {  
     console.log(req.file);
     
     if(!req.file) {
