@@ -3,6 +3,7 @@ const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
 const comments = mongoCollections.comments;
 const image = require("img");
+const comments = require("comments");
 const ObjectId = require('mongodb').ObjectID;
 
 
@@ -183,7 +184,7 @@ async function deleteTheDog(id){
     throw `Could not delete dog with id of ${id}`;
   }
 
-  
+  comments.deleteAllComments(removedData.comments);
 
   return removedData
 }
