@@ -78,7 +78,7 @@ const constructorMethod = (app) => {
     res.render('signup', {title: "Signup"});
   });
 
-  app.post('/signup', upload.single('avatar'),async (req, res) => {
+  app.post('/signup', async (req, res) => {
     await usersData.createANewUser(req.body.username, req.body.password, null, null);
     res.redirect('/login');
   });
