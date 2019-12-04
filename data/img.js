@@ -162,6 +162,37 @@ async function getPhotoDataId(id){
   return stringPhotoData
 }
 
+async function getPhotoDataIds(ids){
+  if (!id) throw "Your input is not exist.";
+  let photos = []
+  const fsChunksCollection = await fsChunks();
+  for (let i = 0; i < ids.length; i++) {
+    let nid = ObjectID(id[i])
+
+    let PhotoInfo = await getPhotoById(nid);
+    let Id = PhotoInfo._id;  
+
+    let PhotoData = await fsChunksCollection.find({ files_id: Id }).toArray();
+    // let PhotoData = await fsChunksCollection.findOne({ files_id: Id });
+    if (PhotoData == null) {
+          throw "Could not find Photo Data successfully";
+    }
+
+    let stringPhotoData = ''
+    for (let i = 0; i < PhotoData.length; i++) {
+      for(let j=0; j < PhotoData.length; j++){
+        if (PhotoData[j].n == i) {
+          // stringPhotoData += PhotoData[i].data.buffer
+          stringPhotoData += PhotoData[i].data.buffer.toString()
+          break
+        }
+      }
+    }
+    photos.push(stringPhotoData)
+  }
+  return photos
+}
+
 async function getPhotoByName(name){
   if (!name) throw "Your input is not exist.";
   isString(name);
@@ -188,5 +219,6 @@ async function getPhotoById(Id){
 module.exports = {
   createGridFS,
   deletePhoto,
-  getPhotoDataId
+  getPhotoDataId,
+  getPhotoDataIds,
 }
