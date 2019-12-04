@@ -99,17 +99,27 @@ async function deleteComments(id){
 
   const comment = await commentsCollection.findOne({_id:parsedId});
 
+  
   const usersCollection = await users();
-  const deleteCommentInUserList = usersCollection.removeOne({_id:comment.author});
-  if (deleteCommentInUserList.deletedCount == 0){
-    throw `Could not delete the comment in the user comment ${id} list`;
+  const userUpdateInfo = await usersCollection.updateOne(
+    { _id: ObjectId.createFromHexString(comment.author) }
+    ,{$pull: {comments: id}}
+    );
+  
+  if (userUpdateInfo.modifiedCount === 0){
+    throw `Could not delete the dog in the user comments ${id} list`;
   }
 
   const dogsCollection = await dogs();
-  const deleteCommentInDogList = dogsCollection.removeOne({_id:comment.dog});
-  if (deleteCommentInDogList.deletedCount == 0){
-    throw `Could not delete the comment in the dog comment ${id} list`;
+  const dogUpdateInfo = await dogsCollection.updateOne(
+    { _id: ObjectId.createFromHexString(comment.dog) }
+    ,{$pull: {comments: id}}
+    );
+  
+  if (dogUpdateInfo.modifiedCount === 0){
+    throw `Could not delete the comment in the dog comments ${id} list`;
   }
+  
   const deletionInfo = await commentsCollection.removeOne({_id:parsedId});
   if (deletionInfo.deletedCount === 0) {
     throw `Could not delete dog with id of ${id}`;
@@ -135,10 +145,47 @@ async function getAllComments(){
 
 }
 
+
+async function deleteAllComments(ids){
+  const commentsCollection = await comments();
+  const usersCollection = await users();
+  const dogsCollection = await dogs();
+
+  for (let i = 0; i < ids.length; i++){
+    let commentId = ids[i];
+    let parsedCommentId = ObjectId.createFromHexString(commentId);
+    const deletionInfo = commentsCollection.removeOne({_id:parsedCommentId});
+    if (deletionInfo.deletedCount === 0) {
+      throw `Could not delete comment with id of ${id}`;
+    }
+
+  const comment = await commentsCollection.findOne({_id:parsedCommentId});
+  const userUpdateInfo = await usersCollection.updateOne(
+    { _id: ObjectId.createFromHexString(comment.author) }
+    ,{$pull: {comments: id}}
+    );
+  
+  if (userUpdateInfo.modifiedCount === 0){
+    throw `Could not delete the dog in the user comments ${id} list`;
+  }
+
+  
+  const dogUpdateInfo = await dogsCollection.updateOne(
+    { _id: ObjectId.createFromHexString(comment.dog) }
+    ,{$pull: {comments: id}}
+    );
+  
+  if (dogUpdateInfo.modifiedCount === 0){
+    throw `Could not delete the comment in the dog comments ${id} list`;
+  }
+  }
+
+}
 module.exports = {
   createComments,
   updateComments,
   deleteComments,
   getComments,
-  getAllComments
+  getAllComments,
+  deleteAllComments
   }

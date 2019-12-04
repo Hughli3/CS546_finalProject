@@ -1,6 +1,8 @@
 const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
+const comments = mongoCollections.comments;
+const image = require("img");
 const ObjectId = require('mongodb').ObjectID;
 
 
@@ -166,8 +168,12 @@ async function deleteTheDog(id){
   const removedData = await dogsCollection.findOne({ _id: parsedId });
 
   const usersCollection = await users();
-  const deleteDogInUserList = usersCollection.removeOne({_id:removedData.owner});
-  if (deleteDogInUserList == null){
+  const updateInfo = await usersCollection.updateOne(
+    { _id: removedData.owner }
+    ,{$pull: {dogs: id}}
+    );
+  
+  if (updateInfo.modifiedCount === 0){
     throw `Could not delete the dog in the user dog ${id} list`;
   }
 
@@ -177,15 +183,12 @@ async function deleteTheDog(id){
     throw `Could not delete dog with id of ${id}`;
   }
 
+  
+
   return removedData
 }
 
-
-async function updateProfilePhotoOfTheDog(){
-
-}
-
-async function addPhotos(){
+async function addPhotos(photoId, dogId){
 
 }
 
