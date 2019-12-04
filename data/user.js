@@ -144,6 +144,9 @@ async function getUser(id){
   return userInfo
 }
 
+
+
+
 async function updateProfilephoto(id, avatarId){
   if (!id) throw "Your input id is not exist.";
   if (!avatarId) throw "Your input photo is not exist.";

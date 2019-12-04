@@ -78,7 +78,7 @@ const constructorMethod = (app) => {
     res.render('signup', {title: "Signup"});
   });
 
-  app.post('/signup', async (req, res) => {
+  app.post('/signup', upload.single('avatar'),async (req, res) => {
     await usersData.createANewUser(req.body.username, req.body.password, null, null);
     res.redirect('/login');
   });
@@ -154,6 +154,7 @@ const constructorMethod = (app) => {
       let photoId = await imgData.createGridFS(req.file)
       let getPhoto = await imgData.getPhotoDataId(photoId)
 
+      
       fs.unlinkSync(req.file.path)
 
       res.render('updatePhoto', {title: "update photo", img:getPhoto})
