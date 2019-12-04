@@ -67,7 +67,7 @@ async function updateTheUser(id, newName){
         throw "Could not update user successfully";
       }
   
-    return await this.get(ObjectId(newId).toString());
+    return await this.get(ObjectId(id).toString());
 }
 
 async function deleteTheUser(id){

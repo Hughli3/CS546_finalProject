@@ -68,8 +68,26 @@ async function createComments(content, author,dog){
     return comment;
 }
 
-async function updateComments(){
+async function updateComments(id){
+  if (!id) throw "Your input id is not exist.";
 
+  isString(id);
+
+  const parsedId = ObjectId.createFromHexString(id);
+
+  const commentsCollection = await comments();
+
+  const updateComment = {
+      content: content
+    };
+   
+  const updateInfo = await commentsCollection.updateOne({ _id: parsedId }, { $set: updateComment});
+
+  if (updateInfo.modifiedCount === 0) {
+      throw "Could not update comment successfully";
+    }
+
+  return await this.get(ObjectId(id).toString());
 }
 
 async function deleteComments(id){
