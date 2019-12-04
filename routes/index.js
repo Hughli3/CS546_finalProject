@@ -116,6 +116,32 @@ const constructorMethod = (app) => {
 
   });
 
+  // update Photo Example
+  app.get('/update', async (req, res) => {    
+    res.render('updatePhoto', {title: "update photo"});
+  });
+
+  // update Photo Example
+  app.post("/update", check.single('avatar'), async (req, res) => {  
+    console.log(req.file);
+    
+    if(!req.file) {
+        console.log('no file input');
+        res.redirect('/update');
+    } else if(req.file.mimetype.split("/")[0] != "image") {
+        fs.unlinkSync(req.file.path)
+        console.log("type error, image only");
+        res.redirect('/update');
+    } else {
+      let photoId = await imgData.createGridFS(req.file)
+      let getPhoto = await imgData.getPhotoDataId(photoId)
+
+      fs.unlinkSync(req.file.path)
+
+      res.render('updatePhoto', {title: "update photo", img:getPhoto})
+    }
+  });
+  
   app.use("*", (req, res) => {
     res.redirect("/");
 
