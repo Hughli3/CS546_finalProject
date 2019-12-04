@@ -20,7 +20,8 @@ module.exports = {
     users: getCollectionFn("users"),
     dogs: getCollectionFn("dogs"),
     comments: getCollectionFn("comments"),
-    photos: getCollectionFn("photos")
+    fsFiles: getCollectionFn("fs.files"),
+    fsChunks: getCollectionFn("fs.chunks"),
 };
 
 //  function main(){
