@@ -126,9 +126,7 @@ const constructorMethod = (app) => {
   });
 
   // update Photo Example
-  app.post("/update", upload.single('avatar'), async (req, res) => {  
-    console.log(req.file);
-    
+  app.post("/update", upload.single('avatar'), async (req, res) => {
     if(!req.file) {
         console.log('no file input');
         res.redirect('/update');
