@@ -10,8 +10,7 @@ const main = async () => {
     // =================================
     // Create a user 
     let originPasswrd = "testtest";
-    
-    
+
     let user = {
         username: 'testuser',
         password:originPasswrd,

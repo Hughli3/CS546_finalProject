@@ -1,51 +1,17 @@
 <section class="section">
 <div class="container">
   <div class="row">
+    {{#each dogs}}
     <div class="col-md-3 mb-4">
         <div class="card">
             <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
+                <h5 class="card-title">{{dogName}}</h5>
+                <p class="card-text">{{type}} {{gender}}</p>
             </div>
         </div>
-    </div>
-        <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
-        <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
-        <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
-        <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
+    </div>    
+    {{/each}}
   </div>
 </div>
 </section>

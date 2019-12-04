@@ -18,10 +18,10 @@ function isString (name){
 async function createANewUser(username, password, name, avatarId){
     if (!username) throw "Your input username is not exist.";
     if (!password) throw "Your input password is not exist.";
-    if (!name) throw "Your input name is not exist.";
+    // if (!name) throw "Your input name is not exist.";
     isString(username);
     isString(password);
-    isString(name);
+    // isString(name);
    
     
     const usersCollection = await users();
@@ -166,18 +166,17 @@ async function updateProfilephoto(id, avatarId){
   return await getUser(id);
 }
 
-async function comparepassword(id, password){
-  if (!id) throw "Your input id is not exist.";
+async function comparepassword(username, password) {
+  if (!username) throw "Your input id is not exist.";
   if (!password) throw "Your input password is not exist.";
 
-  const parsedId = ObjectId.createFromHexString(id);
+  // const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
-
-  let userInfo = usersCollection.findOne({_id:parsedId});
- 
-  comparePassword = await bcrypt.compare(password, userInfo.password);
-
-  return comparepassword;
+  const userInfo = await usersCollection.findOne({username:username});
+  if (!userInfo) throw 'invalid username/password';
+  const isCorrect = await bcryptjs.compare(password, userInfo.password);
+  if (!isCorrect) throw 'invalid username/password';
+  return {isCorect: isCorrect, userid: userInfo._id, username: userInfo.username};
 }
 
 async function getAllDogs(userId){

@@ -36,6 +36,19 @@
             </li>
           </ul>
           <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+            {{#if username}}
+            <li class="nav-item dropdown">
+              <a href="/profile" class="nav-link">
+                <i class="fa fa-user mr-2"></i>
+                <span class="nav-link-inner--text">{{username}}</span>
+              </a>
+            </li>
+            <li class="nav-item d-none d-lg-block ml-lg-4">
+              <a href="/logout" class="btn btn-secondary btn-icon">
+                <span class="nav-link-inner--text">Logout</span>
+              </a>
+            </li> 
+            {{else}}
             <li class="nav-item d-none d-lg-block ml-lg-4">
               <a href="/login" class="btn btn-primary btn-icon">
                 <span class="nav-link-inner--text">Login</span>
@@ -45,13 +58,8 @@
               <a href="/signup" class="btn btn-secondary btn-icon">
                 <span class="nav-link-inner--text">Singup</span>
               </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="/profile" class="nav-link">
-                <i class="fa fa-cloud-download mr-2"></i>
-                <span class="nav-link-inner--text">nealxinyu</span>
-              </a>
-            </li>
+            </li>            
+            {{/if}}
           </ul>
         </div>
       </div>

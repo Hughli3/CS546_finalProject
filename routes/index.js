@@ -2,18 +2,36 @@ const dogData = require("../data/dogs");
 const usersData = require("../data/user");
 const imgData = require("../data/img");
 const multer  = require('multer');
+const session = require('express-session')
 const upload = multer({dest:'./public/images'});
 const fs = require("fs");
 
 const constructorMethod = (app) => {
+
+  app.use(session({
+    name: 'AuthCookie',
+    secret: 'cs548dogdog',
+    resave: false,
+    saveUninitialized: true
+  }));
+  
   app.get('/', async (req, res) => {
-    res.render('home', {title: "Home"});
+    data = {
+      title: "Home",
+      username : req.session.username
+    };
+    res.render('home', data);
   });
 
   app.get('/dogs', async (req, res) => {
     try{
       let dogs = await dogData.getAllDogs();
-      res.render('dogs/dogs', {title: "All Dogs", dogs: dogs});
+      data = {
+        title: "All Dogs",
+        dogs : dogs,
+        username : req.session.username
+      };
+      res.render('dogs/dogs', data);
     } catch (e) {
         res.json(e);
         return;
@@ -25,55 +43,54 @@ const constructorMethod = (app) => {
   });
 
   app.post('/login', async (req, res) => {
-
     try {
-      let username = req.body.username.toLowerCase();
-      let password = req.body.password;
-
-      let authentication = false;
-      let ifIsUser = false;
-
-      for (let i = 0; i < usersData.length; i++){
-        if (usersData[i]["username"] == username){
-          ifIsUser = true;
-          index = i;
-          break
-        }
-      }
-
-      if(ifIsUser === false){
-
-        req.session.ifFirst = false;
-        res.status(401).render("layout/login", {
-          title: "Login page",
-          ifLoginFailed: true
-          //TODO
-          // This mean user login failed
-        });
-        // use return to stop the code
-      }
-
-      authentication = await bcrypt.compare(id,password);
-      if (authentication === true){
-        req.session.user = usersData._id;
-        res.redirect("/");
-      }else{
-
-        req.session.ifFirst = false;
-        res.redirect("/login");
-      }
-        // res.status(200)
+      await login(req);
+      return res.redirect('/profile');
     } catch (e) {
-      res.status(404).json({error: e});
+      res.status(401).render('login', {title: "Login", error: "Invalid username and/or password"});
     }
   });
+
+  const loginRequired = (req, res, next) => {
+    if (!req.session.userid) {
+      res.redirect('/login');
+      return;
+    }
+    next();
+  }
+
+  app.get('/logout', loginRequired, function(req, res) {
+    req.session.destroy();
+    return res.redirect('/');
+  });
+
+  async function login(req) {
+    try {
+      const compareResult = await usersData.comparepassword(req.body.username, req.body.password);
+      req.session.userid = compareResult.userid;
+      req.session.username = compareResult.username;
+    } catch (e) {
+      throw e;
+    }
+  }
 
   app.get('/signup', async (req, res) => {
     res.render('signup', {title: "Signup"});
   });
 
-  app.get('/profile', async (req, res) => {
-    res.render('profile', {title: "Profile"});
+  app.post('/signup', async (req, res) => {
+    await usersData.createANewUser(req.body.username, req.body.password, null, null);
+    res.redirect('/login');
+  });
+
+  
+
+  app.get('/profile', loginRequired, async (req, res) => {
+    data = {
+      title: "Profile",
+      username : req.session.username
+    }
+    res.render('profile', data);
   });
 
   app.get('/dog/add', async (req, res) => {
@@ -96,7 +113,6 @@ const constructorMethod = (app) => {
         res.json(e);
         return;
     }
-
   });
 
   app.post('/dog/add', async (req, res) => {
@@ -144,9 +160,9 @@ const constructorMethod = (app) => {
     }
   });
   
-  app.use("*", (req, res) => {
-    res.redirect("/");
-
+  app.use('*', function(req, res) {
+    res.sendStatus(404);
+    return;
   });
 };
 
