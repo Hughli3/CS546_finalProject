@@ -1,5 +1,7 @@
 const dogData = require("../data/dogs");
 const usersData = require("../data/user");
+const imgData = require("../data/img");
+const fs = require("fs");
 
 const constructorMethod = (app) => {
   app.get('/', async (req, res) => {
