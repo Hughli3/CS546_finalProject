@@ -177,9 +177,32 @@ async function comparepassword(id, password){
  
   comparePassword = await bcrypt.compare(password, userInfo.password);
 
-  return comparepassword
+  return comparepassword;
 }
 
+async function getAllDogs(userId){
+  // return all dogs of this user 
+  if (!userId) throw "Your input id is not exist.";
+  isString(userId);
+  const parsedUserId = ObjectId.createFromHexString(userId);
+  const usersCollection = await users();
+  let userInfo = usersCollection.findOne({_id:parsedUserId});
+  if (userInfo == null ) throw "Could not find user successfully";
+
+  const dogsCollection = await dogs();
+
+  allDogs = [];
+  for (let i = 0; i < userInfo.dogs.length; i++){
+    let dogId = userInfo.dogs
+    let parsedDogId = ObjectId.createFromHexString(dogId);
+    let dogInfo = dogsCollection.findOne({_id:parsedDogId});
+    if (dogInfo == null ) throw "Could not find dog successfully";
+    allDogs.push(dogInfo);
+
+  }
+  return allDogs;
+  
+}
 module.exports = {
     createANewUser,
     updateTheUser,
@@ -187,6 +210,7 @@ module.exports = {
     changePassword,
     getUser,
     updateProfilephoto,
-    comparepassword
+    comparepassword,
+    getAllDogs
   }
   

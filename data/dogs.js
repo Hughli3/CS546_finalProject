@@ -34,7 +34,7 @@ function isString (name){
 
 // ======================================================
 async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId, owner){
-  
+  // create a dog
   if (!name) throw "name is undefinded";
   if (typeof name != "string") throw "name is not a string";
 
@@ -188,22 +188,10 @@ async function addPhotos(){
 }
 
 async function updateHeightWeightOfDog(id, newHeightWeight){
+  // A function just add a new height and weight
   if (!id) throw "Your input id is not exist.";
   isString(id);
-  // if (!newHeightWeight) throw "Your input is not exist.";
   const dogsCollection = await dogs();
-  // if (!newHeightWeight.height) throw "height is undefinded";
-  //   if (typeof newHeightWeight.height != "number") throw "height is not of the proper type";
-  //   if (newHeightWeight.height < 0 ) throw "height is not a positive number";
-
-  //   if (!newHeightWeight.weight) throw "weight is undefinded";
-  //   if (typeof newHeightWeight.weight != "number") throw "weight is not of the proper type";
-  //   if (newHeightWeight.weight < 0 ) throw "weight is not a positive number";
-
-  //   if (!newHeightWeight.date) throw "date is undefinded";
-  //   newHeightWeight.date = new Date(newHeightWeight.date).getTime()
-  //   if (isNaN(newHeightWeight.date)) throw "date is invalid";
-  //   newHeightWeight.date = new Date(newHeightWeight.date);
 
   parsedId = ObjectId.createFromHexString(id);
 
@@ -214,6 +202,43 @@ async function updateHeightWeightOfDog(id, newHeightWeight){
   return await this.getDog(id);
 }
 
+async function getAllComments(dogId){
+  if (!dogId) throw "Your input id is not exist.";
+  isString(dogId);
+
+  parsedUserId = ObjectId.createFromHexString(dogId);
+  const dogsCollection = await dogs();
+  const aDog = dogsCollection.findOne({_id: parsedUserId});
+  let allComments = [];
+
+  const commentsCollection = await comments();
+  const usersCollection = await users();
+
+  for (let i = 0; i < aDog.comments.length;i++){
+
+    parsedCommentId = ObjectId.createFromHexString(aDog.comments[i]);
+    let comment = commentsCollection.findOne({_id:parsedCommentId})
+    if (comment == null){
+      throw "Could not find the comment successfully";
+    }
+
+    parsedUserId = ObjectId.createFromHexString(comment.author);
+    let userInfo = usersCollection.findOne({_id:parsedUserId});
+    if (userInfo == null){
+      throw "Could not find the user successfully";
+    }
+    let data = {
+      author: userInfo.name,
+      content: comment.content,
+      avatar: userInfo.avatarId,
+      commentId:comment._id
+    }
+    allComments.push(data);
+  }
+  return allComments;
+
+}
+
 module.exports = {
   createADog,
   updateTheDog,
@@ -222,6 +247,7 @@ module.exports = {
   getAllDogs,
   getDog,
   addPhotos,
-  updateHeightWeightOfDog
+  updateHeightWeightOfDog,
+  getAllComments
 }
 

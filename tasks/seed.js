@@ -1,12 +1,14 @@
 const dbConnection = require('../config/mongoConnection');
 const dogData = require('../data/dogs');
 const userData = require('../data/user');
+const commentsData = require('../data/comments');
 
 
 const main = async () => {
     const db = await dbConnection();
     await db.dropDatabase();
-
+    // =================================
+    // Create a user 
     let originPasswrd = "testtest";
     
     
@@ -18,9 +20,11 @@ const main = async () => {
     }
 
     const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
-
+    // =================================
+    //  Create a dog
     console.log(userOne);
 
+    let userId = userOne._id.toString()
     let dog = {
         name: "Painting", 
         gender: "Male", 
@@ -37,7 +41,7 @@ const main = async () => {
         ],
         type: "samoye", 
         avatarId: null,
-        owner:userOne._id.toString()
+        owner:userId
     }
 
     const dogOne = await dogData.createADog(
@@ -54,10 +58,20 @@ const main = async () => {
 
   
     let aheightWeight = {height: 15, weight: 20, date: "2018-05-26"}
-    let id = dogOne._id.toString()
-    const updateDog = await dogData.updateHeightWeightOfDog(id, aheightWeight);
+    let dogId = dogOne._id.toString()
+    const updateDog = await dogData.updateHeightWeightOfDog(dogId, aheightWeight);
     console.log(updateDog);
     dogOne.dateOfBirth
+
+
+     // =================================
+    //  Create some comments
+
+    const newComment = await commentsData.createComments("I am a test", userId, dogId);
+    console.log(newComment);
+
+    let output = await commentsData.getComments(newComment._id.toString());
+    console.log(output);
     await db.serverConfig.close();
 }
 
