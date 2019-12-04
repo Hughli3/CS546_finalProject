@@ -1,0 +1,12 @@
+{{!-- <h1>{{ title }}</h1> --}}
+<main>
+  {{#if img}}
+    <img src="{{img}}" alt="1" width="300">
+  {{/if}}
+  <h1>uptade avatar</h1>
+  <form method="post" action="/update" enctype="multipart/form-data">
+    {{!-- <input type="number" name="11"> --}}
+    <input type="file" name="avatar" accept="image/*">
+    <button type="submit">uptade avatar</button>
+  </form>
+</main>
