@@ -138,12 +138,9 @@ async function getPhotoDataId(id){
   if (!id) throw "Your input is not exist.";
   let nid = ObjectID(id)
 
-  let PhotoInfo = await getPhotoById(nid);
-  let Id = PhotoInfo._id;  
-
   const fsChunksCollection = await fsChunks();
 
-  const PhotoData = await fsChunksCollection.find({ files_id: Id }).toArray();
+  const PhotoData = await fsChunksCollection.find({ files_id: nid }).toArray();
   // const PhotoData = await fsChunksCollection.findOne({ files_id: Id });
   if (PhotoData == null) {
         throw "Could not find Photo Data successfully";
@@ -169,10 +166,7 @@ async function getPhotoDataIds(ids){
   for (let i = 0; i < ids.length; i++) {
     let nid = ObjectID(id[i])
 
-    let PhotoInfo = await getPhotoById(nid);
-    let Id = PhotoInfo._id;  
-
-    let PhotoData = await fsChunksCollection.find({ files_id: Id }).toArray();
+    let PhotoData = await fsChunksCollection.find({ files_id: nid }).toArray();
     // let PhotoData = await fsChunksCollection.findOne({ files_id: Id });
     if (PhotoData == null) {
           throw "Could not find Photo Data successfully";
