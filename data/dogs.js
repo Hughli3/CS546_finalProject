@@ -119,6 +119,7 @@ async function getDog(id){
 }
 
 async function updateTheDog(id, newDogData){
+  // Update dog name gender and birthday but can not update height weight
   if (!id) throw "Your input id is not exist.";
   isString(id);
 
@@ -156,6 +157,7 @@ async function updateTheDog(id, newDogData){
 
 
 async function deleteTheDog(id){
+  //Delete the dog
   if (!id) throw "Your input id is not exist.";
   isString(id);
   parsedId = ObjectId.createFromHexString(id);
@@ -203,6 +205,7 @@ async function updateHeightWeightOfDog(id, newHeightWeight){
 }
 
 async function getAllComments(dogId){
+  // Get all comments of this dog
   if (!dogId) throw "Your input id is not exist.";
   isString(dogId);
 
