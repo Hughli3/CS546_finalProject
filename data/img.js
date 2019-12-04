@@ -2,7 +2,7 @@
 // Requires
 const base64Img = require('base64-img');
 const now = new Date();
-var md5 = require('md5');
+const md5 = require('md5');
 const ObjectID = require("mongodb").ObjectID;
 
 const mongoCollections = require("../config/mongoCollections");
