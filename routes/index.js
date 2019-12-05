@@ -3,7 +3,7 @@ const usersData = require("../data/user");
 const imgData = require("../data/img");
 const multer  = require('multer');
 const session = require('express-session')
-const upload = multer({dest:'./public/images'});
+const upload = multer({dest:'./public/img/upload'});
 const fs = require("fs");
 
 const constructorMethod = (app) => {
@@ -107,9 +107,15 @@ const constructorMethod = (app) => {
 
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
+    let user = await usersData.getUser(req.session.userid);
+    if (user.avatarId) {
+      let getPhoto = await imgData.getPhotoDataId(user.avatarId);
+      user.avatar = getPhoto;
+    }
     data = {
       title: "Profile",
-      username : req.session.username
+      username : req.session.username,
+      user
     }
     res.render('profile', data);
   });
@@ -173,19 +179,19 @@ const constructorMethod = (app) => {
   });
 
   // update Photo Example
-  app.post("/update", upload.single('avatar'), async (req, res) => {
+  app.post("/updateUserAvatar", loginRequired, upload.single('avatar'), async (req, res) => {
     if(!req.file) {
-        res.render('updatePhoto', {error: "no file input"});
+      res.render('updatePhoto', {error: "no file input"});
     } else if(req.file.mimetype.split("/")[0] != "image") {
-        res.render('updatePhoto', {error: "type error, image only"});
-    } else {
-      let photoId = await imgData.createGridFS(req.file);
-      let getPhoto = await imgData.getPhotoDataId(photoId);
-      console.log(getPhoto);
       fs.unlinkSync(req.file.path);
+      res.render('updatePhoto', {error: "type error, image only"});
+    } 
+    
+    let photoId = await imgData.createGridFS(req.file);
+    await usersData.updateProfilephoto(req.session.userid, photoId.toString());
+    fs.unlinkSync(req.file.path);
 
-      res.render('updatePhoto', {title: "update photo", img:getPhoto});
-    }
+    res.render('updatePhoto', {title: "update photo", img:getPhoto});
   });
   
   app.use('*', function(req, res) {

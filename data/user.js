@@ -158,13 +158,13 @@ async function updateProfilephoto(id, avatarId){
 
   const updateUserPhoto = {
     avatarId: avatarId
-    };
+  };
    
   const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPhoto});
 
   if (updateInfo.modifiedCount === 0) {
       throw "Could not update user password successfully";
-    }
+  }
 
   return await getUser(id);
 }
