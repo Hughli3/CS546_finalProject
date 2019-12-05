@@ -191,7 +191,7 @@ const constructorMethod = (app) => {
     await usersData.updateProfilephoto(req.session.userid, photoId.toString());
     fs.unlinkSync(req.file.path);
 
-    res.render('updatePhoto', {title: "update photo", img:getPhoto});
+    res.redirect('/profile');
   });
   
   app.use('*', function(req, res) {
