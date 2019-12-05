@@ -5,6 +5,9 @@ const users = mongoCollections.users;
 const dogs = mongoCollections.dogs;
 const commments = mongoCollections.comments;
 const { ObjectId } = require("mongodb");
+const imgData = require("../data/img");
+const dogData = require("../data/dogs");
+
 const bcryptjs = require("bcryptjs");
 const saltRounds = 5;
 //========================================
@@ -139,13 +142,21 @@ async function getUser(id){
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({ _id: parsedId });
   if (userInfo == null) {
-        throw "Could not find user successfully";
+      throw "Could not find user successfully";
   }
+  let dogslist = [];
+  for (let dog of userInfo.dogs) {
+    dogslist.push(await dogData.getDog(dog));
+  }
+  userInfo.dogs = dogslist;
+
+  if (userInfo.avatarId) {
+    let getPhoto = await imgData.getPhotoDataId(userInfo.avatarId);
+    userInfo.avatar = getPhoto;
+  }
+  
   return userInfo
 }
-
-
-
 
 async function updateProfilephoto(id, avatarId){
   if (!id) throw "Your input id is not exist.";
@@ -173,7 +184,6 @@ async function comparepassword(username, password) {
   if (!username) throw "Your input id is not exist.";
   if (!password) throw "Your input password is not exist.";
 
-  // const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({username:username});
   if (!userInfo) throw 'invalid username/password';
@@ -182,29 +192,29 @@ async function comparepassword(username, password) {
   return {isCorect: isCorrect, userid: userInfo._id, username: userInfo.username};
 }
 
-async function getAllDogs(userId){
-  // return all dogs of this user 
-  if (!userId) throw "Your input id is not exist.";
-  isString(userId);
-  const parsedUserId = ObjectId.createFromHexString(userId);
-  const usersCollection = await users();
-  let userInfo = usersCollection.findOne({_id:parsedUserId});
-  if (userInfo == null ) throw "Could not find user successfully";
+// async function getAllDogs(userId){
+//   // return all dogs of this user 
+//   if (!userId) throw "Your input id is not exist.";
+//   isString(userId);
+//   const parsedUserId = ObjectId.createFromHexString(userId);
+//   const usersCollection = await users();
+//   let userInfo = usersCollection.findOne({_id:parsedUserId});
+//   if (userInfo == null ) throw "Could not find user successfully";
 
-  const dogsCollection = await dogs();
+//   const dogsCollection = await dogs();
 
-  allDogs = [];
-  for (let i = 0; i < userInfo.dogs.length; i++){
-    let dogId = userInfo.dogs
-    let parsedDogId = ObjectId.createFromHexString(dogId);
-    let dogInfo = dogsCollection.findOne({_id:parsedDogId});
-    if (dogInfo == null ) throw "Could not find dog successfully";
-    allDogs.push(dogInfo);
+//   allDogs = [];
+//   for (let i = 0; i < userInfo.dogs.length; i++){
+//     let dogId = userInfo.dogs
+//     let parsedDogId = ObjectId.createFromHexString(dogId);
+//     let dogInfo = dogsCollection.findOne({_id:parsedDogId});
+//     if (dogInfo == null ) throw "Could not find dog successfully";
+//     allDogs.push(dogInfo);
 
-  }
-  return allDogs;
+//   }
+//   return allDogs;
   
-}
+// }
 module.exports = {
     createANewUser,
     updateTheUser,
@@ -213,6 +223,6 @@ module.exports = {
     getUser,
     updateProfilephoto,
     comparepassword,
-    getAllDogs
+    // getAllDogs
   }
   

@@ -108,10 +108,6 @@ const constructorMethod = (app) => {
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
     let user = await usersData.getUser(req.session.userid);
-    if (user.avatarId) {
-      let getPhoto = await imgData.getPhotoDataId(user.avatarId);
-      user.avatar = getPhoto;
-    }
     data = {
       title: "Profile",
       username : req.session.username,

@@ -3,7 +3,9 @@
         <h1>{{user.username}}</h1>
         
         {{#if user.avatar}}
-        <img src="{{user.avatar}}" alt="1" width="300">
+            <img src="{{user.avatar}}" alt="1" width="300">
+        {{else}}
+            <img src="/public/img/dog/1.jpg" alt="1" width="300">
         {{/if}}
         
         <a href="#" data-toggle="modal" data-target="#modal-default">Change avatar</a>
@@ -14,45 +16,21 @@
         {{/if}}
         <h1>Your dogs</h1>
 
-
         <div class="row">
-    <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
+        {{#each user.dogs}}
         <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
+            <div class="card">
+                <a href="/dog/{{_id}}" >
+                    <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h1 class="card-title display-4">{{dogName}}</h1>
+                        <p class="card-text">{{type}} {{gender}}</p>
+                    </div>
+                </a>
             </div>
+        </div>    
+        {{/each}} 
         </div>
-    </div>
-        <div class="col-md-3 mb-4">
-        <div class="card">
-            <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Dogname</h5>
-                <p class="card-text">Samoye Male 12</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-4">
-        <a href="dog/add">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Add a new one</h5>
-            </div>
-        </div>
-        </a>
-    </div>
-        
     </div>   
 </section>
 
