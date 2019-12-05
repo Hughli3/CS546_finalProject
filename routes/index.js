@@ -8,13 +8,58 @@ const fs = require("fs");
 
 const constructorMethod = (app) => {
 
+  // ===== Middleware =====
   app.use(session({
     name: 'AuthCookie',
     secret: 'cs548dogdog',
     resave: false,
     saveUninitialized: true
   }));
+
+  const loginRequired = (req, res, next) => {
+    if (!req.session.userid) {
+      res.redirect('/login');
+      return;
+    }
+    next();
+  }
+
+  const notLoginRequired = (req, res, next) => {
+    if (req.session.userid) {
+      res.redirect('/profile');
+      return;
+    }
+    next();
+  }
+
+  // ===== Helper =====
+  function pagination(data, pageNum, showPerPage) {
+    const pageCount = Math.ceil(data.length / showPerPage);
+    let page = parseInt(pageNum);
+    if (!page || page <= 0) { page = 1;}
+    if (page > pageCount) {
+      page = pageCount;
+    }
+    data = {
+      data : data.slice(page * showPerPage - showPerPage, page * showPerPage),
+      totalPage: pageCount,
+      currentPage: page,
+      showPerPage: showPerPage
+    }
+    return data;
+  }
+
+  async function login(req) {
+    try {
+      const compareResult = await usersData.comparepassword(req.body.username, req.body.password);
+      req.session.userid = compareResult.userid;
+      req.session.username = compareResult.username;
+    } catch (e) {
+      throw e;
+    }
+  }
   
+  // ===== public pages =====
   app.get('/', async (req, res) => {
     data = {
       title: "Home",
@@ -42,69 +87,25 @@ const constructorMethod = (app) => {
     }
   });
 
-  app.get('/login', async (req, res) => {
-    res.render('login', {title: "Login"});
-  });
+  app.get('/dog/:id', async (req, res) => {
+    let dogId = req.params.id;
 
-  app.post('/login', async (req, res) => {
-    try {
-      await login(req);
-      return res.redirect('/profile');
+    try{
+        let dog = await dogData.getDog(dogId);
+        data = {
+          title: "Single Dog", 
+          dog: dog,
+          username : req.session.username
+        }
+
+        res.render('dogs/single_dog', data);
     } catch (e) {
-      res.status(401).render('login', {title: "Login", error: "Invalid username and/or password"});
+        res.json(e);
+        return;
     }
   });
 
-  const loginRequired = (req, res, next) => {
-    if (!req.session.userid) {
-      res.redirect('/login');
-      return;
-    }
-    next();
-  }
-
-  app.get('/logout', loginRequired, function(req, res) {
-    req.session.destroy();
-    return res.redirect('/');
-  });
-
-  async function login(req) {
-    try {
-      const compareResult = await usersData.comparepassword(req.body.username, req.body.password);
-      req.session.userid = compareResult.userid;
-      req.session.username = compareResult.username;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  function pagination(data, pageNum, showPerPage) {
-    const pageCount = Math.ceil(data.length / showPerPage);
-    let page = parseInt(pageNum);
-    if (!page || page <= 0) { page = 1;}
-    if (page > pageCount) {
-      page = pageCount;
-    }
-    data = {
-      data : data.slice(page * showPerPage - showPerPage, page * showPerPage),
-      totalPage: pageCount,
-      currentPage: page,
-      showPerPage: showPerPage
-    }
-    return data;
-  }
-
-  app.get('/signup', async (req, res) => {
-    res.render('signup', {title: "Signup"});
-  });
-
-  app.post('/signup', async (req, res) => {
-    await usersData.createANewUser(req.body.username, req.body.password, null, null);
-    res.redirect('/login');
-  });
-
-  
-
+  // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
     data = {
       title: "Profile",
@@ -113,26 +114,37 @@ const constructorMethod = (app) => {
     res.render('profile', data);
   });
 
-  app.get('/dog/add', async (req, res) => {
-
-    let allDogs = dogData.getAllDogs();
-
-    res.render('dogs/add_dog', {title: "All dogs",dog:allDogs});
-    // TODO
-
-
+  app.get('/signup', notLoginRequired, async (req, res) => {
+    res.render('signup', {title: "Signup"});
   });
 
-  app.get('/dog/:id', async (req, res) => {
-    let dogId = req.params.id;
+  app.post('/signup', async (req, res) => {
+    await usersData.createANewUser(req.body.username, req.body.password, null, null);
+    res.redirect('/login');
+  });
 
-    try{
-        let dog = await dogData.getDog(dogId);
-        res.render('dogs/single_dog', {title: "Single Dog", dog: dog});
+  app.get('/logout', loginRequired, function(req, res) {
+    req.session.destroy();
+    return res.redirect('/');
+  });
+
+  app.get('/login', notLoginRequired, async (req, res) => {
+    res.render('login', {title: "Login"});
+  });
+
+  app.post('/login', notLoginRequired, async (req, res) => {
+    try {
+      await login(req);
+      return res.redirect('/profile');
     } catch (e) {
-        res.json(e);
-        return;
+      res.status(401).render('login', {title: "Login", error: "Invalid username and/or password"});
     }
+  });
+
+  // ===== Dog modification =====
+  app.get('/dog/add', async (req, res) => {
+    let allDogs = dogData.getAllDogs();
+    res.render('dogs/add_dog', {title: "All dogs",dog:allDogs});
   });
 
   app.post('/dog/add', async (req, res) => {
@@ -142,18 +154,17 @@ const constructorMethod = (app) => {
     let height = req.body.height;
     let weight = req.body.weight;
     let dateOfHeightWeight = req.body.date;
-    let type = req.body.type;;
-    let avatarId =  null;
+    let type = req.body.type;
+    let avatarId = null;
 
     let dog = await dogData.createADog(name, gender, dataOfBirth,{
-      height:height,
-      weight:weight,
-      date:dateOfHeightWeight
-    },type,avatarId
+        height:height,
+        weight:weight,
+        date:dateOfHeightWeight
+      },type,avatarId
     )
 
     res.render('dogs/add_dog', {title: "Add a Dog",dog:dog});
-
   });
 
   // update Photo Example
@@ -164,19 +175,16 @@ const constructorMethod = (app) => {
   // update Photo Example
   app.post("/update", upload.single('avatar'), async (req, res) => {
     if(!req.file) {
-        console.log('no file input');
-        res.redirect('/update');
+        res.render('updatePhoto', {error: "no file input"});
     } else if(req.file.mimetype.split("/")[0] != "image") {
-        fs.unlinkSync(req.file.path)
-        console.log("type error, image only");
-        res.redirect('/update');
+        res.render('updatePhoto', {error: "type error, image only"});
     } else {
-      let photoId = await imgData.createGridFS(req.file)
-      let getPhoto = await imgData.getPhotoDataId(photoId)
-      
-      fs.unlinkSync(req.file.path)
+      let photoId = await imgData.createGridFS(req.file);
+      let getPhoto = await imgData.getPhotoDataId(photoId);
+      console.log(getPhoto);
+      fs.unlinkSync(req.file.path);
 
-      res.render('updatePhoto', {title: "update photo", img:getPhoto})
+      res.render('updatePhoto', {title: "update photo", img:getPhoto});
     }
   });
   
