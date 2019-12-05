@@ -26,11 +26,13 @@ const constructorMethod = (app) => {
   app.get('/dogs', async (req, res) => {
     try{
       let dogs = await dogData.getAllDogs();
-      dogs = sliceData(dogs, req.query.page, 12);
+      let pageData = pagination(dogs, req.query.page, 12);
 
       data = {
         title: "All Dogs",
-        dogs : dogs,
+        dogs : pageData.data,
+        totalPage: pageData.totalPage,
+        currentPage: pageData.currentPage,
         username : req.session.username
       };
       res.render('dogs/dogs', data);
@@ -76,14 +78,20 @@ const constructorMethod = (app) => {
     }
   }
 
-  function sliceData(data, pageNum, showPerPage) {
+  function pagination(data, pageNum, showPerPage) {
     const pageCount = Math.ceil(data.length / showPerPage);
     let page = parseInt(pageNum);
-    if (!page) { page = 1;}
+    if (!page || page <= 0) { page = 1;}
     if (page > pageCount) {
       page = pageCount;
     }
-    return data.slice(page * showPerPage - showPerPage, page * showPerPage);
+    data = {
+      data : data.slice(page * showPerPage - showPerPage, page * showPerPage),
+      totalPage: pageCount,
+      currentPage: page,
+      showPerPage: showPerPage
+    }
+    return data;
   }
 
   app.get('/signup', async (req, res) => {

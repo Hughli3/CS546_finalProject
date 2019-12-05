@@ -43,7 +43,7 @@ const main = async () => {
         owner:userId
     }
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         const dogOne = await dogData.createADog(
             dog.name,
             dog.gender,

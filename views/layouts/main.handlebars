@@ -9,7 +9,7 @@
 
   <link href="/public/img/brand/favicon.png" rel="icon" type="image/png">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
-  <link href="/public/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/public/vendor/font-awesome/css/all.min.css" rel="stylesheet">
   <link type="text/css" href="/public/css/argon.css" rel="stylesheet">
 </head>
 
@@ -93,9 +93,12 @@
     </div>
   </footer>
 
+
   <script src="/public/vendor/jquery/jquery.min.js"></script>
   <script src="/public/vendor/bootstrap/bootstrap.min.js"></script>
-
+  {{#each scripts}}
+  <script src="{{script}}"></script>
+  {{/each}}
   {{!-- <script src="./assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
   <script src="./assets/js/argon.js?v=1.1.0"></script> --}}
 </body>
