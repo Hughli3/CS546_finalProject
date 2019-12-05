@@ -4,6 +4,13 @@
         {{#if user.avatar}}
         <img src="{{user.avatar}}" alt="1" width="300">
         {{/if}}
+          <form method="post" action="/updateUserAvatar" enctype="multipart/form-data">
+    <input type="file" name="avatar" accept="image/*">
+    <button type="submit">uptade avatar</button>
+  </form>
+  {{#if error}}
+    <p class="error">{{ error }}</p>
+  {{/if}}
         <h1>Your dogs</h1>
 
 
