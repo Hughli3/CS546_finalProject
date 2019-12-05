@@ -26,6 +26,8 @@ const constructorMethod = (app) => {
   app.get('/dogs', async (req, res) => {
     try{
       let dogs = await dogData.getAllDogs();
+      dogs = sliceData(dogs, req.query.page, 12);
+
       data = {
         title: "All Dogs",
         dogs : dogs,
@@ -72,6 +74,16 @@ const constructorMethod = (app) => {
     } catch (e) {
       throw e;
     }
+  }
+
+  function sliceData(data, pageNum, showPerPage) {
+    const pageCount = Math.ceil(data.length / showPerPage);
+    let page = parseInt(pageNum);
+    if (!page) { page = 1;}
+    if (page > pageCount) {
+      page = pageCount;
+    }
+    return data.slice(page * showPerPage - showPerPage, page * showPerPage);
   }
 
   app.get('/signup', async (req, res) => {
@@ -153,7 +165,6 @@ const constructorMethod = (app) => {
     } else {
       let photoId = await imgData.createGridFS(req.file)
       let getPhoto = await imgData.getPhotoDataId(photoId)
-
       
       fs.unlinkSync(req.file.path)
 

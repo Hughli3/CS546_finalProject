@@ -1,8 +1,57 @@
+
+<section class="section">
+    <div class="container">
+       
+        <div class="row">
+            <div class="col-4">
+                <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
+            </div>
+            <div class="col-8">
+                <h2>{{ dog.dogName }}</h2>
+                <h2>{{ dog.type }} {{ dog.gender }} 17</h2>
+
+                <h2>Own by sadsad</h2>
+            </div>
+            <div class="col-4">
+
+                <div class="nav-wrapper">
+                    <ul class="nav nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+                        <li class="nav-item">
+                <a class="nav-link active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-cloud-upload-96 mr-2"></i>Profile</a>
+                        </li>
+                        <li class="nav-item">
+                <a class="nav-link" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-bell-55 mr-2"></i>Health Data</a>
+                        </li>
+                        <li class="nav-item">
+                <a class="nav-link" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i class="ni ni-calendar-grid-58 mr-2"></i>Albumn</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                                        
+                    </div>
+                    <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                        <p class="description">Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                    </div>
+                    <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+                        <p class="description">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <h1>{{ title }}</h1>
 <main>
     <p>name: {{ dog.dogName }}</p>
     <p>gender: {{ dog.gender }}</p>
-    <p>dob: {{ dog.dateOfBirth }}</p>
+    
+    <p>{{ dog.dateOfBirth }}</p>
 
     {{#each dog.heightWeight}}
         <p>date: {{this.date}}</p>
@@ -10,5 +59,7 @@
         <p>weight: {{this.weight}}</p>
     {{/each}}
 
-    <p>type: {{ dog.type }}</p>
 </main>
+
+
+

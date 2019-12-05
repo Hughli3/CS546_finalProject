@@ -2,11 +2,9 @@ const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
 const comments = mongoCollections.comments;
-const image = require("img");
-const comments = require("comments");
+// const image = require("img");
+// const comments = require("comments");
 const ObjectId = require('mongodb').ObjectID;
-
-
 
 // ======================================================
 function isValidHeightWeight (heightWeight) {
@@ -67,7 +65,6 @@ Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970
   // if (!avatarId) throw "avatar is undefinded";
   // if (!ObjectId.isValid(avatarId)) throw "avatarId is invalid";
   // if (typeof avatarId != "string") avatarId = avatarId.toString();
-
   
   let dog = {
     dogName: name,
@@ -79,7 +76,6 @@ Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970
     photos: [],
     comments: [],
     owner:owner
-
   }
   
   const usersCollection = await users();
@@ -250,7 +246,7 @@ module.exports = {
   createADog,
   updateTheDog,
   deleteTheDog,
-  updateProfilePhotoOfTheDog,
+  // updateProfilePhotoOfTheDog,
   getAllDogs,
   getDog,
   addPhotos,

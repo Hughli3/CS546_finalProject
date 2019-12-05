@@ -43,17 +43,19 @@ const main = async () => {
         owner:userId
     }
 
-    const dogOne = await dogData.createADog(
-        dog.name,
-        dog.gender,
-        dog.dataOfBirth,
-        dog.heightWeight,
-        dog.type,
-        dog.avatarId,
-        dog.owner
-    );
+    for (let i = 0; i < 20; i++) {
+        const dogOne = await dogData.createADog(
+            dog.name,
+            dog.gender,
+            dog.dataOfBirth,
+            dog.heightWeight,
+            dog.type,
+            dog.avatarId,
+            dog.owner
+        );
+    }
     
-    console.log(dogOne);
+    // console.log(dogOne);
 
   
     let aheightWeight = {height: 15, weight: 20, date: "2018-05-26"}
