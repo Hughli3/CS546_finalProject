@@ -4,18 +4,20 @@
       {{#each dogs}}
       <div class="col-md-3 mb-4">
           <div class="card">
-              <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h1 class="card-title">{{dogName}}</h1>
-                  <p class="card-text">{{type}} {{gender}}</p>
-              </div>
+              <a href="/dog/{{_id}}" >
+                <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h1 class="card-title display-4">{{dogName}}</h1>
+                    <p class="card-text">{{type}} {{gender}}</p>
+                </div>
+              </a>
           </div>
       </div>    
       {{/each}}
     </div>
     {{#pagination totalPage currentPage}}
     <nav>
-      <ul class="pagination">
+      <ul class="pagination justify-content-center">
         {{#if @previousPage}}
         <li class="page-item">
           <a class="page-link" href="?page={{@previousPage}}">
