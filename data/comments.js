@@ -11,8 +11,8 @@ const { ObjectId } = require("mongodb");
 // Check input
 function isString (name){
     if (!name || name === undefined || name === '' || name.constructor !== String){
-        throw `${name || "Provided string"} is not a string.`
-      }
+        return false;
+      }else return true;
 }
 
 function isNumber(number){
@@ -71,7 +71,7 @@ async function createComments(content, author, dog){
 async function updateComments(id){
   if (!id) throw "Your input id is not exist.";
 
-  isString(id);
+  if (isString(id)) throw `Your input id is not exist`;
 
   const parsedId = ObjectId.createFromHexString(id);
 
