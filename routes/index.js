@@ -99,6 +99,13 @@ const constructorMethod = (app) => {
           comments.push(await commentData.getComments(comment));
         }
         
+        dog.currentWeight = dog.heightWeight[0].weight;
+        dog.currentHeight = dog.heightWeight[0].height;
+        dog.currentBMI = dog.currentWeight / dog.currentHeight;
+
+        for (let comment of dog.comments) {
+          comments.push(await commentData.getComments(comment));
+        }
         data = {
           title: "Single Dog", 
           dog: dog,
