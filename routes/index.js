@@ -69,7 +69,7 @@ const constructorMethod = (app) => {
     res.render('home', data);
   });
 
-  app.get('/dogs', async (req, res) => {
+  app.get('/dog', async (req, res) => {
     try{
       let dogs = await dogData.getAllDogs();
       let pageData = pagination(dogs, req.query.page, 12);
@@ -107,6 +107,18 @@ const constructorMethod = (app) => {
         }
 
         res.render('dogs/single_dog', data);
+    } catch (e) {
+        res.json(e);
+        return;
+    }
+  });
+
+  app.delete('/dog/:id', async (req, res) => {
+    let dogId = req.params.id;
+
+    try{
+        await dogData.deleteTheDog(dogId);
+        res.redirect('/profile');
     } catch (e) {
         res.json(e);
         return;

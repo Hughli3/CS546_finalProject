@@ -30,7 +30,6 @@ const main = async () => {
         dataOfBirth: "2018-03-19", 
         // format should be day month year
         heightWeight: [
-            
             {height: 40, weight: 50, date: "2019-10-30"},
             {height: 36, weight: 55, date: "2019-03-05"},
             {height: 34, weight: 54, date: "2019-01-25"},
