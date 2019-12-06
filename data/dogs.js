@@ -43,11 +43,13 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   if (typeof gender != "string") throw "gender is not a string";
 
   if (!dateOfBirth) throw "dateOfBirth is undefinded";  
-  dateOfBirth = new Date(dateOfBirth).getTime()
+  dateOfBirth = Date.parse(dateOfBirth);
   if (isNaN(dateOfBirth)) throw "dateOfBirth is invalid";
   dateOfBirth = new Date(dateOfBirth);
+
+  let formatted_date = dateOfBirth.getFullYear() + "-" + (dateOfBirth.getMonth() + 1) + "-" + dateOfBirth.getDate();
   console.log(dateOfBirth.toString());
-  console.log(dateOfBirth);
+  console.log(formatted_date);
   /*
 Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970-1-1 00:00:00 UTC 到该日期对象（该日期对象的UTC时间）的毫秒数，
 如果该字符串无法识别，或者一些情况下，包含了不合法的日期数值（如：2015-02-31），则返回值为NaN。
