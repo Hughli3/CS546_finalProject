@@ -80,20 +80,36 @@ async function deletePhoto(id){
 
   const fsFilesCollection = await fsFiles();
   const fsChunksCollection = await fsChunks();
-
-  let PhotoInfo = await getPhotoById(id);
-  let Id = PhotoInfo._id;
   
   // const deletionInfo1 = await fsFilesCollection.removeOne({ _id: Id });
   // const deletionInfo2 = await fsChunksCollection.remove({ files_id: Id });
   
-  const deletionInfo1 = await fsFilesCollection.deleteOne({ _id: Id });
-  const deletionInfo2 = await fsChunksCollection.deleteMany({ files_id: Id });
+  const deletionInfo1 = await fsFilesCollection.deleteOne({ _id: nid });
+  const deletionInfo2 = await fsChunksCollection.deleteMany({ files_id: nid });
 
   if (deletionInfo1.deletedCount === 0 && deletionInfo2.deletedCount === 0) {
       throw `Could not delete user with id of ${id}`;
     }
 
+  return true;
+}
+
+async function deletePhotos(ids){
+  if (!ids) throw "Your input is not exist.";
+
+  const fsFilesCollection = await fsFiles();
+  const fsChunksCollection = await fsChunks();
+
+  for (let i = 0; i < ids.length; i++) {
+    let nid = ObjectID(ids[i])
+    
+    let deletionInfo1 = await fsFilesCollection.deleteOne({ _id: nid });
+    let deletionInfo2 = await fsChunksCollection.deleteMany({ files_id: nid });
+
+    if (deletionInfo1.deletedCount === 0 && deletionInfo2.deletedCount === 0) {
+      throw `Could not delete user with id of ${nid}`;
+    }
+  }
   return true;
 }
 
@@ -160,11 +176,11 @@ async function getPhotoDataId(id){
 }
 
 async function getPhotoDataIds(ids){
-  if (!id) throw "Your input is not exist.";
+  if (!ids) throw "Your input is not exist.";
   let photos = []
   const fsChunksCollection = await fsChunks();
   for (let i = 0; i < ids.length; i++) {
-    let nid = ObjectID(id[i])
+    let nid = ObjectID(ids[i])
 
     let PhotoData = await fsChunksCollection.find({ files_id: nid }).toArray();
     // let PhotoData = await fsChunksCollection.findOne({ files_id: Id });
@@ -213,6 +229,7 @@ async function getPhotoById(Id){
 module.exports = {
   createGridFS,
   deletePhoto,
+  deletePhotos,
   getPhotoDataId,
   getPhotoDataIds,
 }
