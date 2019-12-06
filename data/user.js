@@ -7,8 +7,8 @@ const commments = mongoCollections.comments;
 const { ObjectId } = require("mongodb");
 const imgData = require("../data/img");
 const dogData = require("../data/dogs");
-
 const bcryptjs = require("bcryptjs");
+const fs = require("fs");
 const saltRounds = 5;
 //========================================
 // Check input
@@ -158,23 +158,33 @@ async function getUser(id){
   return userInfo
 }
 
-async function updateProfilephoto(id, avatarId){
+async function updateProfilePhoto(id,  file){
+
   if (!id) throw "Your input id is not exist.";
-  if (!avatarId) throw "Your input photo is not exist.";
+ 
   isString(id);
-  isString(avatarId);
+
+  if(!file) {
+    throw `no file input`;
+  } else if(file.mimetype.split("/")[0] != "image") {
+    fs.unlinkSync(file.path);
+    throw `type error, image only`;
+  } 
+  
+  let photoId = await imgData.createGridFS(file);
+
   const parsedId = ObjectId.createFromHexString(id);
 
   const usersCollection = await users();
 
   const updateUserPhoto = {
-    avatarId: avatarId
+    avatarId: photoId.toString()
   };
    
   const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPhoto});
 
   if (updateInfo.modifiedCount === 0) {
-      throw "Could not update user password successfully";
+      throw "Could not update user avatar successfully";
   }
 
   return await getUser(id);
@@ -221,7 +231,7 @@ module.exports = {
     deleteTheUser,
     changePassword,
     getUser,
-    updateProfilephoto,
+    updateProfilePhoto,
     comparepassword,
     // getAllDogs
   }

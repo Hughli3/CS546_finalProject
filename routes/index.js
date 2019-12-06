@@ -191,8 +191,9 @@ const constructorMethod = (app) => {
       res.render('updatePhoto', {error: "type error, image only"});
     } 
     
-    let photoId = await imgData.createGridFS(req.file);
-    await usersData.updateProfilephoto(req.session.userid, photoId.toString());
+    // let photoId = await imgData.createGridFS(req.file);
+    // This line no need, moved into user.js updateProfilePhoto method
+    await usersData.updateProfilePhoto(req.session.userid, photoId.toString());
     fs.unlinkSync(req.file.path);
 
     res.redirect('/profile');

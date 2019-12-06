@@ -2,8 +2,8 @@ const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
 const comments = mongoCollections.comments;
-// const image = require("img");
-// const comments = require("comments");
+const imgData = require("img");
+const commentData = require("comments");
 const ObjectId = require('mongodb').ObjectID;
 
 // ======================================================
@@ -185,8 +185,93 @@ async function deleteTheDog(id){
   return removedData
 }
 
-async function addPhotos(photoId, dogId){
+async function updateProfilePhotoOfTheDog(dogId, file){
+  if (!dogId) throw "Your input photoId is not exist.";
 
+  isString(dogId);
+
+  if(!file) {
+    throw `no file input`;
+  } else if(file.mimetype.split("/")[0] != "image") {
+    fs.unlinkSync(file.path);
+    throw `type error, image only`;
+  } 
+  parsedDogId = ObjectId.createFromHexString(dogId);
+
+  let photoId = await imgData.createGridFS(file);
+
+  const dogsCollection = await dogs();
+
+  const updatePhoto = {
+    photos: photoId.toString()
+  };
+   
+  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $Set: updatePhoto});
+
+  if (updateInfo.modifiedCount === 0) {
+      throw "Could not update photo successfully";
+  }
+
+  return await getDog(dogId);
+}
+
+async function addPhotos(dogId, file){
+  // add a photo to the dog 
+  if (!dogId) throw "Your input photoId is not exist.";
+
+  isString(dogId);
+
+  if(!file) {
+    throw `no file input`;
+  } else if(file.mimetype.split("/")[0] != "image") {
+    fs.unlinkSync(file.path);
+    throw `type error, image only`;
+  } 
+
+  parsedDogId = ObjectId.createFromHexString(dogId);
+
+  let photoId = await imgData.createGridFS(file);
+
+  const dogsCollection = await dogs();
+
+  const addPhoto = {
+    photos: photoId.toString()
+  };
+   
+  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $addToSet: addPhoto});
+
+  if (updateInfo.modifiedCount === 0) {
+      throw "Could not add a new photo successfully";
+  }
+
+  return await getDog(dogId);
+}
+
+
+async function removePhotos(dogId, photoIds){
+  // remove a photos from the dog 
+  if (!dogId) throw "Your input photoId is not exist.";
+  isString(dogId);
+
+  if(!photoIds) throw "Your input photo id array is not exist.";
+
+  if (! photoIds instanceof Array) throw "Your input photo id array is not exist.";
+
+  parsedDogId = ObjectId.createFromHexString(dogId);
+
+  for (i in photoIds){
+    const updateInfo = await dogssCollection.updateOne(
+      { _id: parsedDogId }
+      ,{$pull: {photos: i}}
+      );
+
+      if (updateInfo.modifiedCount === 0) {
+        throw "Could not remove the photo successfully";
+    }
+  }
+  imgData.deletePhotos(ids);
+
+  return getDog(dogId);
 }
 
 async function updateHeightWeightOfDog(id, newHeightWeight){
@@ -246,11 +331,12 @@ module.exports = {
   createADog,
   updateTheDog,
   deleteTheDog,
-  // updateProfilePhotoOfTheDog,
+  updateProfilePhotoOfTheDog,
   getAllDogs,
   getDog,
   addPhotos,
   updateHeightWeightOfDog,
-  getAllComments
+  getAllComments,
+  removePhotos
 }
 
