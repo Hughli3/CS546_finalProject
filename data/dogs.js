@@ -2,8 +2,8 @@ const mongoCollections = require("../config/mongoCollections");
 const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
 const comments = mongoCollections.comments;
-const imgData = require("img");
-const commentData = require("comments");
+const imgData = require("./img");
+const commentData = require("./comments");
 const ObjectId = require('mongodb').ObjectID;
 
 // ======================================================
