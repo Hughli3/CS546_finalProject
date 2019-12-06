@@ -1,6 +1,7 @@
 const dogData = require("../data/dogs");
 const usersData = require("../data/user");
 const imgData = require("../data/img");
+const commentData = require("../data/comments");
 const multer  = require('multer');
 const session = require('express-session')
 const upload = multer({dest:'./public/img/upload'});
@@ -92,10 +93,17 @@ const constructorMethod = (app) => {
 
     try{
         let dog = await dogData.getDog(dogId);
+        
+        let comments = [];
+        for (let comment of dog.comments) {
+          comments.push(await commentData.getComments(comment));
+        }
+        
         data = {
           title: "Single Dog", 
           dog: dog,
-          username : req.session.username
+          username : req.session.username,
+          comments : comments
         }
 
         res.render('dogs/single_dog', data);

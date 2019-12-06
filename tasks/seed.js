@@ -43,8 +43,9 @@ const main = async () => {
         owner:userId
     }
 
+    let dogOne;
     for (let i = 0; i < 100; i++) {
-        const dogOne = await dogData.createADog(
+        dogOne = await dogData.createADog(
             dog.name,
             dog.gender,
             dog.dataOfBirth,
@@ -68,11 +69,12 @@ const main = async () => {
      // =================================
     //  Create some comments
 
-    const newComment = await commentsData.createComments("I am a test", userId, dogId);
-    console.log(newComment);
-
-    let output = await commentsData.getComments(newComment._id.toString());
-    console.log(output);
+    for (let i = 0; i < 20; i++) {
+        const newComment = await commentsData.createComments("I am a test", userId, dogId);
+        console.log(newComment);
+    }
+    // let output = await commentsData.getComments(newComment._id.toString());
+    // console.log(output);
     await db.serverConfig.close();
 }
 

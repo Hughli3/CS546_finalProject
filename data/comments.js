@@ -24,7 +24,7 @@ function isNumber(number){
 //========================================
 // body functions here
 
-async function createComments(content, author,dog){
+async function createComments(content, author, dog){
   if (!author) throw "Your input author is not exist.";
   if (!content) throw "Your input content is not exist.";
   isString(content);

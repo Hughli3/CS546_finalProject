@@ -48,12 +48,18 @@
     
     <p>{{ dog.dateOfBirth }}</p>
 
+
     {{#each dog.heightWeight}}
         <p>date: {{this.date}}</p>
         <p>height: {{this.height}}</p>
         <p>weight: {{this.weight}}</p>
     {{/each}}
-
+        
+    {{#each comments}}
+        <h1>Comment</h1>
+        <p>{{content}}</p>
+        <p>{{author}}</p>
+    {{/each}}
 </main>
 
 
