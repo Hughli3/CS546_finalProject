@@ -142,7 +142,12 @@ async function getComments(id){
 }
 
 async function getAllComments(){
+  const commentsCollection = await comments();
 
+  const comment = await commentsCollection.find();
+  if (comment == null) throw `Could not find the comments`;
+
+  return comment
 }
 
 
