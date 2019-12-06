@@ -10,6 +10,7 @@ const ObjectId = require('mongodb').ObjectID;
 function isValidHeightWeight (heightWeight) {
   // The heightWeight contains height, weight, date. The date is the scale date of height and weight.
   if (!heightWeight) throw "heightWeight is undefinded";
+  if (! heightWeight instanceof Array) throw "Your input heightWeight is not an array.";
 
   for (let hw of heightWeight) {
     if (!hw.height) throw "height is undefinded";
@@ -29,27 +30,36 @@ function isValidHeightWeight (heightWeight) {
 
 function isString (name){
   if (name.constructor !== String){
-      throw `${name || "Provided string"} is not a string.`
-    }
+    return false
+    }else return true;
 }
+
 
 // ======================================================
 async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId, owner){
   // create a dog
-  if (!name) throw "name is undefinded";
-  if (typeof name != "string") throw "name is not a string";
+  if (!name) throw "Name is undefinded";
+  
+  if (!isString(name)) throw `Your input username is not string`;
 
-  if (!gender) throw "gender is undefinded";
-  if (typeof gender != "string") throw "gender is not a string";
+  if (!gender) throw "Gender is undefinded";
+  if (!isString(gender)) throw `Your input gender is not string`;
+  
 
   if (!dateOfBirth) throw "dateOfBirth is undefinded";  
   dateOfBirth = Date.parse(dateOfBirth);
   if (isNaN(dateOfBirth)) throw "dateOfBirth is invalid";
   dateOfBirth = new Date(dateOfBirth);
 
+  let today = new Date();
+  
+  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) throw `Please input a real birth date of your dog`;
+// Dog age should less than 35 and greater than 0
+
+
   let formatted_date = dateOfBirth.getFullYear() + "-" + (dateOfBirth.getMonth() + 1) + "-" + dateOfBirth.getDate();
-  console.log(dateOfBirth.toString());
-  console.log(formatted_date);
+  // console.log(dateOfBirth.toString());
+  // console.log(formatted_date);
   /*
 Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970-1-1 00:00:00 UTC 到该日期对象（该日期对象的UTC时间）的毫秒数，
 如果该字符串无法识别，或者一些情况下，包含了不合法的日期数值（如：2015-02-31），则返回值为NaN。
@@ -58,10 +68,10 @@ Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970
   isValidHeightWeight(heightWeight);
 
   if (!type) throw "type is undefinded";
-  if (typeof type != "string") throw "owner is not a string";
-
-  if (!owner) throw "type is undefinded";
-  if (typeof owner != "string") throw "owner is not a string";
+ 
+  if (!isString(type)) throw `Your input type is not string`;
+  if (!owner) throw "owner is undefinded";
+  if (!isString(owner)) throw `Your input owner is not string`;
 
 
   // if (!avatarId) throw "avatar is undefinded";
@@ -71,7 +81,7 @@ Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970
   let dog = {
     dogName: name,
     gender: gender,
-    dateOfBirth: dateOfBirth,
+    dateOfBirth: formatted_date,
     heightWeight: heightWeight,
     type: type, 
     avatarId: avatarId,
@@ -83,6 +93,7 @@ Date.parse() 方法解析一个表示某个日期的字符串，并返回从1970
   const usersCollection = await users();
   parsedOwner = ObjectId.createFromHexString(dog.owner);
   const user = await usersCollection.find({_id:parsedOwner});
+  // If this user is not created throw error
   if (user == null) thorw `Could not find the user with the id of ${parsedOwner}`;
 
   // After check the user exist then create the dog
@@ -105,16 +116,59 @@ async function getAllDogs(){
   return allDogs;
 }
 
+
+async function updateHeightWeightOfDog(id, newHeightWeight){
+  // A function just add a new height and weight
+  if (!id) throw "Your input id is not exist.";
+  isString(id);
+  const dogsCollection = await dogs();
+
+  parsedId = ObjectId.createFromHexString(id);
+
+  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$addToSet: {heightWeight: newHeightWeight}});
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not update the dog successfully";
+  }
+  return await this.getDog(id);
+}
+
 async function getDog(id){
   // TODO Get the dog owner name
   if (!id) throw "id is undefinded";
   if (!ObjectId.isValid(id)) throw "id is invalid";
-  if (typeof id != "string") id = id.toString();
+  if (!isString(id)) id = id.toString();
   id = ObjectId.createFromHexString(id);
 
   const dogsCollection = await dogs();
   const dog = await dogsCollection.findOne({_id: id});
   if (!dog) throw 'dog not found';
+//TODO return formated data
+  return dog
+}
+
+async function getDogDetail(id){
+  // TODO Get the dog owner name
+  if (!id) throw "id is undefinded";
+  if (!ObjectId.isValid(id)) throw "id is invalid";
+  if (!isString(id)) id = id.toString();
+  id = ObjectId.createFromHexString(id);
+
+  const dogsCollection = await dogs();
+  const dog = await dogsCollection.findOne({_id: id});
+  if (!dog) throw 'dog not found';
+
+  let data = {
+    _id: dog._id,
+    dogName: dog.name,
+    gender: gender,
+    dateOfBirth: dateOfBirth,
+    heightWeight: heightWeight,
+    type: type, 
+    avatarId: avatarId,
+    photos: [],
+    comments: [],
+    owner:owner
+  }
 
   return dog
 }
@@ -131,12 +185,23 @@ async function updateTheDog(id, newDogData){
     updateDog.dogName = newDogData.dogName;
   }
 
+ 
   if (newDogData.gender){
     updateDog.gender = newDogData.gender;
   }
 
   if (newDogData.dateOfBirth){
-    updateDog.height = newDogData.height;
+    dateOfBirth = Date.parse(newDogData.dateOfBirth);
+    if (isNaN(dateOfBirth)) throw "dateOfBirth is invalid";
+    dateOfBirth = new Date(dateOfBirth);
+  
+    let today = new Date();
+    
+    if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) throw `Please input a real birth date of your dog`;
+  // Dog age should less than 35 and greater than 0
+    let formatted_date = dateOfBirth.getFullYear() + "-" + (dateOfBirth.getMonth() + 1) + "-" + dateOfBirth.getDate();
+   
+    updateDog.dateOfBirth = formatted_date;
   }
 
   // if (newDogData.heightWeight){
@@ -276,20 +341,6 @@ async function removePhotos(dogId, photoIds){
   return getDog(dogId);
 }
 
-async function updateHeightWeightOfDog(id, newHeightWeight){
-  // A function just add a new height and weight
-  if (!id) throw "Your input id is not exist.";
-  isString(id);
-  const dogsCollection = await dogs();
-
-  parsedId = ObjectId.createFromHexString(id);
-
-  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$addToSet: {heightWeight: newHeightWeight}});
-  if (updateInfo.modifiedCount === 0) {
-    throw "Could not update the dog successfully";
-  }
-  return await this.getDog(id);
-}
 
 async function getAllComments(dogId){
   // Get all comments of this dog

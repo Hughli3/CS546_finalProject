@@ -13,29 +13,34 @@ const saltRounds = 5;
 //========================================
 // Check input
 function isString (name){
-    if (name.constructor !== String){
-        throw `${name || "Provided string"} is not a string.`
-      }
+  if (name.constructor == String){
+      return true;
+    }else return false;
 }
 //========================================
-async function createANewUser(username, password, name, avatarId){
+async function createANewUser(username, password ){
     if (!username) throw "Your input username is not exist.";
     if (!password) throw "Your input password is not exist.";
     // if (!name) throw "Your input name is not exist.";
-    isString(username);
-    isString(password);
+   
+    if (!isString(username)) throw `Your input username is not a string`;
+
+    if (!isString(password)) throw `Your input password is not a string`;
     // isString(name);
    
-    
     const usersCollection = await users();
+    username = username.toLowerCase();
+    const findUser = await usersCollection.findOne({ username: username });
+    if (findUser) throw `this username already exist`;
+    
     const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
     // TODO change it to bcryptjs
     let newUser = {
-        username: username.toLowerCase(),
+        username: username,
         // username should be lower case
         password: bcryptjsPassword,
-        name:name,
-        avatarId:avatarId,
+  
+        avatarId:null,
         dogs:[],
         commments:[]
 
@@ -51,6 +56,8 @@ async function createANewUser(username, password, name, avatarId){
     
 }
 
+/*
+// no name data field any more 
 async function updateTheUser(id, newName){
     if (!id) throw "Your input id is not exist.";
     if (!newName) throw "Your input name is not exist.";
@@ -72,16 +79,19 @@ async function updateTheUser(id, newName){
   
     return await this.get(ObjectId(id).toString());
 }
+*/
 
 async function deleteTheUser(id){
     if (!id) throw "Your input id is not exist.";
-    isString(id);
+    if (!isString(id)) throw `Your input id is not a string`;
+
     const parsedId = ObjectId.createFromHexString(id);
 
     const usersCollection = await users();
 
 
     const removedData = await usersCollection.findOne({ _id: parsedId });
+    if (!removedData) throw `This user is not found.`
     const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
 
     if (deletionInfo.deletedCount === 0) {
@@ -116,8 +126,9 @@ async function deleteTheUser(id){
 async function changePassword(id, newPassword){
     if (!id) throw "Your input id is not exist.";
     if (!newPassword) throw "Your input password is not exist.";
-    isString(id);
-    isString(newPassword);
+    if (!isString(id)) throw `Your input id is not a string`;
+    if (!isString(newPassword)) throw `Your input newPassword is not a string`;
+    
     const parsedId = ObjectId.createFromHexString(id);
     const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);
     const usersCollection = await users();
@@ -125,7 +136,11 @@ async function changePassword(id, newPassword){
     const updateUserPassword = {
         password: newbcryptjsPassword
       };
-     
+    const originalData = await usersCollection.findOne({ _id: parsedId });
+    if (originalData.password === newbcryptjsPassword){
+      throw `You have to input a different password.`;
+    }
+
     const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPassword});
 
     if (updateInfo.modifiedCount === 0) {
@@ -137,7 +152,8 @@ async function changePassword(id, newPassword){
 
 async function getUser(id){
   if (!id) throw "Your input id is not exist.";
-  isString(id);
+  if (!isString(id)) throw `Your input id is not a string`;
+
   const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({ _id: parsedId });
@@ -162,7 +178,7 @@ async function updateProfilePhoto(id,  file){
 
   if (!id) throw "Your input id is not exist.";
  
-  isString(id);
+   if (!isString(id)) throw `Your input id is not a string`;
 
   if(!file) {
     throw `no file input`;
@@ -193,6 +209,9 @@ async function updateProfilePhoto(id,  file){
 async function comparepassword(username, password) {
   if (!username) throw "Your input id is not exist.";
   if (!password) throw "Your input password is not exist.";
+
+  if (!isString(username)) throw `Your input username is not a string`;
+  if (!isString(password)) throw `Your input password is not a string`;
 
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({username:username});
@@ -227,7 +246,7 @@ async function comparepassword(username, password) {
 // }
 module.exports = {
     createANewUser,
-    updateTheUser,
+    // updateTheUser,
     deleteTheUser,
     changePassword,
     getUser,
