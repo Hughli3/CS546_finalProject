@@ -88,6 +88,12 @@ const constructorMethod = (app) => {
     }
   });
 
+  function calculateAge(birthday) {
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
   app.get('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
 
@@ -98,14 +104,16 @@ const constructorMethod = (app) => {
         for (let comment of dog.comments) {
           comments.push(await commentData.getComments(comment));
         }
+
+        for (let comment of comments) {
+          comment.author = await usersData.getUser(comment.author);
+        }
         
         dog.currentWeight = dog.heightWeight[0].weight;
         dog.currentHeight = dog.heightWeight[0].height;
         dog.currentBMI = dog.currentWeight / dog.currentHeight;
+        dog.age = calculateAge(dog.dateOfBirth);
 
-        for (let comment of dog.comments) {
-          comments.push(await commentData.getComments(comment));
-        }
         data = {
           title: "Single Dog", 
           dog: dog,
@@ -212,7 +220,7 @@ const constructorMethod = (app) => {
     
     // let photoId = await imgData.createGridFS(req.file);
     // This line no need, moved into user.js updateProfilePhoto method
-    await usersData.updateProfilePhoto(req.session.userid, photoId.toString());
+    await usersData.updateProfilePhoto(req.session.userid, req.file);
     fs.unlinkSync(req.file.path);
 
     res.redirect('/profile');

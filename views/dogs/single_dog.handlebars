@@ -8,12 +8,11 @@
                 <a href="#">Change avatar</a>
             </div>
             <div class="col-8">
-                <h3>Name: {{ dog.dogName }}</h3>
-                <h3>Type: {{ dog.type }} Gender: {{ dog.gender }} Age: 17</h3>
-                <h3>Weight: {{ dog.currentWeight }} Height: {{ dog.currentHeight }} BMI: {{ dog.currentBMI }}</h3>
+                <h1>{{ dog.dogName }}</h3>
+                <h3>Type: {{ dog.type }} Gender: {{ dog.gender }} Age: {{ dog.age }} </h3>
 
                 <h2>Own by sadsad</h2>
-                <h2>Health condition: good</h2>
+
                 <button class="btn btn-primary">Edit</button>
             </div>
         </div>
@@ -24,6 +23,8 @@
 <section>
     <div class="container">
         <h1>Health</h1>
+        <h3>Weight: {{ dog.currentWeight }} Height: {{ dog.currentHeight }} BMI: {{ dog.currentBMI }}</h3>
+        <h3>Health condition: good</h2>
         <div class="row">
             <canvas class="col-lg-6" id="myChart1" height="350"></canvas>
             <canvas class="col-lg-6" id="myChart2" height="350"></canvas>
@@ -56,6 +57,12 @@
 <section>
     <div class="container">
         <h1>Comment</h1>
+        {{#each comments}}
+            <div class="comment">
+                <p>{{content}}</p>
+                <p>Author: {{author.username}}</p>
+            </div>
+        {{/each}}
         <form>
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Write a large text here ..."></textarea>
             <button class="btn btn-primary">Submit</button>
@@ -77,11 +84,7 @@
         <p>weight: {{this.weight}}</p>
     {{/each}}
         
-    {{#each comments}}
-        <h1>Comment</h1>
-        <p>{{content}}</p>
-        <p>{{author}}</p>
-    {{/each}}
+
 </main>
 
 <script src="/public/js/dogs.js"></script>
