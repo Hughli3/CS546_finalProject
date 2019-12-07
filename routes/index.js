@@ -88,8 +88,6 @@ const constructorMethod = (app) => {
     }
   });
 
- 
-
   app.get('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
 
@@ -100,9 +98,7 @@ const constructorMethod = (app) => {
           title: "Single Dog", 
           dog: dog,
           username : req.session.username,
-          comments : comments,
-          scripts : ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js",
-                    "/public/js/dogs.js"]}
+          comments : comments}
                   
         res.render('dogs/single_dog', data);
     } catch (e) {
@@ -125,16 +121,23 @@ const constructorMethod = (app) => {
 
   app.put('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
-
-    let dog = req.body.dog;
-    console.log(dog);
-    
+    let dog = req.body.dog;    
     try{
-        dog = await dogData.updateTheDog(dogId, dog);
-        res.json({ success: true, dog: dog });
+      dog = await dogData.updateDog(dogId, dog);
+      res.json({ status: "success", dog: dog });
+  
     } catch (e) {
-        res.json(e);
-        return;
+      res.json({status: "error", errorMessage: e});
+    }
+  });
+
+  app.post('/dog/:id/avatar', upload.single('avatar'), async (req, res) => {
+    let dogId = req.params.id;
+    try {
+      let dog = await dogData.updateAvatar(dogId, req.file);
+      res.json({status: "success", avatar: dog.avatar});
+    } catch (e) {
+      res.json({status: "error", errorMessage: e});
     }
   });
 

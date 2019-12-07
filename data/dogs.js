@@ -77,8 +77,8 @@ function validateDob(dob) {
 
 function validateImage(image) {
   if(!image) throw "image is undefinded";
-  if(file.mimetype.split("/")[0] != "image") {
-    fs.unlinkSync(file.path);
+  if(image.mimetype.split("/")[0] != "image") {
+    fs.unlinkSync(image.path);
     throw "file is not in proper type image";
   }
 }
@@ -138,7 +138,7 @@ async function updateDog(id, dog){
     name: dog.name,
     type: dog.type,
     gender: dog.gender,
-    dob: new Date(Date.parse(dob)) }
+    dob: new Date(Date.parse(dog.dob)) }
 
   const dogsCollection = await dogs();
   const parsedId = ObjectId.createFromHexString(id);
@@ -193,7 +193,7 @@ async function getDog(id){
   dog.owner = owner.username;
   dog.age = calculateAge(dog.dob);
   dog.dob = convertDateToString(dog.dob);
-
+  if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
   if(dog.heightWeight && dog.heightWeight.length) {
     dog.weight = dog.heightWeight[0].weight;
     dog.height = dog.heightWeight[0].height;
@@ -211,7 +211,7 @@ async function updateAvatar(id, file){
   const dogsCollection = await dogs(); 
   let parsedId = ObjectId.createFromHexString(id);  
   let photoId = await imgData.createGridFS(file);
-  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $Set: {avatar: photoId.toString()}});
+  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update avatar successfully";
 
   return await getDog(id);

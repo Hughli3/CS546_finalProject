@@ -1,6 +1,5 @@
-let ctx1 = document.getElementById('myChart1').getContext('2d');
-let ctx2 = document.getElementById('myChart2').getContext('2d');
-
+let weightChart = document.getElementById('weight-chart').getContext('2d');
+let heightChart = document.getElementById('height-chart').getContext('2d');
 new Chart(ctx1, {
     type: 'line',
     data: {
@@ -98,7 +97,9 @@ new Chart(ctx2, {
 
 
 (function($) {
+    var urlpath = window.location.pathname;
     let editDogForm = $("#edit-dog-form");
+    let updateAvatarForm = $("#update-avatar-form");
 
     let editDogButton = $("#edit-dog-profile-button");
     editDogButton.click(function() {
@@ -112,7 +113,7 @@ new Chart(ctx2, {
         event.preventDefault();
         $('#edit-dog-profile-modal').modal('toggle'); 
 
-        let requestConfig = {
+        $.ajax({
             method: "PUT",
             url: "",
             contentType: "application/json",
@@ -120,21 +121,46 @@ new Chart(ctx2, {
                 name: $("#edit-dog-form-name").val(),
                 type: $("#edit-dog-form-type").val(),
                 gender: $("#edit-dog-form-gender").val(),
-                dateOfBirth: $("#edit-dog-form-dob").val()
+                dob: $("#edit-dog-form-dob").val()
+            }}),
+            success: function(data){
+                if (data.status == "success") {
+                    $("#dog-name").text(data.dog.name);
+                    $("#dog-gender").text(data.dog.gender);
+                    $("#dog-dob").text(data.dog.dob);
+                    $("#dog-type").text(data.dog.type);
+                } else {
+                    console.log(data);
                 }
-            })
-        };
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
+    });
 
-        $.ajax(requestConfig).then(function(responseMessage) {
-            console.log(responseMessage);
+    updateAvatarForm.submit(function(event) {
+        event.preventDefault();
+        $('#update-avatar-modal').modal('toggle'); 
 
-            $("#dog-name").text(responseMessage.dog.dogName);
-            $("#dog-gender").text(responseMessage.dog.gender);
-            $("#dog-dob").text(responseMessage.dog.gender);
-
-            $("#dog-type").text(responseMessage.dog.type);
-        // newContent.html(responseMessage.message);
-        //                alert("Data Saved: " + msg);
+        $.ajax({
+            method: "POST",
+            url: urlpath + "/avatar",
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function(data){
+                if (data.status == "success") {
+                    $("#dog-avatar").attr("src", data.avatar);
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
         });
     });
   })(window.jQuery);

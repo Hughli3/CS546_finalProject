@@ -1,33 +1,35 @@
 <section class="section">
     <div class="container">
-       
         <div class="row">
             <div class="col-4">
-                <img src="/public/img/dog/1.jpg" class="card-img-top" alt="...">
-                <a href="#">Change avatar</a>
+                {{#if dog.avatar}}
+                <img src="{{ dog.avatar }}" id="dog-avatar" class="card-img-top" alt="dog's avatar">
+                {{else}}
+                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="card-img-top" alt="dog's avatar">
+                {{/if}}
+                <a href="#" data-toggle="modal" data-target="#update-avatar-modal">Change avatar</a>
             </div>
             <div class="col-8">
-                <h1><span id="dog-name">{{ dog.name }}</span></h3>
-                <h3>Type: <span id="dog-type">{{ dog.type }}</span></h3>
-                <h3>Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h3>
-                <h3>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h3>
+                <h1><span id="dog-name">{{ dog.name }}</span></h4>
+                <h4>Type: <span id="dog-type">{{ dog.type }}</span></h4>
+                <h4>Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h4>
+                <h4>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h4>
 
-                <h2>Own by sadsad</h2>
+                <h4>Owner: {{ dog.owner }}</h2>
 
                 <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
             </div>
         </div>
-       
     </div>
 </section>
 
 <section>
     <div class="container">
         <h1>Health</h1>
-        <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Add Weight/Height</button>
+        <button id="add-height-weight-button" class="btn btn-primary" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
         {{#if dog.heightWeight}}
-        <h3>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }}</h3>
-        <h3>Health condition: good</h2>
+        <h4>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }}</h4>
+        <h4>Health condition: good</h4>
         <div class="row">
             <canvas class="col-lg-6" id="myChart1" height="350"></canvas>
             <canvas class="col-lg-6" id="myChart2" height="350"></canvas>
@@ -35,7 +37,6 @@
         {{else}}
         <h3>Please update weight and height of the dog to see health data.</h3>
         {{/if}}
-
     </div>
 </section>
 
@@ -90,6 +91,7 @@
 
 </main>
 
+{{!-- modal for edit profile --}}
 <div class="modal fade" id="edit-dog-profile-modal" tabindex="-1" role="dialog" aria-labelledby="edit-dog-profile-modal" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
         <div class="modal-content">
@@ -115,15 +117,13 @@
                         <input name="edit-dog-form-gender" class="custom-control-input" id="edit-dog-form-gender-2" type="radio">
                         <label class="custom-control-label" for="edit-dog-form-gender-2">Female</label>
                     </div> --}}
-    <label for="inputGroupSelect01">Options</label>
-<select class="custom-select" id="inputGroupSelect01">
-    <option selected>Choose...</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </select>
-
-
+                    {{!-- <label for="inputGroupSelect01">Options</label> --}}
+            {{!-- <select class="custom-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select> --}}
                     <label for="edit-dog-form-gender">Gender</label>
                     <input type="text" id="edit-dog-form-gender" class="form-control" placeholder="gender" name="gender">
                     <label for="edit-dog-form-dob">Date of Birth</label>
@@ -141,10 +141,10 @@
     </div>
 </div>
 
+{{!-- modal for upload photo --}}
 <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -162,7 +162,66 @@
                 <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
             </div>
             </form>
-
         </div>
     </div>
 </div>
+
+{{!-- modal for add height weight --}}
+<div class="modal fade" id="add-height-weight-modal" tabindex="-1" role="dialog" aria-labelledby="add-height-weight-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="add-height-weight-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="add-height-weight-form-weight">Weight</label>
+                        <input type="text" id="add-height-weight-form-weight" class="form-control" placeholder="weight" name="weight">
+                        <label for="add-height-weight-form-height">Height</label>
+                        <input type="text" id="add-height-weight-form-height" class="form-control" placeholder="height" name="height">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- modal for update avatar --}}
+<div class="modal fade" id="update-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="update-avatar-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="update-avatar-form" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="file" class="btn btn-primary" name="avatar" accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#section 'script'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="/public/js/dogs.js"></script>
+{{/section}}
