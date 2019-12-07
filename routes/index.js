@@ -144,10 +144,9 @@ const constructorMethod = (app) => {
 
   app.put('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
-    let type = req.body.type;
-    let dog = {
-      type: type
-    }
+
+    let dog = req.body.dog;
+    console.log(dog);
     
     try{
         dog = await dogData.updateTheDog(dogId, dog);

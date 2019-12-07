@@ -7,12 +7,14 @@
                 <a href="#">Change avatar</a>
             </div>
             <div class="col-8">
-                <h1>{{ dog.dogName }}</h3>
-                <h3>Type: {{ dog.type }} Gender: {{ dog.gender }} Age: {{ dog.age }} </h3>
+                <h1><span id="dog-name">{{ dog.dogName }}</span></h3>
+                <h3>Type: <span id="dog-type">{{ dog.type }}</span></h3>
+                <h3>Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h3>
+                <h3>dateOfBirth: <span id="dog-dob">{{ dog.dateOfBirth }}</span></h3>
 
                 <h2>Own by sadsad</h2>
 
-                <button class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
+                <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
             </div>
         </div>
        
@@ -94,8 +96,33 @@
 
             <form id="edit-dog-form">
                 <div class="modal-body">
+                    <div class="form-group">
+                    <label for="edit-dog-form-name">Name</label>
+                    <input type="text" id="edit-dog-form-name" class="form-control" placeholder="name" name="name">
                     <label for="edit-dog-form-type">Type</label>
-                    <input type="text" id="edit-dog-form-type" class="" name="type">
+                    <input type="text" id="edit-dog-form-type" class="form-control" placeholder="type" name="type">
+                    {{!-- <div class="custom-control custom-radio mb-3">
+                        <input name="edit-dog-form-gender" class="custom-control-input" id="edit-dog-form-gender-1" type="radio">
+                        <label class="custom-control-label" for="edit-dog-form-gender-1">Male</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-3">
+                        <input name="edit-dog-form-gender" class="custom-control-input" id="edit-dog-form-gender-2" type="radio">
+                        <label class="custom-control-label" for="edit-dog-form-gender-2">Female</label>
+                    </div> --}}
+    <label for="inputGroupSelect01">Options</label>
+<select class="custom-select" id="inputGroupSelect01">
+    <option selected>Choose...</option>
+    <option value="1">One</option>
+    <option value="2">Two</option>
+    <option value="3">Three</option>
+  </select>
+
+
+                    <label for="edit-dog-form-gender">Gender</label>
+                    <input type="text" id="edit-dog-form-gender" class="form-control" placeholder="gender" name="gender">
+                    <label for="edit-dog-form-dob">Date of Birth</label>
+                    <input type="text" id="edit-dog-form-dob" class="form-control" placeholder="date of birth" name="dob">
+                    </div>
                 </div>
 
                 <div class="modal-footer">
