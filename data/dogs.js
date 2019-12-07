@@ -8,6 +8,7 @@ const ObjectId = require('mongodb').ObjectID;
 const fs = require('fs');
 
 // ======================================================
+// check input
 function validateHeightWeight (hw) {
   if (!hw) throw "heightWeight is undefinded";
   // if (! heightWeight instanceof Array) throw "Your input heightWeight is not an array.";
@@ -47,6 +48,11 @@ function validateName(name){
 function validateGender(gender){
   if (!gender) throw "gender is undefinded";
   if (gender.constructor !== String) throw "gender is not a string";
+  const genderType = new Set();
+ ["male", "female","other"].forEach(x => genderType.add(x));
+  if (!genderType.has(gender.toLowerCase())){
+    throw "Gender should be male, female or other";
+  }
 }
 
 
@@ -305,33 +311,6 @@ async function getAllComments(dogId){
   return allComments;
 }
 
-
-// async function getDogDetail(id){
-//   // TODO Get the dog owner name
-//   if (!id) throw "id is undefinded";
-//   if (!ObjectId.isValid(id)) throw "id is invalid";
-//   if (!isString(id)) id = id.toString();
-//   id = ObjectId.createFromHexString(id);
-
-//   const dogsCollection = await dogs();
-//   const dog = await dogsCollection.findOne({_id: id});
-//   if (!dog) throw 'dog not found';
-
-//   let data = {
-//     _id: dog._id,
-//     dogName: dog.name,
-//     gender: gender,
-//     dateOfBirth: dateOfBirth,
-//     heightWeight: heightWeight,
-//     type: type, 
-//     avatarId: avatarId,
-//     photos: [],
-//     comments: [],
-//     owner:owner
-//   }
-
-//   return dog
-// }
 
 module.exports = {
   addDog,
