@@ -143,6 +143,17 @@ const constructorMethod = (app) => {
     }
   });
 
+  app.post('/dog/:id/heightWeight', async (req, res) => {
+    let dogId = req.params.id;
+    let heightWeight = req.body.heightWeight;
+    try {
+      let dog = await dogData.addHeightWeight(dogId, heightWeight);
+      res.json({status: "success", dog: dog});
+    } catch (e) {
+      res.json({status: "error", errorMessage: e});
+    }
+  });
+
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
     let user = await usersData.getUser(req.session.userid);
