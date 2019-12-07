@@ -51,7 +51,7 @@ const constructorMethod = (app) => {
   }
 
   function dogPhotosPagination(data, pageNum) {
-    let showPerPage = 2;
+    let showPerPage = 4;
     const pageCount = Math.ceil(data.length / showPerPage);
     let page = parseInt(pageNum);
     if (!page || page <= 0) { page = 1;}
@@ -92,7 +92,7 @@ const constructorMethod = (app) => {
     try{
       let dogs = await dogData.getAllDogs();
 
-      let pageData = pagination(dogs, req.query.page, 2);
+      let pageData = pagination(dogs, req.query.page, 12);
       data = {
         title: "All Dogs",
         dogs : pageData.data,
@@ -185,8 +185,8 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/:id/photos', upload.single('avatar'), async (req, res) => {
-    let dogId = req.params.id;
     try{
+        let dogId = req.params.id;
         let dog = await dogData.getDog(dogId);
         let pagedData = dogPhotosPagination(dog.photos, req.query.page, 2);
 
@@ -197,17 +197,23 @@ const constructorMethod = (app) => {
         res.json({status: "success", photos: photos, isLastPage: pagedData.isLastPage});
     } catch (e) {
         res.json({status: "error", errorMessage: e});
-        return;
     }
   });
 
-  app.post("/dog/:id/photos", loginRequired, upload.single('photo'), async (req, res) => {
+  app.post("/dog/:id/photos", upload.single('photo'), async (req, res) => {
     try{
       let dogId = req.params.id;
-      await dogData.addPhotos(dogId, req.file);
-      res.redirect('/dog/' + dogId);
+      let dog = await dogData.addPhotos(dogId, req.file);
+  
+      let pagedData = dogPhotosPagination(dog.photos, 1);
+      let photos = [];
+      for (let photoId of pagedData.data) {
+        photos.push(await imgData.getPhotoDataId(photoId));
+      }
+
+      res.json({status: "success", photos: photos, isLastPage: pagedData.isLastPage});
     } catch(e) {
-      res.render('/dog/' + dogId, {error: e})
+      res.json({status: "error", errorMessage: e});
     }
   });
 

@@ -2,8 +2,9 @@ $(function() {
     let urlpath = window.location.pathname;
     let editDogForm = $("#edit-dog-form");
     let updateAvatarForm = $("#update-avatar-form");
-
+    let uploadPhotoForm = $("#upload-photo-form");
     let editDogButton = $("#edit-dog-profile-button");
+
     editDogButton.click(function() {
         $("#edit-dog-form-name").val($("#dog-name").text());
         $("#edit-dog-form-type").val($("#dog-type").text());
@@ -55,6 +56,36 @@ $(function() {
             success: function(data){
                 if (data.status == "success") {
                     $("#dog-avatar").attr("src", data.avatar);
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
+    });
+
+    uploadPhotoForm.submit(function(event) {
+        event.preventDefault();
+        $('#upload-photo-modal').modal('toggle'); 
+
+        $.ajax({
+            method: "POST",
+            url: urlpath + "/photos",
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function(data){
+                if (data.status == "success") {
+                    $("#photos").empty();
+                    for(let photo of data.photos) {
+                        $("#photos").append('<img class="col-3 my-3" src="' + photo + '" />');
+                    }
+                    if (data.isLastPage) $("#load-more-photos").hide();
+                    else $("#load-more-photos").show();
+                    $("#load-more-photos").attr("current-page", "1");
                 } else {
                     console.log(data);
                 }

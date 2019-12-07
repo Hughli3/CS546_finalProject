@@ -50,9 +50,11 @@
             {{/each}}
         </div>
 
-        {{#unless dog.isPhotoLastPage}}
+        {{#if dog.isPhotoLastPage}}
+        <button id="load-more-photos" style="display: none" current-page="1" class="btn btn-primary">Load More</button>
+        {{else}}
         <button id="load-more-photos" current-page="1" class="btn btn-primary">Load More</button>
-        {{/unless}}
+        {{/if}}
 
     </div>
 </section>
@@ -152,7 +154,7 @@
                 </button>
             </div>
 
-            <form method="POST" action="/dog/{{dog._id}}/photos" enctype="multipart/form-data">
+            <form id="upload-photo-form" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="file" class="btn btn-primary" name="photo" accept="image/*">
                 </div>

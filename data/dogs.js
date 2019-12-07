@@ -245,7 +245,7 @@ async function addHeightWeight(id, hw){
 
   const dogsCollection = await dogs();
   let parsedId = ObjectId.createFromHexString(id);
-  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$addToSet: {heightWeight: hw}});
+  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$push: {heightWeight: hw}});
   if (updateInfo.modifiedCount === 0) throw "Could not update the height/weight successfully";
   return await getDog(id);
 }
@@ -258,7 +258,9 @@ async function addPhotos(id, file){
   const dogsCollection = await dogs();
   let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
-  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $addToSet: {photos: photoId.toString()}});
+  fs.unlinkSync(file.path);
+  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, 
+                          { $push: {photos: { $each: [ photoId.toString() ], $position: 0}}});
   if (updateInfo.modifiedCount === 0) throw "could not add a new photo successfully";
 
   return await getDog(id);
