@@ -1,19 +1,23 @@
-<section class="section">
+<section class="my-5">
+    <div class="container">    
+        <div class="row">
+            <div class="col-3">
+                {{#if user.avatar}}
+                    <img src="{{user.avatar}}" class="img-fluid rounded-circle" alt="1" width="300">
+                {{else}}
+                    <img src="/public/img/dog/1.jpg" class="img-fluid rounded-circle" alt="1" width="300">
+                {{/if}}
+            </div>
+            <div class="col-9">
+                <h1>{{user.username}}</h1>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modal-default">Change avatar</a>
+                <button class="btn btn-primary" data-toggle="" data-target="">Change password</a>
+            </div>   
+    </div>
+</section>
+
+<section class="my-5">
     <div class="container">
-        <h1>{{user.username}}</h1>
-        
-        {{#if user.avatar}}
-            <img src="{{user.avatar}}" alt="1" width="300">
-        {{else}}
-            <img src="/public/img/dog/1.jpg" alt="1" width="300">
-        {{/if}}
-        
-        <a href="#" data-toggle="modal" data-target="#modal-default">Change avatar</a>
-
-
-        {{#if error}}
-            <p class="error">{{ error }}</p>
-        {{/if}}
         <h1>Your dogs</h1>
 
         <div class="row">

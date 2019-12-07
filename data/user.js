@@ -191,6 +191,7 @@ async function updateProfilePhoto(id,  file){
   } 
   
   let photoId = await imgData.createGridFS(file);
+  fs.unlinkSync(file.path);
 
   const parsedId = ObjectId.createFromHexString(id);
 

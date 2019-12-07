@@ -1,14 +1,19 @@
 <section class="section">
   <div class="container">
+    <h1 class="mb-5">All dogs</h1>
     <div class="row">
       {{#each dogs}}
       <div class="col-md-3 mb-4">
           <div class="card">
               <a href="/dog/{{_id}}" >
+                {{#if avatar}}
+                <img src="{{ avatar }}" class="card-img-top" alt="Dog profile photo">
+                {{else}}
                 <img src="/public/img/dog/1.jpg" class="card-img-top" alt="Dog profile photo">
+                {{/if}}
                 <div class="card-body">
-                    <h1 class="card-title display-4">{{name}}</h1>
-                    <p class="card-text">{{type}} {{gender}}</p>
+                    <h2 class="display-4">{{name}}</h2>
+                    <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>
                 </div>
               </a>
           </div>

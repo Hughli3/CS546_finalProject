@@ -5,12 +5,12 @@ const comments = mongoCollections.comments;
 const imgData = require("./img");
 const commentData = require("./comments");
 const ObjectId = require('mongodb').ObjectID;
+const fs = require('fs');
 
 // ======================================================
 // check input
 function validateHeightWeight (hw) {
   if (!hw) throw "heightWeight is undefinded";
-  // if (! heightWeight instanceof Array) throw "Your input heightWeight is not an array.";
   validateHeight(hw.height);
   validateWeight(hw.weight);
 }
@@ -76,7 +76,7 @@ function validateDob(dob) {
   let today = new Date();
   if (!dob) throw "date of birth is undefinded";
   if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
-  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35) 
+  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35)
     throw "date of birth is invalid, dog age should less than 35 and greater than 0";
 }
 
@@ -108,10 +108,10 @@ async function addDog(name, gender, dob, type, owner){
   validateDob(dob);
   validateType(type);
   validateOwner(owner);
-  
+
   let dog = {
     name: name,
-    type: type, 
+    type: type,
     gender: gender,
     dob: new Date(Date.parse(dob)),
     avatar: null,
@@ -180,6 +180,11 @@ async function getAllDogs(){
   const allDogs = await dogsCollection.find().toArray();
   if (!allDogs) throw 'no dog found';
 
+  for(let dog of allDogs) {
+    if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
+    dog.age = calculateAge(dog.dob);
+  }
+
   return allDogs;
 }
 
@@ -191,7 +196,7 @@ async function getDog(id){
   let parsedId = ObjectId.createFromHexString(id);
   const dog = await dogsCollection.findOne({_id: parsedId});
   if (!dog) throw "dog not found";
-  
+
   const usersCollection = await users();
   const owner = await usersCollection.findOne({_id: ObjectId.createFromHexString(dog.owner)});
   if (!owner) throw "owner not found";
@@ -205,15 +210,15 @@ async function getDog(id){
     dog.weightList = [], dog.bmiList = [], dog.healthDateList = [];
     dog.weight = dog.heightWeight[0].weight;
     dog.height = dog.heightWeight[0].height;
-    dog.bmi = dog.weight / (dog.height * dog.height );
+    dog.bmi = Math.round(dog.weight / dog.height * 100) / 100;
     dog.lastHeightWeightUpdate = convertDateToString(dog.heightWeight[0].date);
     for (let hw of dog.heightWeight) {
       dog.weightList.push(hw.weight);
-      dog.bmiList.push(hw.weight / hw.height);
+      dog.bmiList.push(Math.round(hw.weight / hw.height * 100) / 100);
       dog.healthDateList.push(convertDateToString(hw.date));
     }
   }
-  
+
   return dog;
 }
 
@@ -222,9 +227,10 @@ async function updateAvatar(id, file){
   validateId(id);
   validateImage(file);
 
-  const dogsCollection = await dogs(); 
-  let parsedId = ObjectId.createFromHexString(id);  
+  const dogsCollection = await dogs();
+  let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
+  fs.unlinkSync(file.path);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update avatar successfully";
 
@@ -288,7 +294,7 @@ async function getAllComments(dogId){
 
   let allComments = [];
   if (!dog.comments || !dog.comments.length) return [];
-  
+
   for (let commentId of dog.comments){
     let parsedCommentId = ObjectId.createFromHexString(commentId);
     let comment = await commentsCollection.findOne({_id:parsedCommentId})
@@ -322,4 +328,3 @@ module.exports = {
   removePhotos,
   getAllComments
 }
-

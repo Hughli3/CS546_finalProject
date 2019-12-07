@@ -93,6 +93,7 @@ const constructorMethod = (app) => {
 
     try{
         let dog = await dogData.getDog(dogId);
+        console.log(dog);
         let comments = await dogData.getAllComments(dogId);
 
         data = {
@@ -235,7 +236,6 @@ const constructorMethod = (app) => {
     // let photoId = await imgData.createGridFS(req.file);
     // This line no need, moved into user.js updateProfilePhoto method
     await usersData.updateProfilePhoto(req.session.userid, req.file);
-    fs.unlinkSync(req.file.path);
 
     res.redirect('/profile');
   });
