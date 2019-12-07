@@ -4,7 +4,7 @@ const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const dogs = mongoCollections.dogs;
 const commments = mongoCollections.comments;
-const { ObjectId } = require("mongodb");
+const ObjectId = require('mongodb').ObjectID;
 const imgData = require("../data/img");
 const dogData = require("../data/dogs");
 const bcryptjs = require("bcryptjs");
@@ -22,10 +22,6 @@ function validateUsername(username){
   if (!username) throw "username is undefinded";
   if (username.constructor !== String) throw "username is not of the proper type";
   if (username.length < 4 ) throw "username too short";
-  const usersCollection = await users();
-  username = username.toLowerCase();
-  const findUser = await usersCollection.findOne({ username: username });
-  if (findUser) throw "username already exists";
 }
 
 function validatePassword(password){
@@ -33,11 +29,24 @@ function validatePassword(password){
   if (password.constructor !== String) throw "password is not of the proper type";
   if (password.length < 6 ) throw "usernapasswordme too short";
 }
+
+function validateImage(image) {
+  if(!image) throw "image is undefinded";
+  if(image.mimetype.split("/")[0] != "image") {
+    fs.unlinkSync(image.path);
+    throw "file is not in proper type image";
+  }  
+}
 //========================================
 async function addUser(username, password){
-  validUsername(username);
-  validPassword(password);
-  
+  validateUsername(username);
+  validatePassword(password);
+
+  const usersCollection = await users();
+  username = username.toLowerCase();
+  const findUser = await usersCollection.findOne({ username: username });
+  if (findUser) throw "username already exists";
+
   const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
   let user = {
       username: username.toLowerCase(),
@@ -67,7 +76,7 @@ async function getUser(id){
   }
   userInfo.dogs = dogslist;
 
-  if (userInfo.avatarId) {
+  if (userInfo.avatar) {
     let avatar = await imgData.getPhotoDataId(userInfo.avatar);
     userInfo.avatar = avatar;
   }
@@ -75,99 +84,82 @@ async function getUser(id){
   return userInfo;
 }
 
-
-async function removeUser(id){
-    validateId(id);
-
-    const usersCollection = await users();
-    const parsedId = ObjectId.createFromHexString(id);
-    const removedData = await usersCollection.findOne({ _id: parsedId });
-    if (!removedData) throw "This user is not found.";
-
-    const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
-    if (deletionInfo.deletedCount === 0) throw `Could not delete user with id of ${id}`;
-  
-    const dogsCollection = await dogs();
-    let dogDeletionInfo = await dogsCollection.remove({ owner: id});
-    if (dogDeletionInfo.deletedCount === 0) throw `Could not delete dog with owner id of ${id}`;
-
-    const commmentsCollection = await commments();
-    let commmentDeletionInfo = await commmentsCollection.remove({ author: id});
-    if (commmentDeletionInfo.deletedCount === 0) throw `Could not delete comment with author id of ${id}`;
-    
-    //TODO delete user avatar, dog avatar, dog photo
-    return removedData;
-}
-
 async function changePassword(id, newPassword){
-    validateId(id);
-    validPassword(passnewPasswordword);
-    
-    const parsedId = ObjectId.createFromHexString(id);
-    const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);
-    const usersCollection = await users();
-
-    const updateUserPassword = {
-        password: newbcryptjsPassword
-      };
-    const originalData = await usersCollection.findOne({ _id: parsedId });
-    if (originalData.password === newbcryptjsPassword){
-      throw `You have to input a different password.`;
-    }
-
-    const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPassword});
-
-    if (updateInfo.modifiedCount === 0) {
-        throw "Could not update user password successfully";
-      }
+  validateId(id);
+  validatePassword(passnewPasswordword);
   
-    return await getUser(id);
-}
-
-async function updateProfilePhoto(id,  file){
-
-  if (!id) throw "Your input id is not exist.";
- 
-   if (!isString(id)) throw `Your input id is not a string`;
-
-  if(!file) {
-    throw `no file input`;
-  } else if(file.mimetype.split("/")[0] != "image") {
-    fs.unlinkSync(file.path);
-    throw `type error, image only`;
-  } 
-  
-  let photoId = await imgData.createGridFS(file);
-  fs.unlinkSync(file.path);
-
   const parsedId = ObjectId.createFromHexString(id);
-
+  const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);
   const usersCollection = await users();
 
-  const updateUserPhoto = {
-    avatarId: photoId.toString()
-  };
-   
-  const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPhoto});
+  const updateUserPassword = {
+      password: newbcryptjsPassword
+    };
+  const originalData = await usersCollection.findOne({ _id: parsedId });
+  if (originalData.password === newbcryptjsPassword){
+    throw `You have to input a different password.`;
+  }
+
+  const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUserPassword});
 
   if (updateInfo.modifiedCount === 0) {
-      throw "Could not update user avatar successfully";
-  }
+      throw "Could not update user password successfully";
+    }
 
   return await getUser(id);
 }
 
-async function comparepassword(username, password) {
-  validUsername(username);
-  validPassword(password);
+async function updateAvatar(id, file){
+  validateId(id);
+  validateImage(file);
+
+  let photoId = await imgData.createGridFS(file);
+  fs.unlinkSync(file.path);
+   
+  const usersCollection = await users();
+  const parsedId = ObjectId.createFromHexString(id);
+  const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
+  if (updateInfo.modifiedCount === 0) throw "Could not update user avatar successfully";
+
+  return await getUser(id);
+}
+
+async function comparePassword(username, password) {
+  validateUsername(username);
+  validatePassword(password);
 
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({username:username});
   if (!userInfo) throw 'invalid username/password';
+
   const isCorrect = await bcryptjs.compare(password, userInfo.password);
   if (!isCorrect) throw 'invalid username/password';
-  return {isCorect: isCorrect, userid: userInfo._id, username: userInfo.username};
+
+  return {userid: userInfo._id, username: userInfo.username};
 }
+
+// async function removeUser(id){
+//     validateId(id);
+
+//     const usersCollection = await users();
+//     const parsedId = ObjectId.createFromHexString(id);
+//     const removedData = await usersCollection.findOne({ _id: parsedId });
+//     if (!removedData) throw "This user is not found.";
+
+//     const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
+//     if (deletionInfo.deletedCount === 0) throw `Could not delete user with id of ${id}`;
+  
+//     const dogsCollection = await dogs();
+//     let dogDeletionInfo = await dogsCollection.remove({ owner: id});
+//     if (dogDeletionInfo.deletedCount === 0) throw `Could not delete dog with owner id of ${id}`;
+
+//     const commmentsCollection = await commments();
+//     let commmentDeletionInfo = await commmentsCollection.remove({ author: id});
+//     if (commmentDeletionInfo.deletedCount === 0) throw `Could not delete comment with author id of ${id}`;
+    
+//     //TODO delete user avatar, dog avatar, dog photo
+//     return removedData;
+// }
 
 // async function getAllDogs(userId){
 //   // return all dogs of this user 
@@ -221,10 +213,10 @@ async function updateTheUser(id, newName){
 module.exports = {
     addUser,
     getUser,
-    removeUser,
+    updateAvatar,
     changePassword,
-    updateProfilePhoto,
-    comparepassword,
+    comparePassword,
+    // removeUser,
     // updateTheUser,
     // getAllDogs
   }

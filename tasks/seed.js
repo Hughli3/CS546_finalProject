@@ -18,7 +18,7 @@ const main = async () => {
         avatarId: null
     }
 
-    const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
+    const userOne = await userData.addUser(user.username, user.password);
     console.log("user created");
     // =================================
     //  Create a dog

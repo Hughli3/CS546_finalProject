@@ -52,7 +52,7 @@ const constructorMethod = (app) => {
 
   async function login(req) {
     try {
-      const compareResult = await usersData.comparepassword(req.body.username, req.body.password);
+      const compareResult = await usersData.comparePassword(req.body.username, req.body.password);
       req.session.userid = compareResult.userid;
       req.session.username = compareResult.username;
     } catch (e) {
@@ -105,7 +105,7 @@ const constructorMethod = (app) => {
           username : req.session.username,
           comments : comments
         }
-                  
+
         res.render('dogs/single_dog', data);
     } catch (e) {
         res.json({error: e});
@@ -160,13 +160,17 @@ const constructorMethod = (app) => {
 
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
-    let user = await usersData.getUser(req.session.userid);
-    data = {
-      title: "Profile",
-      username : req.session.username,
-      user
+    try {
+      let user = await usersData.getUser(req.session.userid);
+      data = {
+        title: "Profile",
+        username : req.session.username,
+        user
+      }
+      res.render('profile', data);
+    } catch (e) {
+      res.render('profile', {error: e});
     }
-    res.render('profile', data);
   });
 
   app.get('/signup', notLoginRequired, async (req, res) => {
@@ -241,6 +245,16 @@ const constructorMethod = (app) => {
     await usersData.updateProfilePhoto(req.session.userid, req.file);
 
     res.redirect('/profile');
+  });
+
+  app.post('/user/:id/avatar', upload.single('avatar'), async (req, res) => {
+    let userId = req.params.id;
+    try {
+      let user = await usersData.updateAvatar(userId, req.file);
+      res.json({status: "success", avatar: user.avatar});
+    } catch (e) {
+      res.json({status: "error", errorMessage: e});
+    }
   });
   
   app.use('*', function(req, res) {

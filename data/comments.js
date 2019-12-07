@@ -71,7 +71,7 @@ async function createComments(content, author, dog){
     const dogUpdateInfo = await dogsCollection.updateOne({ _id: parsedDog }, {$addToSet: {comments: ObjectId(newId).toString()}});
     if (dogUpdateInfo.modifiedCount === 0) throw "Could not add comment to the dog";
 
-    const comment =  await this.getComments(ObjectId(newId).toString());
+    const comment =  await getComment(ObjectId(newId).toString());
     return comment;
 }
 
