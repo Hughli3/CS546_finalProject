@@ -5,6 +5,7 @@ const comments = mongoCollections.comments;
 const imgData = require("./img");
 const commentData = require("./comments");
 const ObjectId = require('mongodb').ObjectID;
+const fs = require('fs');
 
 // ======================================================
 function validateHeightWeight (hw) {
@@ -207,7 +208,7 @@ async function getDog(id){
       dog.healthDateList.push(convertDateToString(hw.date));
     }
   }
-  
+
   return dog;
 }
 
@@ -219,6 +220,7 @@ async function updateAvatar(id, file){
   const dogsCollection = await dogs(); 
   let parsedId = ObjectId.createFromHexString(id);  
   let photoId = await imgData.createGridFS(file);
+  fs.unlinkSync(file.path);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update avatar successfully";
 
