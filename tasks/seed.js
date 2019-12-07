@@ -38,8 +38,7 @@ const main = async () => {
     console.log("dog created");
     // let date = new Date();
     
-//   date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
-//     console.log(date);
+
     let dogId = dog._id.toString()
 
     for (let i = 0; i < 20; i++) {

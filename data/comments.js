@@ -15,6 +15,16 @@ function isString (name){
       }else return false;
 }
 
+function convertDateToString(date) {
+  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+}
+
+function validateId(id){
+  if (!id) throw "id is undefinded";
+  if (id.constructor !== String) throw "id is not a string";
+  if (!ObjectId.isValid(id)) throw "id is invalid";
+}
+
 //========================================
 // body functions here
 
@@ -25,7 +35,7 @@ async function createComments(content, author, dog){
   const commentsCollection = await comments();
 
   let date = new Date();
-  formated_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+  let formated_date = convertDateToString(date);
   let newComment = {
     content:content,
     author:author,
@@ -66,9 +76,7 @@ async function createComments(content, author, dog){
 }
 
 async function updateComments(id){
-  if (!id) throw "Your input id is not exist.";
-
-  if (!isString(id)) throw `Your input id is not a string`;
+  validateId(id);
 
   const parsedId = ObjectId.createFromHexString(id);
 
@@ -88,9 +96,8 @@ async function updateComments(id){
 }
 
 async function deleteComments(id){
-  if (!id) throw "Your input id is not exist.";
+  validateId(id);
 
-  if (!isString(id)) throw `Your input id is not a string`;
   parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
 
@@ -126,9 +133,8 @@ return comment;
 }
 
 async function getComments(id){
-  if (!id) throw "Your input id is not exist.";
+  validateId(id);
 
-  if (!isString(id)) throw `Your input id is not a string`;
   parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
 
@@ -142,7 +148,7 @@ async function getComments(id){
 async function getAllComments(){
   const commentsCollection = await comments();
 
-  const comment = await commentsCollection.find();
+  const comment = await commentsCollection.find().toArray();
   if (comment == null) throw `Could not find the comments`;
 
   return comment
@@ -150,6 +156,7 @@ async function getAllComments(){
 
 
 async function deleteAllComments(ids){
+  // delete all comments
   const commentsCollection = await comments();
   const usersCollection = await users();
   const dogsCollection = await dogs();

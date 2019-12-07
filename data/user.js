@@ -12,21 +12,29 @@ const fs = require("fs");
 const saltRounds = 5;
 //========================================
 // Check input
-function isString (name){
-  if (name.constructor == String){
-      return true;
-    }else return false;
+function validateId(id){
+  if (!id) throw "id is undefinded";
+  if (id.constructor !== String) throw "id is not a string";
+  if (!ObjectId.isValid(id)) throw "id is invalid";
+}
+
+function validUsername(username){
+  if (!username) throw "username is undefinded";
+  if (username.constructor !== String) throw "username is not of the proper type";
+  if (username.length < 4 ) throw "username too short";
+
+}
+
+function validPassword(password){
+  if (!password) throw "password is undefinded";
+  if (password.constructor !== String) throw "password is not of the proper type";
+  if (password.length < 6 ) throw "usernapasswordme too short";
+
 }
 //========================================
 async function createANewUser(username, password ){
-    if (!username) throw "Your input username is not exist.";
-    if (!password) throw "Your input password is not exist.";
-    // if (!name) throw "Your input name is not exist.";
-   
-    if (!isString(username)) throw `Your input username is not a string`;
-
-    if (!isString(password)) throw `Your input password is not a string`;
-    // isString(name);
+    validUsername(username);
+    validPassword(password);
    
     const usersCollection = await users();
     username = username.toLowerCase();
@@ -34,12 +42,11 @@ async function createANewUser(username, password ){
     if (findUser) throw `this username already exist`;
     
     const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
-    // TODO change it to bcryptjs
+    
     let newUser = {
         username: username,
         // username should be lower case
         password: bcryptjsPassword,
-  
         avatarId:null,
         dogs:[],
         commments:[]
@@ -82,8 +89,7 @@ async function updateTheUser(id, newName){
 */
 
 async function deleteTheUser(id){
-    if (!id) throw "Your input id is not exist.";
-    if (!isString(id)) throw `Your input id is not a string`;
+    validateId(id);
 
     const parsedId = ObjectId.createFromHexString(id);
 
@@ -124,10 +130,8 @@ async function deleteTheUser(id){
 }
 
 async function changePassword(id, newPassword){
-    if (!id) throw "Your input id is not exist.";
-    if (!newPassword) throw "Your input password is not exist.";
-    if (!isString(id)) throw `Your input id is not a string`;
-    if (!isString(newPassword)) throw `Your input newPassword is not a string`;
+    validateId(id);
+    validPassword(passnewPasswordword);
     
     const parsedId = ObjectId.createFromHexString(id);
     const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);
@@ -151,8 +155,7 @@ async function changePassword(id, newPassword){
 }
 
 async function getUser(id){
-  if (!id) throw "Your input id is not exist.";
-  if (!isString(id)) throw `Your input id is not a string`;
+  validateId(id);
 
   const parsedId = ObjectId.createFromHexString(id);
   const usersCollection = await users();
@@ -207,11 +210,8 @@ async function updateProfilePhoto(id,  file){
 }
 
 async function comparepassword(username, password) {
-  if (!username) throw "Your input id is not exist.";
-  if (!password) throw "Your input password is not exist.";
-
-  if (!isString(username)) throw `Your input username is not a string`;
-  if (!isString(password)) throw `Your input password is not a string`;
+  validUsername(username);
+  validPassword(password);
 
   const usersCollection = await users();
   const userInfo = await usersCollection.findOne({username:username});

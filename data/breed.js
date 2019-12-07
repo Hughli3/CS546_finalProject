@@ -135,6 +135,6 @@ const breedType = {
 'Wirehaired_pointing_griffon': null,
 'Xoloitzcuintli': null,
 'Yorkshire_terrier': null}
-module.exports = [
+module.exports = {
     breedType
-  ];
+};
