@@ -63,8 +63,9 @@
         <h1>Comment</h1>
         {{#each comments}}
             <div class="card comment">
+                <img src="{{author.avatarId}}">
                 <p>{{content}}</p>
-                <p>Author: {{author}} 2019-2-2</p>
+                <p>Author: {{author.username}} 2019-2-2</p>
             </div>
         {{/each}}
         <form>

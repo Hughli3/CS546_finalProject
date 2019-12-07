@@ -132,17 +132,23 @@ async function deleteComments(id){
 return comment;
 }
 
-async function getComments(id){
+async function getComment(id){
   validateId(id);
 
-  parsedId = ObjectId.createFromHexString(id);
+  let parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
 
   const comment = await commentsCollection.findOne({_id:parsedId});
-  if (comment == null) throw `Could not find the comment with id of ${parsedId}`;
+  if (comment == null) throw `could not find the comment with id of ${parsedId}`;
 
+  let parsedUserId = ObjectId.createFromHexString(comment.author);
+  const usersCollection = await users();
+  const userInfo = await usersCollection.findOne({ _id: parsedUserId });
+  if (userInfo == null) throw "could not find author successfully";
 
-  return comment
+  comment.author = userInfo;
+
+  return comment;
 }
 
 async function getAllComments(){
@@ -195,7 +201,7 @@ module.exports = {
   createComments,
   updateComments,
   deleteComments,
-  getComments,
+  getComment,
   getAllComments,
   deleteAllComments
   }

@@ -18,75 +18,63 @@ function validateId(id){
   if (!ObjectId.isValid(id)) throw "id is invalid";
 }
 
-function validUsername(username){
+function validateUsername(username){
   if (!username) throw "username is undefinded";
   if (username.constructor !== String) throw "username is not of the proper type";
   if (username.length < 4 ) throw "username too short";
-
+  const usersCollection = await users();
+  username = username.toLowerCase();
+  const findUser = await usersCollection.findOne({ username: username });
+  if (findUser) throw "username already exists";
 }
 
-function validPassword(password){
+function validatePassword(password){
   if (!password) throw "password is undefinded";
   if (password.constructor !== String) throw "password is not of the proper type";
   if (password.length < 6 ) throw "usernapasswordme too short";
-
 }
 //========================================
-async function createANewUser(username, password ){
-    validUsername(username);
-    validPassword(password);
-   
-    const usersCollection = await users();
-    username = username.toLowerCase();
-    const findUser = await usersCollection.findOne({ username: username });
-    if (findUser) throw `this username already exist`;
-    
-    const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
-    
-    let newUser = {
-        username: username,
-        // username should be lower case
-        password: bcryptjsPassword,
-        avatarId:null,
-        dogs:[],
-        commments:[]
-
-    }
-
-    const insertInfo = await usersCollection.insertOne(newUser);
-    if (insertInfo.insertedCount === 0) throw "Could not create a new user";
-    else return getUser(insertInfo.insertedId.toString())
-    // const newId = insertInfo.insertedId;
-
-    // const theNewUser =  await this.get(ObjectId(newId).toString());
-    // return theNewUser;
-    
-}
-
-/*
-// no name data field any more 
-async function updateTheUser(id, newName){
-    if (!id) throw "Your input id is not exist.";
-    if (!newName) throw "Your input name is not exist.";
-    isString(id);
-    isString(newName);
-    const parsedId = ObjectId.createFromHexString(id);
-
-    const usersCollection = await users();
-
-    const updateUser = {
-        name: newName
-      };
-     
-    const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUser});
-
-    if (updateInfo.modifiedCount === 0) {
-        throw "Could not update user successfully";
-      }
+async function addUser(username, password){
+  validUsername(username);
+  validPassword(password);
   
-    return await this.get(ObjectId(id).toString());
+  const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
+  let user = {
+      username: username.toLowerCase(),
+      password: bcryptjsPassword,
+      avatar: null,
+      dogs: [],
+      commments: []}
+
+  const insertInfo = await usersCollection.insertOne(user);
+  if (insertInfo.insertedCount === 0) throw "Could not create a new user";
+  
+  return getUser(insertInfo.insertedId.toString());
 }
-*/
+
+
+async function getUser(id){
+  validateId(id);
+
+  const usersCollection = await users();
+  const parsedId = ObjectId.createFromHexString(id);
+  const userInfo = await usersCollection.findOne({ _id: parsedId });
+  if (userInfo == null) throw "Could not find user successfully";
+
+  let dogslist = [];
+  for (let dog of userInfo.dogs) {
+    dogslist.push(await dogData.getDog(dog));
+  }
+  userInfo.dogs = dogslist;
+
+  if (userInfo.avatarId) {
+    let avatar = await imgData.getPhotoDataId(userInfo.avatar);
+    userInfo.avatar = avatar;
+  }
+  
+  return userInfo;
+}
+
 
 async function deleteTheUser(id){
     validateId(id);
@@ -152,29 +140,6 @@ async function changePassword(id, newPassword){
       }
   
     return await getUser(id);
-}
-
-async function getUser(id){
-  validateId(id);
-
-  const parsedId = ObjectId.createFromHexString(id);
-  const usersCollection = await users();
-  const userInfo = await usersCollection.findOne({ _id: parsedId });
-  if (userInfo == null) {
-      throw "Could not find user successfully";
-  }
-  let dogslist = [];
-  for (let dog of userInfo.dogs) {
-    dogslist.push(await dogData.getDog(dog));
-  }
-  userInfo.dogs = dogslist;
-
-  if (userInfo.avatarId) {
-    let getPhoto = await imgData.getPhotoDataId(userInfo.avatarId);
-    userInfo.avatar = getPhoto;
-  }
-  
-  return userInfo
 }
 
 async function updateProfilePhoto(id,  file){
@@ -245,14 +210,40 @@ async function comparepassword(username, password) {
 //   return allDogs;
   
 // }
+
+
+/*
+// no name data field any more 
+async function updateTheUser(id, newName){
+    if (!id) throw "Your input id is not exist.";
+    if (!newName) throw "Your input name is not exist.";
+    isString(id);
+    isString(newName);
+    const parsedId = ObjectId.createFromHexString(id);
+
+    const usersCollection = await users();
+
+    const updateUser = {
+        name: newName
+      };
+     
+    const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUser});
+
+    if (updateInfo.modifiedCount === 0) {
+        throw "Could not update user successfully";
+      }
+  
+    return await this.get(ObjectId(id).toString());
+}
+*/
 module.exports = {
-    createANewUser,
-    // updateTheUser,
+    addUser,
+    getUser,
     deleteTheUser,
     changePassword,
-    getUser,
     updateProfilePhoto,
     comparepassword,
+    // updateTheUser,
     // getAllDogs
   }
   

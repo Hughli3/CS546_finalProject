@@ -94,8 +94,11 @@ const constructorMethod = (app) => {
     try{
         let dog = await dogData.getDog(dogId);
         console.log(dog);
-        let comments = await dogData.getAllComments(dogId);
-
+        comments = [];
+        for(let commentId of dog.comments){
+          comments.push(await commentData.getComment(commentId));
+        }
+        
         data = {
           title: "Single Dog", 
           dog: dog,
@@ -112,7 +115,7 @@ const constructorMethod = (app) => {
 
   app.delete('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
-
+ 
     try{
         await dogData.deleteTheDog(dogId);
         res.redirect('/profile');
