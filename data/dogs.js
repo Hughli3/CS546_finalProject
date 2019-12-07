@@ -11,7 +11,6 @@ const fs = require('fs');
 // check input
 function validateHeightWeight (hw) {
   if (!hw) throw "heightWeight is undefinded";
-  // if (! heightWeight instanceof Array) throw "Your input heightWeight is not an array.";
   validateHeight(hw.height);
   validateWeight(hw.weight);
 }
@@ -181,6 +180,11 @@ async function getAllDogs(){
   const allDogs = await dogsCollection.find().toArray();
   if (!allDogs) throw 'no dog found';
 
+  for(let dog of allDogs) {
+    if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
+    dog.age = calculateAge(dog.dob);
+  }
+
   return allDogs;
 }
 
@@ -206,11 +210,11 @@ async function getDog(id){
     dog.weightList = [], dog.bmiList = [], dog.healthDateList = [];
     dog.weight = dog.heightWeight[0].weight;
     dog.height = dog.heightWeight[0].height;
-    dog.bmi = dog.weight / dog.height;
+    dog.bmi = Math.round(dog.weight / dog.height * 100) / 100;
     dog.lastHeightWeightUpdate = convertDateToString(dog.heightWeight[0].date);
     for (let hw of dog.heightWeight) {
       dog.weightList.push(hw.weight);
-      dog.bmiList.push(hw.weight / hw.height);
+      dog.bmiList.push(Math.round(hw.weight / hw.height * 100) / 100);
       dog.healthDateList.push(convertDateToString(hw.date));
     }
   }

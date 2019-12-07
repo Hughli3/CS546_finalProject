@@ -93,6 +93,7 @@ const constructorMethod = (app) => {
 
     try{
         let dog = await dogData.getDog(dogId);
+        console.log(dog);
         let comments = await dogData.getAllComments(dogId);
 
         data = {

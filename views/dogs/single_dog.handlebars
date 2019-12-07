@@ -1,23 +1,23 @@
 <section class="section">
     <div class="container">
         <div class="row">
-            <div class="col-4">
+            <div class="col-3">
                 {{#if dog.avatar}}
-                <img src="{{ dog.avatar }}" id="dog-avatar" class="card-img-top" alt="dog's avatar">
+                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle" alt="dog's avatar">
                 {{else}}
-                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="card-img-top" alt="dog's avatar">
+                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle" alt="dog's avatar">
                 {{/if}}
-                <a href="#" data-toggle="modal" data-target="#update-avatar-modal">Change avatar</a>
             </div>
-            <div class="col-8">
-                <h1><span id="dog-name">{{ dog.name }}</span></h4>
-                <h4>Type: <span id="dog-type">{{ dog.type }}</span></h4>
-                <h4>Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h4>
+            <div class="col-9">
+                <h1><span id="dog-name">{{ dog.name }}</span></h1>
+                <button data-toggle="modal" class="btn btn-primary" data-target="#update-avatar-modal">Change avatar</a>
+                <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
+            
+                <h4>Type: <span id="dog-type">{{ dog.type }} </span> Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h4>
+                <h4> </h4>
                 <h4>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h4>
 
                 <h4>Owner: {{ dog.owner }}</h2>
-
-                <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
             </div>
         </div>
     </div>
@@ -62,9 +62,9 @@
     <div class="container">
         <h1>Comment</h1>
         {{#each comments}}
-            <div class="comment">
+            <div class="card comment">
                 <p>{{content}}</p>
-                <p>Author: {{author}}</p>
+                <p>Author: {{author}} 2019-2-2</p>
             </div>
         {{/each}}
         <form>
