@@ -205,7 +205,7 @@ async function getDog(id){
     dog.weightList = [], dog.bmiList = [], dog.healthDateList = [];
     dog.weight = dog.heightWeight[0].weight;
     dog.height = dog.heightWeight[0].height;
-    dog.bmi = dog.weight / dog.height;
+    dog.bmi = dog.weight / (dog.height * dog.height );
     dog.lastHeightWeightUpdate = convertDateToString(dog.heightWeight[0].date);
     for (let hw of dog.heightWeight) {
       dog.weightList.push(hw.weight);
