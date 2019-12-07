@@ -65,6 +65,34 @@ $(function() {
             }
         });
     });
+
+    $("#load-more-photos").click(function() {
+        let page = $("#load-more-photos").attr("current-page");
+        let nextPage = parseInt(page) + 1;
+
+        $.ajax({
+            method: "GET",
+            url: urlpath + "/photos?page=" + nextPage,
+            success: function(data){
+                if (data.status == "success") {
+                    console.log(data);
+                    $("#load-more-photos").attr("current-page", nextPage);
+                    for (let photo of data.photos) {
+                        $("#photos").append('<img class="col-3 my-3" src="' + photo + '" />');
+                    }
+                    if (data.isLastPage) {
+                        $("#load-more-photos").hide();
+                    }
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
+    });
 });
 
 function updateLabelAndData(chart, label, data) {

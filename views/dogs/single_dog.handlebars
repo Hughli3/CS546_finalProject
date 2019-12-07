@@ -44,17 +44,16 @@
     <div class="container">
         <h1>Photos</h1>
         <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-default">Upload photo</button>
-        <div class="row">
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
-            <img class="col-3 my-3" src="/public/img/dog/1.jpg" >
+        <div id="photos" class="row">
+            {{#each dog.photos}}
+            <img class="col-3 my-3" src="{{ this }}" >
+            {{/each}}
         </div>
-        <button class="btn btn-primary">Load More</button>
+
+        {{#unless dog.isPhotoLastPage}}
+        <button id="load-more-photos" current-page="1" class="btn btn-primary">Load More</button>
+        {{/unless}}
+
     </div>
 </section>
 

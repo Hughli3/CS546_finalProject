@@ -50,6 +50,25 @@ const constructorMethod = (app) => {
     return data;
   }
 
+  function dogPhotosPagination(data, pageNum) {
+    let showPerPage = 2;
+    const pageCount = Math.ceil(data.length / showPerPage);
+    let page = parseInt(pageNum);
+    if (!page || page <= 0) { page = 1;}
+    if (page > pageCount) {
+      page = pageCount;
+    }
+
+    let isLastPage = false;
+    if (pageCount == page) isLastPage = true;
+
+    data = {
+      data : data.slice(page * showPerPage - showPerPage, page * showPerPage),
+      isLastPage: isLastPage,
+    }
+    return data;
+  }
+
   async function login(req) {
     try {
       const compareResult = await usersData.comparePassword(req.body.username, req.body.password);
@@ -73,7 +92,7 @@ const constructorMethod = (app) => {
     try{
       let dogs = await dogData.getAllDogs();
 
-      let pageData = pagination(dogs, req.query.page, 12);
+      let pageData = pagination(dogs, req.query.page, 2);
       data = {
         title: "All Dogs",
         dogs : pageData.data,
@@ -93,11 +112,18 @@ const constructorMethod = (app) => {
 
     try{
         let dog = await dogData.getDog(dogId);
-        console.log(dog);
         comments = [];
         for(let commentId of dog.comments){
           comments.push(await commentData.getComment(commentId));
         }
+
+        let pagedData = dogPhotosPagination(dog.photos, 1);
+
+        dog.photos = [];
+        for (let photoId of pagedData.data) {
+          dog.photos.push(await imgData.getPhotoDataId(photoId));
+        }
+        dog.isPhotoLastPage = pagedData.isLastPage;
         
         data = {
           title: "Single Dog", 
@@ -155,6 +181,23 @@ const constructorMethod = (app) => {
       res.json({status: "success", dog: dog});
     } catch (e) {
       res.json({status: "error", errorMessage: e});
+    }
+  });
+
+  app.get('/dog/:id/photos', upload.single('avatar'), async (req, res) => {
+    let dogId = req.params.id;
+    try{
+        let dog = await dogData.getDog(dogId);
+        let pagedData = dogPhotosPagination(dog.photos, req.query.page, 2);
+
+        let photos = [];
+        for(let photoId of pagedData.data){
+          photos.push(await imgData.getPhotoDataId(photoId));
+        }
+        res.json({status: "success", photos: photos, isLastPage: pagedData.isLastPage});
+    } catch (e) {
+        res.json({status: "error", errorMessage: e});
+        return;
     }
   });
 
