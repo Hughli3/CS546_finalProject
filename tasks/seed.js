@@ -19,65 +19,48 @@ const main = async () => {
     }
 
     const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
+    console.log("user created");
     // =================================
     //  Create a dog
     // console.log(userOne);
     
-    let userId = userOne._id.toString()
-    let dog = {
-        name: "Painting", 
-        gender: "Male", 
-        dataOfBirth: "1988-03-19", 
-        // format should be day month year
-        heightWeight: [
-            {height: 40, weight: 50, date: "2019-10-30"},
-            {height: 36, weight: 55, date: "2019-03-05"},
-            {height: 34, weight: 54, date: "2019-01-25"},
-            {height: 32, weight: 57, date: "2019-01-01"},
-            {height: 30, weight: 55, date: "2018-10-25"},
-            {height: 25, weight: 56, date: "2018-07-19"}
-        ],
-        type: "samoye", 
-        avatarId: null,
-        owner:userId
-    }
-    // console.log(new Date());
-    // let test = Date.parse(dog.dataOfBirth);
-    // console.log(new Date(test));
-    // console.log((new Date() - test)/ (1000 * 24 * 60 * 60 * 365) )
-    let dogOne;
-    for (let i = 0; i < 100; i++) {
-        dogOne = await dogData.createADog(
-            dog.name,
-            dog.gender,
-            dog.dataOfBirth,
-            dog.heightWeight,
-            dog.type,
-            dog.avatarId,
-            dog.owner
+    let userId = userOne._id.toString();
+    let dog;
+    for (let i = 0; i < 30; i++) {
+        dog = await dogData.addDog(
+            "Painting",
+            "Male",
+            "1988-03-19",
+            "samoye",
+            userId
         );
     }
-    
-    // console.log(dogOne);
+    console.log("dog created");
     // let date = new Date();
     
 //   date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 //     console.log(date);
+    let dogId = dog._id.toString()
 
-    let aheightWeight = {height: 15, weight: 20, date: "2018-05-26"}
-    let dogId = dogOne._id.toString()
-    const updateDog = await dogData.updateHeightWeightOfDog(dogId, aheightWeight);
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 2}
+        dog = await dogData.addHeightWeight(dogId, heightWeight);
+    }
+    console.log("heightWeight created");
+
     // console.log(updateDog);
-    dogOne.dateOfBirth
+    // dogOne.dateOfBirth
 
 
      // =================================
     //  Create some comments
 
     for (let i = 0; i < 20; i++) {
-        const newComment = await commentsData.createComments("I am a test", userId, dogId);
+        await commentsData.createComments("I am a test", userId, dogId);
         // console.log(newComment);
     }
+    console.log("comment created");
+
     // let output = await commentsData.getComments(newComment._id.toString());
     // console.log(output);
     await db.serverConfig.close();

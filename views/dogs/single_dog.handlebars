@@ -7,10 +7,10 @@
                 <a href="#">Change avatar</a>
             </div>
             <div class="col-8">
-                <h1><span id="dog-name">{{ dog.dogName }}</span></h3>
+                <h1><span id="dog-name">{{ dog.name }}</span></h3>
                 <h3>Type: <span id="dog-type">{{ dog.type }}</span></h3>
                 <h3>Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h3>
-                <h3>dateOfBirth: <span id="dog-dob">{{ dog.dateOfBirth }}</span></h3>
+                <h3>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h3>
 
                 <h2>Own by sadsad</h2>
 
@@ -24,12 +24,18 @@
 <section>
     <div class="container">
         <h1>Health</h1>
-        <h3>Weight: {{ dog.currentWeight }} Height: {{ dog.currentHeight }} BMI: {{ dog.currentBMI }}</h3>
+        <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Add Weight/Height</button>
+        {{#if dog.heightWeight}}
+        <h3>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }}</h3>
         <h3>Health condition: good</h2>
         <div class="row">
             <canvas class="col-lg-6" id="myChart1" height="350"></canvas>
             <canvas class="col-lg-6" id="myChart2" height="350"></canvas>
         </div> 
+        {{else}}
+        <h3>Please update weight and height of the dog to see health data.</h3>
+        {{/if}}
+
     </div>
 </section>
 
@@ -57,7 +63,7 @@
         {{#each comments}}
             <div class="comment">
                 <p>{{content}}</p>
-                <p>Author: {{author.username}}</p>
+                <p>Author: {{author}}</p>
             </div>
         {{/each}}
         <form>

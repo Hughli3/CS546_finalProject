@@ -72,8 +72,8 @@ const constructorMethod = (app) => {
   app.get('/dog', async (req, res) => {
     try{
       let dogs = await dogData.getAllDogs();
-      let pageData = pagination(dogs, req.query.page, 12);
 
+      let pageData = pagination(dogs, req.query.page, 12);
       data = {
         title: "All Dogs",
         dogs : pageData.data,
@@ -88,44 +88,25 @@ const constructorMethod = (app) => {
     }
   });
 
-  function calculateAge(birthday) {
-    var ageDifMs = Date.now() - birthday.getTime();
-    var ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
-  }
+ 
 
   app.get('/dog/:id', async (req, res) => {
     let dogId = req.params.id;
 
     try{
         let dog = await dogData.getDog(dogId);
-        
-        let comments = [];
-        for (let comment of dog.comments) {
-          comments.push(await commentData.getComments(comment));
-        }
-
-        for (let comment of comments) {
-          comment.author = await usersData.getUser(comment.author);
-        }
-        
-        dog.currentWeight = dog.heightWeight[0].weight;
-        dog.currentHeight = dog.heightWeight[0].height;
-        dog.currentBMI = dog.currentWeight / dog.currentHeight;
-        dog.age = calculateAge(dog.dateOfBirth);
-
+        let comments = await dogData.getAllComments(dogId);
         data = {
           title: "Single Dog", 
           dog: dog,
           username : req.session.username,
           comments : comments,
           scripts : ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js",
-                    "/public/js/dogs.js"]
-        }
-
+                    "/public/js/dogs.js"]}
+                  
         res.render('dogs/single_dog', data);
     } catch (e) {
-        res.json(e);
+        res.json({error: e});
         return;
     }
   });

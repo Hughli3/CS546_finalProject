@@ -55,12 +55,12 @@ function validateType(type){
 }
 
 
-function validateOwner(owner){
+async function validateOwner(owner){
   if (!owner) throw "owner is undefinded";
   if (owner.constructor !== String) throw "owner is not a string";
 
   const usersCollection = await users();
-  parsedOwner = ObjectId.createFromHexString(dog.owner);
+  parsedOwner = ObjectId.createFromHexString(owner);
   const user = await usersCollection.find({_id:parsedOwner});
   if (user == null) thorw `owner with the id ${parsedOwner} is not exist`;
 }
@@ -70,7 +70,7 @@ function validateDob(dob) {
   let today = new Date();
   if (!dob) throw "date of birth is undefinded";
   if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
-  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) 
+  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35) 
     throw "date of birth is invalid, dog age should less than 35 and greater than 0";
 }
 
@@ -88,6 +88,13 @@ function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 }
 
+
+function calculateAge(date) {
+  let ageDifMs = Date.now() - date.getTime();
+  let ageDate = new Date(ageDifMs);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 // ======================================================
 async function addDog(name, gender, dob, type, owner){
   validateName(name);
@@ -103,7 +110,7 @@ async function addDog(name, gender, dob, type, owner){
     dob: new Date(Date.parse(dob)),
     avatar: null,
     owner: owner,
-    health: [],
+    heightWeight: [],
     photos: [],
     comments: [] }
 
@@ -112,10 +119,11 @@ async function addDog(name, gender, dob, type, owner){
   if (insertedInfo.insertedCount === 0) throw "could not create the dog";
   const dogId = insertedInfo.insertedId;
 
+  const usersCollection = await users();
   const updateInfo = await usersCollection.updateOne({ _id: ObjectId.createFromHexString(owner) }, {$addToSet: {dogs: ObjectId(dogId).toString()}});
   if (updateInfo.modifiedCount === 0) throw "could not add the dog to the user";
 
-  return await getDog(dogId);
+  return await getDog(dogId.toString());
 }
 
 
@@ -163,10 +171,10 @@ async function removeDog(id){
 
 async function getAllDogs(){
   const dogsCollection = await dogs();
-  const dogs = dogsCollection.find().toArray();
-  if (!dogs) throw 'no dog found';
+  const allDogs = await dogsCollection.find().toArray();
+  if (!allDogs) throw 'no dog found';
 
-  return dogs;
+  return allDogs;
 }
 
 
@@ -183,7 +191,14 @@ async function getDog(id){
   if (!owner) throw "owner not found";
 
   dog.owner = owner.username;
+  dog.age = calculateAge(dog.dob);
   dog.dob = convertDateToString(dog.dob);
+
+  if(dog.heightWeight && dog.heightWeight.length) {
+    dog.weight = dog.heightWeight[0].weight;
+    dog.height = dog.heightWeight[0].height;
+    dog.bmi = dog.weight / dog.height;
+  }
 
   return dog;
 }
@@ -254,17 +269,19 @@ async function getAllComments(dogId){
   const usersCollection = await users();
 
   let parsedUserId = ObjectId.createFromHexString(dogId);
-  const dog = dogsCollection.findOne({_id: parsedUserId});
+  const dog = await dogsCollection.findOne({_id: parsedUserId});
   if (!dog) throw "dog not found";
 
   let allComments = [];
+  if (!dog.comments || !dog.comments.length) return [];
+  
   for (let commentId of dog.comments){
     let parsedCommentId = ObjectId.createFromHexString(commentId);
-    let comment = commentsCollection.findOne({_id:parsedCommentId})
+    let comment = await commentsCollection.findOne({_id:parsedCommentId})
     if (!comment) throw "could not find the comment successfully";
 
     let parsedUserId = ObjectId.createFromHexString(comment.author);
-    let user = usersCollection.findOne({_id:parsedUserId});
+    let user = await usersCollection.findOne({_id:parsedUserId});
     if (!user) throw "could not find the user successfully";
 
     allComments.push({
