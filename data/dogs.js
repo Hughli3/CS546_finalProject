@@ -38,15 +38,9 @@ function isString (name){
 // ======================================================
 async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarId, owner){
   // create a dog
-<<<<<<< HEAD
   if (!name) throw "name is undefinded";
   if (typeof name != "string") throw "name is not a string";
   if (name.length > 30) throw "name is too long";
-=======
-  if (!name) throw "Name is undefinded";
-  
-  if (!isString(name)) throw `Your input username is not string`;
->>>>>>> 8aaec16663e3ca7ef16b309e78696bd62943192d
 
   if (!gender) throw "Gender is undefinded";
   if (!isString(gender)) throw `Your input gender is not string`;
