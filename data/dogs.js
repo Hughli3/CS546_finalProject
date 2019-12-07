@@ -76,7 +76,7 @@ function validateDob(dob) {
   let today = new Date();
   if (!dob) throw "date of birth is undefinded";
   if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
-  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35) 
+  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35)
     throw "date of birth is invalid, dog age should less than 35 and greater than 0";
 }
 
@@ -108,10 +108,10 @@ async function addDog(name, gender, dob, type, owner){
   validateDob(dob);
   validateType(type);
   validateOwner(owner);
-  
+
   let dog = {
     name: name,
-    type: type, 
+    type: type,
     gender: gender,
     dob: new Date(Date.parse(dob)),
     avatar: null,
@@ -196,7 +196,7 @@ async function getDog(id){
   let parsedId = ObjectId.createFromHexString(id);
   const dog = await dogsCollection.findOne({_id: parsedId});
   if (!dog) throw "dog not found";
-  
+
   const usersCollection = await users();
   const owner = await usersCollection.findOne({_id: ObjectId.createFromHexString(dog.owner)});
   if (!owner) throw "owner not found";
@@ -227,8 +227,8 @@ async function updateAvatar(id, file){
   validateId(id);
   validateImage(file);
 
-  const dogsCollection = await dogs(); 
-  let parsedId = ObjectId.createFromHexString(id);  
+  const dogsCollection = await dogs();
+  let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
   fs.unlinkSync(file.path);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
@@ -294,7 +294,7 @@ async function getAllComments(dogId){
 
   let allComments = [];
   if (!dog.comments || !dog.comments.length) return [];
-  
+
   for (let commentId of dog.comments){
     let parsedCommentId = ObjectId.createFromHexString(commentId);
     let comment = await commentsCollection.findOne({_id:parsedCommentId})
@@ -328,4 +328,3 @@ module.exports = {
   removePhotos,
   getAllComments
 }
-
