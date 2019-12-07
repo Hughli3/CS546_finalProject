@@ -94,11 +94,13 @@ const constructorMethod = (app) => {
     try{
         let dog = await dogData.getDog(dogId);
         let comments = await dogData.getAllComments(dogId);
+
         data = {
           title: "Single Dog", 
           dog: dog,
           username : req.session.username,
-          comments : comments}
+          comments : comments
+        }
                   
         res.render('dogs/single_dog', data);
     } catch (e) {

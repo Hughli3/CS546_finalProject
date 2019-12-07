@@ -28,11 +28,11 @@
         <h1>Health</h1>
         <button id="add-height-weight-button" class="btn btn-primary" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
         {{#if dog.heightWeight}}
-        <h4>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }}</h4>
+        <h4>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }} LastUpdate: {{ dog.lastHeightWeightUpdate }}</h4>
         <h4>Health condition: good</h4>
         <div class="row">
-            <canvas class="col-lg-6" id="myChart1" height="350"></canvas>
-            <canvas class="col-lg-6" id="myChart2" height="350"></canvas>
+            <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
+            <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
         </div> 
         {{else}}
         <h3>Please update weight and height of the dog to see health data.</h3>
@@ -224,4 +224,97 @@
 {{#section 'script'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
 <script src="/public/js/dogs.js"></script>
+{{#if dog.heightWeight}}
+<script>
+new Chart($('#bmi-chart'), {
+    type: 'line',
+    data: {
+        labels: [{{#each dog.healthDateList}}"{{ this }}",{{/each}}],
+        datasets: [{
+            label: 'BMI',
+            backgroundColor: "#3099d8",
+            borderColor: "#3099d8",
+            data: [{{ dog.bmiList }}],
+            fill: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'BMI Trend'
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Date'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'BMI'
+                }
+            }]
+        }
+    }
+});
+
+new Chart($('#weight-chart'), {
+    type: 'line',
+    data: {
+        labels: [{{#each dog.healthDateList}}"{{ this }}",{{/each}}],
+        datasets: [{
+            label: 'Weight',
+            backgroundColor: "#3099d8",
+            borderColor: "#3099d8",
+            data: [{{ dog.weightList }}],
+            fill: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Weight Trend'
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Weight'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Date'
+                }
+            }]
+        }
+    }
+});
+</script>
+{{/if}}
 {{/section}}

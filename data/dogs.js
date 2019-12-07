@@ -194,12 +194,20 @@ async function getDog(id){
   dog.age = calculateAge(dog.dob);
   dog.dob = convertDateToString(dog.dob);
   if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
+
   if(dog.heightWeight && dog.heightWeight.length) {
+    dog.weightList = [], dog.bmiList = [], dog.healthDateList = [];
     dog.weight = dog.heightWeight[0].weight;
     dog.height = dog.heightWeight[0].height;
     dog.bmi = dog.weight / dog.height;
+    dog.lastHeightWeightUpdate = convertDateToString(dog.heightWeight[0].date);
+    for (let hw of dog.heightWeight) {
+      dog.weightList.push(hw.weight);
+      dog.bmiList.push(hw.weight / hw.height);
+      dog.healthDateList.push(convertDateToString(hw.date));
+    }
   }
-
+  
   return dog;
 }
 
