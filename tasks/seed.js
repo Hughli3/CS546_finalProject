@@ -21,13 +21,13 @@ const main = async () => {
     const userOne = await userData.createANewUser(user.username, user.password, user.name, user.avatarId);
     // =================================
     //  Create a dog
-    console.log(userOne);
-
+    // console.log(userOne);
+    
     let userId = userOne._id.toString()
     let dog = {
         name: "Painting", 
         gender: "Male", 
-        dataOfBirth: "2018-03-19", 
+        dataOfBirth: "1988-03-19", 
         // format should be day month year
         heightWeight: [
             {height: 40, weight: 50, date: "2019-10-30"},
@@ -41,7 +41,10 @@ const main = async () => {
         avatarId: null,
         owner:userId
     }
-
+    // console.log(new Date());
+    // let test = Date.parse(dog.dataOfBirth);
+    // console.log(new Date(test));
+    // console.log((new Date() - test)/ (1000 * 24 * 60 * 60 * 365) )
     let dogOne;
     for (let i = 0; i < 100; i++) {
         dogOne = await dogData.createADog(
@@ -56,12 +59,15 @@ const main = async () => {
     }
     
     // console.log(dogOne);
+    // let date = new Date();
+    
+//   date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+//     console.log(date);
 
-  
     let aheightWeight = {height: 15, weight: 20, date: "2018-05-26"}
     let dogId = dogOne._id.toString()
     const updateDog = await dogData.updateHeightWeightOfDog(dogId, aheightWeight);
-    console.log(updateDog);
+    // console.log(updateDog);
     dogOne.dateOfBirth
 
 
@@ -70,7 +76,7 @@ const main = async () => {
 
     for (let i = 0; i < 20; i++) {
         const newComment = await commentsData.createComments("I am a test", userId, dogId);
-        console.log(newComment);
+        // console.log(newComment);
     }
     // let output = await commentsData.getComments(newComment._id.toString());
     // console.log(output);

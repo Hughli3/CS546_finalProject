@@ -10,15 +10,9 @@ const { ObjectId } = require("mongodb");
 //========================================
 // Check input
 function isString (name){
-    if (!name || name === undefined || name === '' || name.constructor !== String){
-        return false;
-      }else return true;
-}
-
-function isNumber(number){
-  if (number.constructor != Number || number === NaN){
-    throw `${number || "Provided number"} is not a number.`
-  }
+    if (name.constructor == String){
+        return true;
+      }else return false;
 }
 
 //========================================
@@ -27,13 +21,16 @@ function isNumber(number){
 async function createComments(content, author, dog){
   if (!author) throw "Your input author is not exist.";
   if (!content) throw "Your input content is not exist.";
-  isString(content);
+  if(!isString(content))  `${content || "Provided input"} is not a string.`
   const commentsCollection = await comments();
 
+  let date = new Date();
+  formated_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
   let newComment = {
     content:content,
     author:author,
-    dog:dog
+    dog:dog,
+    date: formated_date
   }
   
   
@@ -71,7 +68,7 @@ async function createComments(content, author, dog){
 async function updateComments(id){
   if (!id) throw "Your input id is not exist.";
 
-  if (isString(id)) throw `Your input id is not exist`;
+  if (!isString(id)) throw `Your input id is not a string`;
 
   const parsedId = ObjectId.createFromHexString(id);
 
@@ -93,7 +90,7 @@ async function updateComments(id){
 async function deleteComments(id){
   if (!id) throw "Your input id is not exist.";
 
-  isString(id);
+  if (!isString(id)) throw `Your input id is not a string`;
   parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
 
@@ -131,12 +128,13 @@ return comment;
 async function getComments(id){
   if (!id) throw "Your input id is not exist.";
 
-  isString(id);
+  if (!isString(id)) throw `Your input id is not a string`;
   parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
 
   const comment = await commentsCollection.findOne({_id:parsedId});
   if (comment == null) throw `Could not find the comment with id of ${parsedId}`;
+
 
   return comment
 }

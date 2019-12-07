@@ -203,7 +203,7 @@ const constructorMethod = (app) => {
   });
 
   app.post('/dog/add', async (req, res) => {
-    let name= req.body.name;
+    let name = req.body.name;
     let gender = req.body.gender;
     let dataOfBirth = req.body.dataOfBirth;
     let height = req.body.height;
@@ -212,11 +212,11 @@ const constructorMethod = (app) => {
     let type = req.body.type;
     let avatarId = null;
 
-    let dog = await dogData.createADog(name, gender, dataOfBirth,{
+    let dog = await dogData.createADog(name, gender, dataOfBirth,[{
         height:height,
         weight:weight,
         date:dateOfHeightWeight
-      },type,avatarId
+      }],type,avatarId
     )
 
     res.render('dogs/add_dog', {title: "Add a Dog",dog:dog});
