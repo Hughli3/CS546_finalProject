@@ -38,6 +38,7 @@ async function createADog(name, gender, dateOfBirth, heightWeight, type, avatarI
   // create a dog
   if (!name) throw "name is undefinded";
   if (typeof name != "string") throw "name is not a string";
+  if (name.length > 30) throw "name is too long";
 
   if (!gender) throw "gender is undefinded";
   if (typeof gender != "string") throw "gender is not a string";

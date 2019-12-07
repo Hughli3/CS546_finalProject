@@ -95,3 +95,57 @@ new Chart(ctx2, {
         }
     }
 });
+
+
+(function($) {
+    let editDogForm = $("#edit-dog-form");
+    let newTypeInput = $("#edit-dog-form-type");
+    //   newDecriptionArea = $("#new-task-description"),
+    //   todoArea = $("#todo-area");
+  
+    // function bindEventsToTodoItem(todoItem) {
+    //   todoItem.find(".finishItem").on("click", function(event) {
+    //     event.preventDefault();
+    //     var currentLink = $(this);
+    //     var currentId = currentLink.data("id");
+  
+    //     var requestConfig = {
+    //       method: "POST",
+    //       url: "/api/todo/complete/" + currentId
+    //     };
+  
+    //     $.ajax(requestConfig).then(function(responseMessage) {
+    //       var newElement = $(responseMessage);
+    //       bindEventsToTodoItem(newElement);
+    //       todoItem.replaceWith(newElement);
+    //     });
+    //   });
+    // }
+  
+    // todoArea.children().each(function(index, element) {
+    //   bindEventsToTodoItem($(element));
+    // });
+  
+    editDogForm.submit(function(event) {
+        event.preventDefault();
+        $('#edit-dog-profile-modal').modal('toggle'); 
+
+        let newType = newTypeInput.val();
+        if (newType) {
+            let requestConfig = {
+                method: "PUT",
+                url: "",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    type: newType
+                })
+            };
+
+            $.ajax(requestConfig).then(function(responseMessage) {
+                console.log(responseMessage);
+            // newContent.html(responseMessage.message);
+            //                alert("Data Saved: " + msg);
+            });
+        }
+    });
+  })(window.jQuery);

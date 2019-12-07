@@ -118,7 +118,9 @@ const constructorMethod = (app) => {
           title: "Single Dog", 
           dog: dog,
           username : req.session.username,
-          comments : comments
+          comments : comments,
+          scripts : ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js",
+                    "/public/js/dogs.js"]
         }
 
         res.render('dogs/single_dog', data);
@@ -134,6 +136,22 @@ const constructorMethod = (app) => {
     try{
         await dogData.deleteTheDog(dogId);
         res.redirect('/profile');
+    } catch (e) {
+        res.json(e);
+        return;
+    }
+  });
+
+  app.put('/dog/:id', async (req, res) => {
+    let dogId = req.params.id;
+    let type = req.body.type;
+    let dog = {
+      type: type
+    }
+    
+    try{
+        dog = await dogData.updateTheDog(dogId, dog);
+        res.json({ success: true, dog: dog });
     } catch (e) {
         res.json(e);
         return;
