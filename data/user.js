@@ -76,45 +76,27 @@ async function getUser(id){
 }
 
 
-async function deleteTheUser(id){
+async function removeUser(id){
     validateId(id);
 
-    const parsedId = ObjectId.createFromHexString(id);
-
     const usersCollection = await users();
-
-
+    const parsedId = ObjectId.createFromHexString(id);
     const removedData = await usersCollection.findOne({ _id: parsedId });
-    if (!removedData) throw `This user is not found.`
-    const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
+    if (!removedData) throw "This user is not found.";
 
-    if (deletionInfo.deletedCount === 0) {
-        throw `Could not delete user with id of ${id}`;
-      }
+    const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
+    if (deletionInfo.deletedCount === 0) throw `Could not delete user with id of ${id}`;
   
-      const dogsCollection = await dogs();
-      for (let j = 0; j < removedData.dogs.length; j++){
-        dogsId = removedData.dogs[j]
-        parsedDogId = ObjectId.createFromHexString(dogsId);
-        let dogDeletionInfo = await dogsCollection.removeOne({ _id: postParsedId});
-        if (dogDeletionInfo.deletedCount === 0) {
-          throw `Could not delete dog with id of ${dogDeletionInfo.id}`;
-        }
-    }
+    const dogsCollection = await dogs();
+    let dogDeletionInfo = await dogsCollection.remove({ owner: id});
+    if (dogDeletionInfo.deletedCount === 0) throw `Could not delete dog with owner id of ${id}`;
 
     const commmentsCollection = await commments();
-      for (let j = 0; j < removedData.commments.length; j++){
-        commmentId = removedData.commments[j]
-        commmentParsedId = ObjectId.createFromHexString(commmentId);
-        let commmentDeletionInfo = await commmentsCollection.removeOne({ _id: commmentParsedId});
-        if (commmentDeletionInfo.deletedCount === 0) {
-          throw `Could not delete dog with id of ${commmentDeletionInfo.id}`;
-        }
-    }
+    let commmentDeletionInfo = await commmentsCollection.remove({ author: id});
+    if (commmentDeletionInfo.deletedCount === 0) throw `Could not delete comment with author id of ${id}`;
     
-    // TODO remove dogId and avatarId
-    return await get(id);
-    //// TODO this is wrong
+    //TODO delete user avatar, dog avatar, dog photo
+    return removedData;
 }
 
 async function changePassword(id, newPassword){
@@ -239,7 +221,7 @@ async function updateTheUser(id, newName){
 module.exports = {
     addUser,
     getUser,
-    deleteTheUser,
+    removeUser,
     changePassword,
     updateProfilePhoto,
     comparepassword,
