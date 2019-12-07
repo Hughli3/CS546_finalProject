@@ -21,7 +21,7 @@ $(function() {
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
+                console.log("fail uploading image");
                 console.log(data);
             }
         });

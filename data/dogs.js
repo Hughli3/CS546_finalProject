@@ -126,7 +126,8 @@ async function addDog(name, gender, dob, type, owner){
   const dogId = insertedInfo.insertedId;
 
   const usersCollection = await users();
-  const updateInfo = await usersCollection.updateOne({ _id: ObjectId.createFromHexString(owner) }, {$addToSet: {dogs: ObjectId(dogId).toString()}});
+  const updateInfo = await usersCollection.updateOne({ _id: ObjectId.createFromHexString(owner) }, 
+                                        {$push: {dogs: { $each: [ ObjectId(dogId).toString() ], $position: 0}}});
   if (updateInfo.modifiedCount === 0) throw "could not add the dog to the user";
 
   return await getDog(dogId.toString());
