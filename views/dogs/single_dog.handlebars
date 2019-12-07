@@ -43,7 +43,7 @@
 <section>
     <div class="container">
         <h1>Photos</h1>
-        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-default">Upload photo</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
         <div id="photos" class="row">
             {{#each dog.photos}}
             <img class="col-3 my-3" src="{{ this }}" >
@@ -142,7 +142,7 @@
 </div>
 
 {{!-- modal for upload photo --}}
-<div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+<div class="modal fade" id="upload-photo-modal" tabindex="-1" role="dialog" aria-labelledby="upload-photo-modal" aria-hidden="true">
     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -152,15 +152,15 @@
                 </button>
             </div>
 
-            <form method="post" action="/updateUserAvatar" enctype="multipart/form-data">
-            <div class="modal-body">
-                <input type="file" class="btn btn-primary" name="avatar" accept="image/*">
-            </div>
+            <form method="POST" action="/dog/{{dog._id}}/photos" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="file" class="btn btn-primary" name="photo" accept="image/*">
+                </div>
 
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
+                </div>
             </form>
         </div>
     </div>

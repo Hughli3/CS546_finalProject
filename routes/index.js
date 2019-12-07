@@ -201,6 +201,16 @@ const constructorMethod = (app) => {
     }
   });
 
+  app.post("/dog/:id/photos", loginRequired, upload.single('photo'), async (req, res) => {
+    try{
+      let dogId = req.params.id;
+      await dogData.addPhotos(dogId, req.file);
+      res.redirect('/dog/' + dogId);
+    } catch(e) {
+      res.render('/dog/' + dogId, {error: e})
+    }
+  });
+
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
     try {
@@ -272,22 +282,6 @@ const constructorMethod = (app) => {
   // update Photo Example
   app.get('/update', async (req, res) => {    
     res.render('updatePhoto', {title: "update photo"});
-  });
-
-  // update Photo Example
-  app.post("/updateUserAvatar", loginRequired, upload.single('avatar'), async (req, res) => {
-    if(!req.file) {
-      res.render('updatePhoto', {error: "no file input"});
-    } else if(req.file.mimetype.split("/")[0] != "image") {
-      fs.unlinkSync(req.file.path);
-      res.render('updatePhoto', {error: "type error, image only"});
-    } 
-    
-    // let photoId = await imgData.createGridFS(req.file);
-    // This line no need, moved into user.js updateProfilePhoto method
-    await usersData.updateProfilePhoto(req.session.userid, req.file);
-
-    res.redirect('/profile');
   });
 
   app.post('/user/:id/avatar', upload.single('avatar'), async (req, res) => {
