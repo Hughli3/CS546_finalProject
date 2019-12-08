@@ -6,9 +6,21 @@
     display: none;
     right: 15px;
     top: 10px;
+    z-index: 99;
 }
 
 .dog-img-container:hover .btn-delete-photo{
+    display: block;
+}
+
+.btn-delete-dog {
+    display: none;
+    right: 15px;
+    top: 10px;
+    z-index: 99;
+}
+
+.dog-container:hover .btn-delete-dog{
     display: block;
 }
 

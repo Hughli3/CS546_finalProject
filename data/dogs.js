@@ -119,7 +119,7 @@ async function addDog(name, gender, dob, type, owner){
   validateGender(gender);
   validateDob(dob);
   validateType(type);
-  validateOwner(owner);
+  await validateOwner(owner);
 
   let dog = {
     name: name,
