@@ -65,7 +65,8 @@ function validateType(type){
   if (!type) throw "type is undefinded";
   if (type.constructor !== String) throw "type is not a string";
 
-  const dogType = firstUpperCase(type)
+  const dogType = firstUpperCase(type.toLowerCase());
+  // change type to lower case and transfer its first digit to Upper case
   if (!dogType in breedData.breed ){
     throw "Type is not available";
   }
