@@ -54,8 +54,8 @@
             {{#each dog.photos}}
             <div class="col-lg-3 col-6 my-3 dog-img-container">
                 <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>
-                <a href="{{ this }}" data-alt="dog photos" data-lightbox="photos">
-                    <img class="dog-img img-fluid rounded w-100" alt="dog photos" src="{{ this }}">
+                <a href="{{ photo }}" data-alt="dog photos" data-lightbox="photos">
+                    <img id="{{ id }}" src="{{ photo }}" class="dog-img img-fluid rounded w-100" alt="dog photos">
                 </a>
             </div>
             {{/each}}

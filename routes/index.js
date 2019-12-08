@@ -81,9 +81,10 @@ const constructorMethod = (app) => {
   
   async function getFirstPageOfPhotos(photos) {
     let pagedData = dogPhotosPagination(photos, 1);
-    let photos = [];
+    photos = [];
     for (let photoId of pagedData.data) {
-      photos.push(await imgData.getPhotoDataId(photoId));
+      photos.push({ id : photoId,
+                  photo : await imgData.getPhotoDataId(photoId)});
     }
     return {photos: photos, 
             isLastPage: pagedData.isLastPage}; 
@@ -123,7 +124,7 @@ const constructorMethod = (app) => {
         let dog = await dogData.getDog(dogId);
         let comments = await commentData.getCommentsByDog(dogId);
         
-        let pagedData = getFirstPageOfPhotos(dog.photos);
+        let pagedData = await getFirstPageOfPhotos(dog.photos);
         dog.photos = pagedData.photos;
         dog.isPhotoLastPage = pagedData.isLastPage;
         
@@ -190,11 +191,12 @@ const constructorMethod = (app) => {
     try{
         let dogId = req.params.id;
         let dog = await dogData.getDog(dogId);
-        let pagedData = dogPhotosPagination(dog.photos, req.query.page, 2);
+        let pagedData = dogPhotosPagination(dog.photos, req.query.page);
 
         let photos = [];
         for(let photoId of pagedData.data){
-          photos.push(await imgData.getPhotoDataId(photoId));
+          photos.push({id: photoId,
+                      photo: await imgData.getPhotoDataId(photoId)});
         }
         res.json({status: "success", photos: photos, isLastPage: pagedData.isLastPage});
     } catch (e) {
@@ -206,7 +208,7 @@ const constructorMethod = (app) => {
     try{
       let dogId = req.params.id;
       let dog = await dogData.addPhotos(dogId, req.file);
-      let pagedData = getFirstPageOfPhotos(dog.photos);
+      let pagedData = await getFirstPageOfPhotos(dog.photos);
 
       res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch(e) {
@@ -220,7 +222,7 @@ const constructorMethod = (app) => {
       let dogId = req.params.dogid;
       let photoId = req.params.photoid;
       let dog = await dogData.removePhoto(dogId, photoId);
-      let pagedData = getFirstPageOfPhotos(dog.photos);
+      let pagedData = await getFirstPageOfPhotos(dog.photos);
 
       res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch (e) {

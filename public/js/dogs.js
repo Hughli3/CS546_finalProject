@@ -81,7 +81,7 @@ $(function() {
                 if (data.status == "success") {
                     $("#photos").empty();
                     for(let photo of data.photos) {
-                        addDogPhoto(photo);
+                        addDogPhoto(photo.id, photo.photo);
                     }
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
@@ -106,10 +106,9 @@ $(function() {
             url: urlpath + "/photos?page=" + nextPage,
             success: function(data){
                 if (data.status == "success") {
-                    console.log(data);
                     $("#load-more-photos").attr("current-page", nextPage);
                     for (let photo of data.photos) {
-                        addDogPhoto(photo);
+                        addDogPhoto(photo.id, photo.photo);
                     }
                     if (data.isLastPage) {
                         $("#load-more-photos").hide();
@@ -125,40 +124,38 @@ $(function() {
         });
     });
 
-    function addDogPhoto(photo) {
+    function addDogPhoto(id, photo) {
         let imgContainer = $('<div class="col-lg-3 col-6 my-3 dog-img-container">');
         let lightboxContainer = $('<a href="' + photo + '" data-alt="dog photos" data-lightbox="photos">');
-        lightboxContainer.append('<img class="dog-img img-fluid rounded w-100" alt="dog photos" src="' + photo + '" />');
+        lightboxContainer.append('<img id="' + id + '" src="' + photo + '" class="dog-img img-fluid rounded w-100" alt="dog photos" />');
         imgContainer.append('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>');
         imgContainer.append(lightboxContainer);
         $("#photos").append(imgContainer);
     }
 
     $('body').on('click', '.dog-img-container button', function() {
-        console.log("ads");
-        // let photoId = $('#btn-delete-photo');
-        // $.ajax({
-        //     method: "DELETE",
-        //     url: urlpath + "/photos/" + nextPage,
-        //     success: function(data){
-        //         if (data.status == "success") {
-        //             console.log(data);
-        //             $("#load-more-photos").attr("current-page", nextPage);
-        //             for (let photo of data.photos) {
-        //                 addDogPhoto(photo);
-        //             }
-        //             if (data.isLastPage) {
-        //                 $("#load-more-photos").hide();
-        //             }
-        //         } else {
-        //             console.log(data);
-        //         }
-        //     },
-        //     error: function(data){
-        //         console.log("fail updating avatar");
-        //         console.log(data);
-        //     }
-        // });
+        let photoId = $(this).next().find('img').attr('id');
+        $.ajax({
+            method: "DELETE",
+            url: urlpath + "/photo/" + photoId,
+            success: function(data){
+                if (data.status == "success") {
+                    $("#photos").empty();
+                    for(let photo of data.photos) {
+                        addDogPhoto(photo.id, photo.photo);
+                    }
+                    if (data.isLastPage) $("#load-more-photos").hide();
+                    else $("#load-more-photos").show();
+                    $("#load-more-photos").attr("current-page", "1");
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
     });
 });
 
