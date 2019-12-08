@@ -79,6 +79,15 @@ const constructorMethod = (app) => {
     }
   }
   
+  async function getFirstPageOfPhotos(photos) {
+    let pagedData = dogPhotosPagination(photos, 1);
+    let photos = [];
+    for (let photoId of pagedData.data) {
+      photos.push(await imgData.getPhotoDataId(photoId));
+    }
+    return {photos: photos, 
+            isLastPage: pagedData.isLastPage}; 
+  }
   // ===== public pages =====
   app.get('/', async (req, res) => {
     data = {
@@ -112,24 +121,17 @@ const constructorMethod = (app) => {
 
     try{
         let dog = await dogData.getDog(dogId);
-        comments = [];
-        for(let commentId of dog.comments){
-          comments.push(await commentData.getComment(commentId));
-        }
-
-        let pagedData = dogPhotosPagination(dog.photos, 1);
-
-        dog.photos = [];
-        for (let photoId of pagedData.data) {
-          dog.photos.push(await imgData.getPhotoDataId(photoId));
-        }
+        let comments = await commentData.getCommentsByDog(dogId);
+        
+        let pagedData = getFirstPageOfPhotos(dog.photos);
+        dog.photos = pagedData.photos;
         dog.isPhotoLastPage = pagedData.isLastPage;
         
         data = {
           title: "Single Dog", 
-          dog: dog,
+          dog: dog,          
+          comments : comments,
           username : req.session.username,
-          comments : comments
         }
 
         res.render('dogs/single_dog', data);
@@ -204,19 +206,27 @@ const constructorMethod = (app) => {
     try{
       let dogId = req.params.id;
       let dog = await dogData.addPhotos(dogId, req.file);
-  
-      let pagedData = dogPhotosPagination(dog.photos, 1);
-      let photos = [];
-      for (let photoId of pagedData.data) {
-        photos.push(await imgData.getPhotoDataId(photoId));
-      }
+      let pagedData = getFirstPageOfPhotos(dog.photos);
 
-      res.json({status: "success", photos: photos, isLastPage: pagedData.isLastPage});
+      res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch(e) {
       res.json({status: "error", errorMessage: e});
     }
   });
 
+  // ===== Image =====
+  app.delete('/dog/:dogid/photo/:photoid', async (req, res) => {
+    try{
+      let dogId = req.params.dogid;
+      let photoId = req.params.photoid;
+      let dog = await dogData.removePhoto(dogId, photoId);
+      let pagedData = getFirstPageOfPhotos(dog.photos);
+
+      res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
+    } catch (e) {
+      res.json({status: "error", errorMessage: e});
+    }
+  });
   // ===== Account =====
   app.get('/profile', loginRequired, async (req, res) => {
     try {

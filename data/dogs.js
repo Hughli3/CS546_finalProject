@@ -279,7 +279,7 @@ async function addPhotos(id, file){
 }
 
 
-async function removePhotos(dogId, photoId){
+async function removePhoto(dogId, photoId){
   validateId(dogId);
   validateId(photoId);
 
@@ -288,7 +288,7 @@ async function removePhotos(dogId, photoId){
   const updateInfo = await dogsCollection.updateOne({ _id: parsedDogId } ,{$pull: {photos: photoId}});
   if (updateInfo.modifiedCount === 0) throw "could not remove the photo successfully";
 
-  imgData.deletePhotos([photoId]);
+  imgData.deletePhoto(photoId);
 
   return getDog(dogId);
 }
@@ -338,6 +338,6 @@ module.exports = {
   addHeightWeight,
   removeDog,
   addPhotos,
-  removePhotos,
+  removePhoto,
   // getAllComments
 }

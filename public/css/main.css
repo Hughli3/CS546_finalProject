@@ -11,3 +11,8 @@
 .dog-img-container:hover .btn-delete-photo{
     display: block;
 }
+
+.avatar {
+    width: 100%;
+    height: auto;
+}

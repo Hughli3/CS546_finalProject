@@ -122,7 +122,6 @@ async function getCommentsByUser(user){
 
   const commentsCollection = await comments();
   const comment = await commentsCollection.find({user: user}).toArray();
-  if (!comment) throw `Could not find the comments with the user`;
 
   return comment
 }
@@ -132,7 +131,6 @@ async function getCommentsByDog(dog){
 
   const commentsCollection = await comments();
   const commentInfo = await commentsCollection.find({dog: dog}).toArray();
-  if (!commentInfo) throw `Could not find the comments with the dog`;
 
   for (let comment of commentInfo) {
     const usersCollection = await users();
@@ -142,8 +140,8 @@ async function getCommentsByDog(dog){
     comment.user = {};
     comment.user.username = userInfo.username;
     comment.date = convertDateToString(comment.date);
-    if (comment.user.avatar) {
-      comment.user.avatar = await imgData.getPhotoDataId(comment.user.avatar);
+    if (userInfo.avatar) {
+      comment.user.avatar = await imgData.getPhotoDataId(userInfo.avatar);
     }
   }
 

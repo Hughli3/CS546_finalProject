@@ -1,14 +1,15 @@
 {{#section 'style'}}
 <link type="text/css" href="/public/vendor/lightbox2/css/lightbox.min.css" rel="stylesheet">
 {{/section}}
+{{!-- Basic Info --}}
 <section class="section">
     <div class="container">
         <div class="row">
             <div class="col-3">
                 {{#if dog.avatar}}
-                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle" alt="dog's avatar">
+                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
                 {{else}}
-                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle" alt="dog's avatar">
+                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
                 {{/if}}
             </div>
             <div class="col-9">
@@ -26,6 +27,7 @@
     </div>
 </section>
 
+{{!-- Health --}}
 <section>
     <div class="container">
         <h1>Health</h1>
@@ -43,6 +45,7 @@
     </div>
 </section>
 
+{{!-- Photo --}}
 <section>
     <div class="container">
         <h1>Photos</h1>
@@ -67,39 +70,25 @@
     </div>
 </section>
 
+{{!-- Comment --}}
 <section>
     <div class="container">
         <h1>Comment</h1>
+        <div class="comment-container">
         {{#each comments}}
-            <div class="card comment">
-                <img src="{{author.avatarId}}">
+            <div class="card single-comment">
+                <img class="avatar" src="{{user.avatar}}">
                 <p>{{content}}</p>
-                <p>Author: {{author.username}} 2019-2-2</p>
+                <p>Author: {{user.username}} {{date}}</p>
             </div>
         {{/each}}
+        </div>
         <form>
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Write a large text here ..."></textarea>
             <button class="btn btn-primary">Submit</button>
         </form>
     </div>
 </section>
-
-<h1>{{ title }}</h1>
-<main>
-    <p>name: {{ dog.dogName }}</p>
-    <p>gender: {{ dog.gender }}</p>
-    
-    <p>{{ dog.dateOfBirth }}</p>
-
-
-    {{#each dog.heightWeight}}
-        <p>date: {{this.date}}</p>
-        <p>height: {{this.height}}</p>
-        <p>weight: {{this.weight}}</p>
-    {{/each}}
-        
-
-</main>
 
 {{!-- modal for edit profile --}}
 <div class="modal fade" id="edit-dog-profile-modal" tabindex="-1" role="dialog" aria-labelledby="edit-dog-profile-modal" aria-hidden="true">

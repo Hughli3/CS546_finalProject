@@ -133,6 +133,33 @@ $(function() {
         imgContainer.append(lightboxContainer);
         $("#photos").append(imgContainer);
     }
+
+    $('body').on('click', '.dog-img-container button', function() {
+        console.log("ads");
+        // let photoId = $('#btn-delete-photo');
+        // $.ajax({
+        //     method: "DELETE",
+        //     url: urlpath + "/photos/" + nextPage,
+        //     success: function(data){
+        //         if (data.status == "success") {
+        //             console.log(data);
+        //             $("#load-more-photos").attr("current-page", nextPage);
+        //             for (let photo of data.photos) {
+        //                 addDogPhoto(photo);
+        //             }
+        //             if (data.isLastPage) {
+        //                 $("#load-more-photos").hide();
+        //             }
+        //         } else {
+        //             console.log(data);
+        //         }
+        //     },
+        //     error: function(data){
+        //         console.log("fail updating avatar");
+        //         console.log(data);
+        //     }
+        // });
+    });
 });
 
 function updateLabelAndData(chart, label, data) {
