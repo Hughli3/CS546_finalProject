@@ -31,7 +31,7 @@ const main = async () => {
             "Painting",
             "Male",
             "1988-03-19",
-            "samoye",
+            "samoyed",
             userId
         );
     }

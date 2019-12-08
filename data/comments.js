@@ -111,7 +111,7 @@ async function deleteComments(id){
     );
   
   if (userUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the dog in the user comments ${id} list`;
+    throw `Could not delete the dog in the user  ${id} comments list`;
   }
 
   const dogsCollection = await dogs();
@@ -121,7 +121,7 @@ async function deleteComments(id){
     );
   
   if (dogUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the comment in the dog comments ${id} list`;
+    throw `Could not delete the comment in the dog ${id} comments list`;
   }
   
   const deletionInfo = await commentsCollection.removeOne({_id:parsedId});

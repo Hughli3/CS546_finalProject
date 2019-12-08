@@ -3,7 +3,8 @@ const dogs = mongoCollections.dogs;
 const users = mongoCollections.users;
 const comments = mongoCollections.comments;
 const imgData = require("./img");
-const commentData = require("./comments");
+// const commentData = require("./comments");
+const breedData = require("./breed");
 const ObjectId = require('mongodb').ObjectID;
 const fs = require('fs');
 
@@ -19,14 +20,14 @@ function validateHeightWeight (hw) {
 function validateWeight(weight){
   if (!weight) throw "weight is undefinded";
   if (typeof weight != "number") throw "weight is not of the proper type";
-  if (weight < 0 ) throw "weight is not a positive number";
+  if (weight <= 0 ) throw "weight is not a positive number";
 }
 
 
 function validateHeight(height){
   if (!height) throw "height is undefinded";
   if (typeof height != "number") throw "height is not of the proper type";
-  if (height < 0 ) throw "height is not a positive number";
+  if (height <= 0 ) throw "height is not a positive number";
 }
 
 
@@ -55,10 +56,21 @@ function validateGender(gender){
 }
 
 
+function firstUpperCase(str) {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+}
+
+
 function validateType(type){
   if (!type) throw "type is undefinded";
   if (type.constructor !== String) throw "type is not a string";
+
+  const dogType = firstUpperCase(type)
+  if (!dogType in breedData.breed ){
+    throw "Type is not available";
+  }
 }
+
 
 
 async function validateOwner(owner){
