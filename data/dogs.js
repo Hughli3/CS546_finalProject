@@ -170,17 +170,21 @@ async function updateDog(id, dog){
 async function removeDog(id){
   validateId(id);
 
-  const parsedId = ObjectId.createFromHexString(id);
   const dogsCollection = await dogs();
+  const parsedId = ObjectId.createFromHexString(id);
+  const removedData = await dogsCollection.findOne({_id:parsedId});
+  if (!removedData) throw "could not find dog successfully";
+
+  await commentData.deleteCommentsByDog(id);
+
+  const usersCollection = await users();
+  const parsedOwnerId = ObjectId.createFromHexString(removedData.owner);
+  const updateInfo = await usersCollection.updateOne( { _id: parsedOwnerId }, {$pull: {dogs: id}});
+  if (updateInfo.modifiedCount === 0) throw "could not delete the dog in the user";
 
   const deletionInfo = await dogsCollection.removeOne({ _id: parsedId });
   if (deletionInfo.deletedCount === 0) throw `could not delete dog with id of ${id}`;
 
-  const usersCollection = await users();
-  const updateInfo = await usersCollection.updateOne( { _id: removedData.owner }, {$pull: {dogs: id}});
-  if (updateInfo.modifiedCount === 0) throw "could not delete the dog in the user";
-  // TODO delete comment
-  commentData.deleteCommentsByDog(id);
   // TODO delete photo
 
   return removedData;

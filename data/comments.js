@@ -109,10 +109,10 @@ async function deleteCommentsByDog(dog){
 
   const commentsCollection = await comments();
   const commentsInfo = await commentsCollection.find({dog: dog}).toArray();
-  if (!commentsInfo) throw "could not find comment successfully";
+  // if (!commentsInfo) throw "could not find comment successfully";
 
-  const deletionInfo = await commentsCollection.deleteMany({dog: dog});
-  if (deletionInfo.deletedCount === 0) throw "could not delete comment with the dog";
+  await commentsCollection.deleteMany({dog: dog});
+  // if (deletionInfo.deletedCount === 0) throw "could not delete comment with the dog";
 
   return commentsInfo;
 }

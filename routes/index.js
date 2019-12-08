@@ -120,7 +120,6 @@ const constructorMethod = (app) => {
   app.post('/dog', loginRequired, async (req, res) => {
     try{
       let gender = req.body.gender;
-      console.log(gender);
       let type = req.body.type;
       let dob = req.body.dob;
       let name = req.body.name;
@@ -158,14 +157,12 @@ const constructorMethod = (app) => {
   });
 
   app.delete('/dog/:id', async (req, res) => {
-    let dogId = req.params.id;
- 
     try{
-        await dogData.deleteTheDog(dogId);
-        res.redirect('/profile');
+      let dogId = req.params.id;
+      await dogData.removeDog(dogId);
+      res.json({ status: "success" });
     } catch (e) {
-        res.json(e);
-        return;
+      res.json({status: "error", errorMessage: e});
     }
   });
 

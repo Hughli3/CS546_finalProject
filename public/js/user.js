@@ -1,5 +1,4 @@
 $(function() {
-    let urlpath = window.location.pathname;
     let updateAvatarForm = $("#update-avatar-form");
     let userId = $("#user-id").val();
 
@@ -77,4 +76,24 @@ $(function() {
 
         $('#dogs-container').prepend(dogContainer);
     }
+
+    $('body').on('click', '.dog-container button', function() {
+        let dogContainer = $(this).parent();
+        let dogURI = $(this).next().find('a').attr('href');
+        $.ajax({
+            method: "DELETE",
+            url: dogURI,
+            success: function(data){
+                if (data.status == "success") {
+                    dogContainer.remove();
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
+    });
 });
