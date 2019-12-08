@@ -54,10 +54,14 @@ const main = async () => {
      // =================================
     //  Create some comments
 
+    let comment;
     for (let i = 0; i < 20; i++) {
-        await commentsData.createComments("I am a test", userId, dogId);
+        comment = await commentsData.addComment("I am a test", userId, dogId);
         // console.log(newComment);
     }
+    // console.log(await commentsData.getComment(comment._id.toString()));
+    // console.log(await commentsData.deleteCommentsByDog(dogId));
+    
     console.log("comment created");
 
     // let output = await commentsData.getComments(newComment._id.toString());

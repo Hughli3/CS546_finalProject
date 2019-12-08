@@ -3,7 +3,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const dogs = mongoCollections.dogs;
-const commments = mongoCollections.comments;
 const ObjectId = require('mongodb').ObjectID;
 const imgData = require("../data/img");
 const dogData = require("../data/dogs");
@@ -52,8 +51,7 @@ async function addUser(username, password){
       username: username.toLowerCase(),
       password: bcryptjsPassword,
       avatar: null,
-      dogs: [],
-      commments: []}
+      dogs: []}
 
   const insertInfo = await usersCollection.insertOne(user);
   if (insertInfo.insertedCount === 0) throw "Could not create a new user";

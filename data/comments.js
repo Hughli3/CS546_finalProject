@@ -4,17 +4,11 @@ const mongoCollections = require("../config/mongoCollections");
 const comments = mongoCollections.comments;
 const users = mongoCollections.users;
 const dogs = mongoCollections.dogs;
-
-const { ObjectId } = require("mongodb");
+const imgData = require("./img");
+const ObjectId = require('mongodb').ObjectID;
 
 //========================================
 // Check input
-function isString (name){
-    if (name.constructor == String){
-        return true;
-      }else return false;
-}
-
 function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 }
@@ -25,183 +19,224 @@ function validateId(id){
   if (!ObjectId.isValid(id)) throw "id is invalid";
 }
 
+async function validateUser(user){
+  if (!user) throw "user is undefinded";
+  if (!ObjectId.isValid(user)) throw "user is invalid";
+
+  let parsedId = ObjectId.createFromHexString(user);
+  const usersCollection = await users();
+  const userInfo = await usersCollection.findOne({_id: parsedId});
+  if (!userInfo) throw "user is not exist";
+}
+
+function validateContent(content){
+  if (!content) throw "content is undefinded";
+  if (content.constructor !== String) throw "content is not a string";
+}
+
+async function validateDog(dog){
+  if (!dog) throw "dog is undefinded";
+  if (!ObjectId.isValid(dog)) throw "dog is invalid";
+
+  let parsedId = ObjectId.createFromHexString(dog);
+  const dogsCollection = await dogs();
+  const dogInfo = await dogsCollection.findOne({_id: parsedId});
+  if (!dogInfo) throw "dog is not exist";
+}
+
 //========================================
 // body functions here
 
-async function createComments(content, author, dog){
-  if (!author) throw "Your input author is not exist.";
-  if (!content) throw "Your input content is not exist.";
-  if(!isString(content))  `${content || "Provided input"} is not a string.`
+async function addComment(content, user, dog) {
+  validateContent(content);
+  await validateUser(user);
+  await validateDog(dog);
+
+  let comment = {
+    content: content,
+    user: user,
+    dog: dog,
+    date: new Date()
+  }
+  
   const commentsCollection = await comments();
+  const insertInfo = await commentsCollection.insertOne(comment);
+  if (insertInfo.insertedCount === 0) throw "could not add comments";
+  const commentId = insertInfo.insertedId;
 
-  let date = new Date();
-  let formated_date = convertDateToString(date);
-  let newComment = {
-    content:content,
-    author:author,
-    dog:dog,
-    date: formated_date
-  }
-  
-  
-  // =============
-  // before create a new comments check if user and dog exist
-  parsedAuthor = ObjectId.createFromHexString(newComment.author);
-  const usersCollection = await users();
-
-  const aUser = await usersCollection.findOne({_id:parsedAuthor});
-  if (aUser == null) throw `Could not find the user with id of ${parsedAuthor}`;
-
-
-  parsedDog = ObjectId.createFromHexString(newComment.dog);
-  const dogsCollection = await dogs();
-  const aDog = await dogsCollection.findOne({_id:parsedDog});
-  if (aDog == null) throw `Could not find the dog with id of ${parsedDog}`;
-  // =============
-
-
-  const insertInfo = await commentsCollection.insertOne(newComment);
-    if (insertInfo.insertedCount === 0) throw "Could not add comments";
-
-    const newId = insertInfo.insertedId;
-    const userUpdateInfo = await usersCollection.updateOne({ _id: parsedAuthor }, {$addToSet: {comments: ObjectId(newId).toString()}});
-    if (userUpdateInfo.modifiedCount === 0) throw "Could not add comment to the user";
-    
-    parsedDog = ObjectId.createFromHexString(newComment.dog);
-    const dogUpdateInfo = await dogsCollection.updateOne({ _id: parsedDog }, {$addToSet: {comments: ObjectId(newId).toString()}});
-    if (dogUpdateInfo.modifiedCount === 0) throw "Could not add comment to the dog";
-
-    const comment =  await getComment(ObjectId(newId).toString());
-    return comment;
-}
-
-async function updateComments(id){
-  validateId(id);
-
-  const parsedId = ObjectId.createFromHexString(id);
-
-  const commentsCollection = await comments();
-
-  const updateComment = {
-      content: content
-    };
-   
-  const updateInfo = await commentsCollection.updateOne({ _id: parsedId }, { $set: updateComment});
-
-  if (updateInfo.modifiedCount === 0) {
-      throw "Could not update comment successfully";
-    }
-
-  return await this.get(ObjectId(id).toString());
-}
-
-async function deleteComments(id){
-  validateId(id);
-
-  parsedId = ObjectId.createFromHexString(id);
-  const commentsCollection = await comments();
-
-  const comment = await commentsCollection.findOne({_id:parsedId});
-
-  
-  const usersCollection = await users();
-  const userUpdateInfo = await usersCollection.updateOne(
-    { _id: ObjectId.createFromHexString(comment.author) }
-    ,{$pull: {comments: id}}
-    );
-  
-  if (userUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the dog in the user  ${id} comments list`;
-  }
-
-  const dogsCollection = await dogs();
-  const dogUpdateInfo = await dogsCollection.updateOne(
-    { _id: ObjectId.createFromHexString(comment.dog) }
-    ,{$pull: {comments: id}}
-    );
-  
-  if (dogUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the comment in the dog ${id} comments list`;
-  }
-  
-  const deletionInfo = await commentsCollection.removeOne({_id:parsedId});
-  if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete dog with id of ${id}`;
-  }
-// just return comment content without user info and dog info 
-return comment;
+  return await getComment(ObjectId(commentId).toString());
 }
 
 async function getComment(id){
   validateId(id);
 
-  let parsedId = ObjectId.createFromHexString(id);
   const commentsCollection = await comments();
-
+  let parsedId = ObjectId.createFromHexString(id);
   const comment = await commentsCollection.findOne({_id:parsedId});
-  if (comment == null) throw `could not find the comment with id of ${parsedId}`;
+  if (!comment) throw `could not find the comment with id of ${parsedId}`;
 
-  let parsedUserId = ObjectId.createFromHexString(comment.author);
+  let parsedUserId = ObjectId.createFromHexString(comment.user);
   const usersCollection = await users();
-  const userInfo = await usersCollection.findOne({ _id: parsedUserId });
-  if (userInfo == null) throw "could not find author successfully";
-
-  comment.author = userInfo;
+  const userInfo = await usersCollection.findOne({_id: parsedUserId });
+  if (!userInfo) throw "could not find user successfully";
+  
+  comment.user = {};
+  comment.user.username = userInfo.username;
+  comment.date = convertDateToString(comment.date);
+  if (comment.user.avatar) {
+    comment.user.avatar = await imgData.getPhotoDataId(comment.user.avatar);
+  }
 
   return comment;
 }
 
-async function getAllComments(){
-  const commentsCollection = await comments();
+async function deleteComment(id){
+  validateId(id);
 
-  const comment = await commentsCollection.find().toArray();
-  if (comment == null) throw `Could not find the comments`;
+  const commentsCollection = await comments();
+  let parsedId = ObjectId.createFromHexString(id);
+  const comment = await commentsCollection.findOne({_id:parsedId});
+  if (!comment) throw "could not find comment successfully";
+
+  const deletionInfo = await commentsCollection.deleteOne({_id:parsedId});
+  if (deletionInfo.deletedCount === 0) throw `could not delete comment with id of ${id}`;
+
+  return comment;
+}
+
+async function deleteCommentsByDog(dog){
+  await validateDog(dog);
+
+  const commentsCollection = await comments();
+  const commentsInfo = await commentsCollection.find({dog: dog}).toArray();
+  if (!commentsInfo) throw "could not find comment successfully";
+
+  const deletionInfo = await commentsCollection.deleteMany({dog: dog});
+  if (deletionInfo.deletedCount === 0) throw "could not delete comment with the dog";
+
+  return commentsInfo;
+}
+
+async function getCommentsByUser(user){
+  await validateUser(user);
+
+  const commentsCollection = await comments();
+  const comment = await commentsCollection.find({user: user}).toArray();
+  if (!comment) throw `Could not find the comments with the user`;
 
   return comment
 }
 
+async function getCommentsByDog(dog){
+  await validateDog(dog);
 
-async function deleteAllComments(ids){
-  // delete all comments
   const commentsCollection = await comments();
-  const usersCollection = await users();
-  const dogsCollection = await dogs();
+  const commentInfo = await commentsCollection.find({dog: dog}).toArray();
+  if (!commentInfo) throw `Could not find the comments with the dog`;
 
-  for (let i = 0; i < ids.length; i++){
-    let commentId = ids[i];
-    let parsedCommentId = ObjectId.createFromHexString(commentId);
-    const deletionInfo = commentsCollection.removeOne({_id:parsedCommentId});
-    if (deletionInfo.deletedCount === 0) {
-      throw `Could not delete comment with id of ${id}`;
+  for (let comment of commentInfo) {
+    const usersCollection = await users();
+    let parsedUserId = ObjectId.createFromHexString(comment.user);
+    const userInfo = await usersCollection.findOne({_id: parsedUserId });
+    if (!userInfo) throw "could not find user successfully";
+    comment.user = {};
+    comment.user.username = userInfo.username;
+    comment.date = convertDateToString(comment.date);
+    if (comment.user.avatar) {
+      comment.user.avatar = await imgData.getPhotoDataId(comment.user.avatar);
     }
-
-  const comment = await commentsCollection.findOne({_id:parsedCommentId});
-  const userUpdateInfo = await usersCollection.updateOne(
-    { _id: ObjectId.createFromHexString(comment.author) }
-    ,{$pull: {comments: id}}
-    );
-  
-  if (userUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the dog in the user comments ${id} list`;
   }
 
-  
-  const dogUpdateInfo = await dogsCollection.updateOne(
-    { _id: ObjectId.createFromHexString(comment.dog) }
-    ,{$pull: {comments: id}}
-    );
-  
-  if (dogUpdateInfo.modifiedCount === 0){
-    throw `Could not delete the comment in the dog comments ${id} list`;
-  }
-  }
-
+  return commentInfo;
 }
+
+// async function deleteAllComments(ids){
+//   // delete all comments
+//   const commentsCollection = await comments();
+//   const usersCollection = await users();
+//   const dogsCollection = await dogs();
+
+//   for (let i = 0; i < ids.length; i++){
+//     let commentId = ids[i];
+//     let parsedCommentId = ObjectId.createFromHexString(commentId);
+//     const deletionInfo = commentsCollection.removeOne({_id:parsedCommentId});
+//     if (deletionInfo.deletedCount === 0) {
+//       throw `Could not delete comment with id of ${id}`;
+//     }
+
+//   const comment = await commentsCollection.findOne({_id:parsedCommentId});
+//   const userUpdateInfo = await usersCollection.updateOne(
+//     { _id: ObjectId.createFromHexString(comment.author) }
+//     ,{$pull: {comments: id}}
+//     );
+  
+//   if (userUpdateInfo.modifiedCount === 0){
+//     throw `Could not delete the dog in the user comments ${id} list`;
+//   }
+
+  
+//   const dogUpdateInfo = await dogsCollection.updateOne(
+//     { _id: ObjectId.createFromHexString(comment.dog) }
+//     ,{$pull: {comments: id}}
+//     );
+  
+//   if (dogUpdateInfo.modifiedCount === 0){
+//     throw `Could not delete the comment in the dog comments ${id} list`;
+//   }
+//   }
+
+// }
 module.exports = {
-  createComments,
-  updateComments,
-  deleteComments,
+  addComment,
   getComment,
-  getAllComments,
-  deleteAllComments
-  }
+  getCommentsByUser,
+  getCommentsByDog,
+  deleteComment,
+  deleteCommentsByDog,
+  // updateComments,
+  // deleteAllComments
+}
+
+
+
+// async function updateComments(id){
+//   validateId(id);
+
+//   const parsedId = ObjectId.createFromHexString(id);
+
+//   const commentsCollection = await comments();
+
+//   const updateComment = {
+//       content: content
+//     };
+   
+//   const updateInfo = await commentsCollection.updateOne({ _id: parsedId }, { $set: updateComment});
+
+//   if (updateInfo.modifiedCount === 0) {
+//       throw "Could not update comment successfully";
+//     }
+
+//   return await this.get(ObjectId(id).toString());
+// }
+
+
+  // FOR DELETION
+  // const usersCollection = await users();
+  // const userUpdateInfo = await usersCollection.updateOne(
+  //   { _id: ObjectId.createFromHexString(comment.author) }
+  //   ,{$pull: {comments: id}}
+  //   );
+  
+  // if (userUpdateInfo.modifiedCount === 0){
+  //   throw `Could not delete the dog in the user  ${id} comments list`;
+  // }
+
+  // const dogsCollection = await dogs();
+  // const dogUpdateInfo = await dogsCollection.updateOne(
+  //   { _id: ObjectId.createFromHexString(comment.dog) }
+  //   ,{$pull: {comments: id}}
+  //   );
+  
+  // if (dogUpdateInfo.modifiedCount === 0){
+  //   throw `Could not delete the comment in the dog ${id} comments list`;
+  // }

@@ -1,3 +1,6 @@
+{{#section 'style'}}
+<link type="text/css" href="/public/vendor/lightbox2/css/lightbox.min.css" rel="stylesheet">
+{{/section}}
 <section class="section">
     <div class="container">
         <div class="row">
@@ -46,7 +49,12 @@
         <button class="btn btn-primary" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
         <div id="photos" class="row">
             {{#each dog.photos}}
-            <img class="col-3 my-3" src="{{ this }}" >
+            <div class="col-lg-3 col-6 my-3 dog-img-container">
+                <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>
+                <a href="{{ this }}" data-alt="dog photos" data-lightbox="photos">
+                    <img class="dog-img img-fluid rounded w-100" alt="dog photos" src="{{ this }}">
+                </a>
+            </div>
             {{/each}}
         </div>
 
@@ -225,8 +233,18 @@
 
 {{#section 'script'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
 <script src="/public/js/healthChart.js"></script>
 <script src="/public/js/dogs.js"></script>
+<script>
+    lightbox.option({
+        'fadeDuration': 200,
+        'imageFadeDuration': 200,
+        'showImageNumberLabel': false,
+        'resizeDuration': 200,
+        'wrapAround': true
+    })
+</script>
 {{#if dog.heightWeight}}
 <script>
 {{#each dog.healthDateList}}

@@ -81,7 +81,7 @@ $(function() {
                 if (data.status == "success") {
                     $("#photos").empty();
                     for(let photo of data.photos) {
-                        $("#photos").append('<img class="col-3 my-3" src="' + photo + '" />');
+                        addDogPhoto(photo);
                     }
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
@@ -109,7 +109,7 @@ $(function() {
                     console.log(data);
                     $("#load-more-photos").attr("current-page", nextPage);
                     for (let photo of data.photos) {
-                        $("#photos").append('<img class="col-3 my-3" src="' + photo + '" />');
+                        addDogPhoto(photo);
                     }
                     if (data.isLastPage) {
                         $("#load-more-photos").hide();
@@ -124,6 +124,15 @@ $(function() {
             }
         });
     });
+
+    function addDogPhoto(photo) {
+        let imgContainer = $('<div class="col-lg-3 col-6 my-3 dog-img-container">');
+        let lightboxContainer = $('<a href="' + photo + '" data-alt="dog photos" data-lightbox="photos">');
+        lightboxContainer.append('<img class="dog-img img-fluid rounded w-100" alt="dog photos" src="' + photo + '" />');
+        imgContainer.append('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>');
+        imgContainer.append(lightboxContainer);
+        $("#photos").append(imgContainer);
+    }
 });
 
 function updateLabelAndData(chart, label, data) {

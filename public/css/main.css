@@ -1,3 +1,13 @@
 .footer.has-cards {
     margin-top: -525px;
 }
+
+.btn-delete-photo {
+    display: none;
+    right: 15px;
+    top: 10px;
+}
+
+.dog-img-container:hover .btn-delete-photo{
+    display: block;
+}
