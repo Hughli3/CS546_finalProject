@@ -16,32 +16,63 @@
                 </div>
             </div>
             <div class="col-9">
-                <h1><span id="dog-name">{{ dog.name }}</span></h1>            
-                <h4>Type: <span id="dog-type">{{ dog.type }} </span> Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h4>
-                <h4> </h4>
-                <h4>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h4>
-                <h4>Owner: {{ dog.owner }}</h2>
-                <button id="edit-dog-profile-button" class="btn btn-primary my-2" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
+                <div class="dog-info-container">
+                    <h1><span id="dog-name">{{ dog.name }}</span></h1>
+                    <h2>Type</h2>
+                    <p id="dog-type">{{ dog.type }}</p>
+                    <h2>Gender</h2>
+                    <p id="dog-gender">{{ dog.gender }}</p>
+                    <h2>Age</h2>
+                    <p id="dog-age">{{ dog.age }}</p>
+                    <div>
+                        <h2>Birthday</h2>
+                        <p id="dog-dob">{{ dog.dob }}</p>
+                    </div>
+                    <div>
+                        <h2>Owner</h2>
+                        <p id="dog-owner">{{ dog.owner }}</p>
+                    </div>
+                </div>
+                <button id="edit-dog-profile-button" class="btn btn-primary my-3" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
             </div>
         </div>
     </div>
 </section>
 
 {{!-- Health --}}
-<section class="m-5">
+<section class="m-4">
     <div class="container">
         <h1>Health</h1>
-        {{#if dog.heightWeight}}
-        <h4>Weight: <span id="dog-weight">{{ dog.weight }}</span> Height: <span id="dog-height">{{ dog.height }}</span> BMI: <span id="dog-bmi">{{ dog.bmi }}</span> Health condition: Good</h4>
-        <h4>LastUpdate: {{ dog.lastHeightWeightUpdate }}</h4>
-        {{else}}
-        <h3>Please update weight and height of the dog to see health data.</h3>
-        {{/if}}
-        <button id="add-height-weight-button" class="btn btn-primary my-2" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
-        <div class="row">
-            <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
-            <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
-        </div> 
+        <div class="dog-health-container">
+            {{#unless dog.heightWeight}}
+            <p id="no-data-found-alert-health" class="no-data-found-alert">Please update weight and height of the dog to see health data.</p>
+            {{/unless}}
+            <div class="dog-health-info">
+                {{#if dog.heightWeight}}
+                <div class="dog-health-info-basic">
+                    <h2>Weight</h2>
+                    <p id="dog-weight">{{ dog.weight }}</p>
+                    <h2>Height</h2>
+                    <p id="dog-height">{{ dog.height }}</p> 
+                    <h2>BMI</h2>
+                    <p id="dog-bmi">{{ dog.bmi }}</p>
+                </div>
+                <div class="dog-health-info-condition">
+                    <h2>Health Condition</h2>
+                    <p id="dog-health">Good</p>
+                </div>
+                <div class="dog-health-info-date">
+                    <h2>Last Update</h2>
+                    <p id="dog-date">{{ dog.lastHeightWeightUpdate }}</p>
+                </div>
+                {{/if}}
+            </div>
+            <button id="add-height-weight-button" class="btn btn-primary my-3" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
+            <div class="row">
+                <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
+                <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
+            </div> 
+        </div>
     </div>
 </section>
 
@@ -49,7 +80,8 @@
 <section class="m-4">
     <div class="container">
         <h1>Photos</h1>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
+        <p {{#if photos}}style="display: none"{{/if}} id="no-data-found-alert-photo" class="no-data-found-alert">No photos found. Welcome to upload your lovely photos.</p>
+        <button class="btn btn-primary my-2" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
         <div id="photos" class="row">
             {{#each photos}}
             <div class="col-lg-3 col-6 my-3 dog-img-container">
@@ -61,7 +93,7 @@
             {{/each}}
         </div>
         <div class="text-center">
-            <button id="load-more-photos" current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
+            <button id="load-more-photos" data-current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
         </div>
     </div>
 </section>
@@ -70,6 +102,9 @@
 <section class="m-4">
     <div class="container">
         <h1>Comment</h1>
+        {{#unless comments}}
+        <p id="no-data-found-alert-comment" class="no-data-found-alert">No comments found.</p>
+        {{/unless}}
         <div id="comments" class="comment-container">
         {{#each comments}}
             <div class="row single-comment">
@@ -93,12 +128,12 @@
         {{/each}}
         </div>
         <div class="text-center">
-            <button id="load-more-comments" current-page="1" {{#if isCommentLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load more</button>
+            <button id="load-more-comments" data-current-page="1" {{#if isCommentLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load more</button>
         </div>
         <div class="comment-form-container my-4">
             <form id="comment-form">
                 <label for="comment-form-content">Comment</label>
-                <textarea class="form-control" class="comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
+                <textarea class="form-control comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
                 <button class="btn btn-primary btn-comment" type="submit">Post comment</button>
             </form>
         </div>
@@ -107,10 +142,10 @@
 
 {{!-- modal for edit profile --}}
 <div class="modal fade" id="edit-dog-profile-modal" tabindex="-1" role="dialog" aria-labelledby="edit-dog-profile-modal" aria-hidden="true">
-    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-default">Edit profile</h6>
+                <h6 class="modal-title">Edit profile</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -157,10 +192,10 @@
 
 {{!-- modal for upload photo --}}
 <div class="modal fade" id="upload-photo-modal" tabindex="-1" role="dialog" aria-labelledby="upload-photo-modal" aria-hidden="true">
-    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
+                <h6 class="modal-title">Upload photo</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -185,7 +220,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
+                <h6 class="modal-title">Update health information</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -202,7 +237,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                     <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -215,7 +250,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-default">Upload photo</h6>
+                <h6 class="modal-title">Upload avatar</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>

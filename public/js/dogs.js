@@ -85,7 +85,8 @@ $(function() {
                     }
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
-                    $("#load-more-photos").attr("current-page", "1");
+                    $("#load-more-photos").data("current-page", "1");
+                    $("#no-data-found-alert-photo").hide();
                 } else {
                     console.log(data);
                 }
@@ -98,7 +99,7 @@ $(function() {
     });
 
     $("#load-more-photos").click(function() {
-        let page = $("#load-more-photos").attr("current-page");
+        let page = $("#load-more-photos").data("current-page");
         let nextPage = parseInt(page) + 1;
 
         $.ajax({
@@ -106,7 +107,7 @@ $(function() {
             url: urlpath + "/photos?page=" + nextPage,
             success: function(data){
                 if (data.status == "success") {
-                    $("#load-more-photos").attr("current-page", nextPage);
+                    $("#load-more-photos").data("current-page", nextPage);
                     for (let photo of data.photos) {
                         addDogPhoto(photo.id, photo.photo);
                     }
@@ -125,7 +126,7 @@ $(function() {
     });
 
     $("#load-more-comments").click(function() {
-        let page = $("#load-more-comments").attr("current-page");
+        let page = $("#load-more-comments").data("current-page");
         let nextPage = parseInt(page) + 1;
 
         $.ajax({
@@ -133,7 +134,7 @@ $(function() {
             url: urlpath + "/comments?page=" + nextPage,
             success: function(data){
                 if (data.status == "success") {
-                    $("#load-more-comments").attr("current-page", nextPage);
+                    $("#load-more-comments").data("current-page", nextPage);
                     for (let comment of data.comments) {
                         addComment(comment);
                     }
@@ -167,7 +168,8 @@ $(function() {
                     }
                     if (data.isLastPage) $("#load-more-comments").hide();
                     else $("#load-more-comments").show();
-                    $("#load-more-comments").attr("current-page", "1");
+                    $("#load-more-comments").data("current-page", "1");
+                    $("#no-data-found-alert-comment").hide();
                 } else {
                     console.log(data);
                 }
@@ -214,12 +216,17 @@ $(function() {
             success: function(data){
                 if (data.status == "success") {
                     $("#photos").empty();
-                    for(let photo of data.photos) {
-                        addDogPhoto(photo.id, photo.photo);
+                    if (data.photos.length) {
+                        console.log(data.photos);
+                        for(let photo of data.photos) {
+                            addDogPhoto(photo.id, photo.photo);
+                        }
+                    } else {
+                        $("#no-data-found-alert-photo").show();
                     }
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
-                    $("#load-more-photos").attr("current-page", "1");
+                    $("#load-more-photos").data("current-page", "1");
                 } else {
                     console.log(data);
                 }
