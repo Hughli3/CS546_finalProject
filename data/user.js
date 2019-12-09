@@ -26,7 +26,7 @@ function validateUsername(username){
 function validatePassword(password){
   if (!password) throw "password is undefinded";
   if (password.constructor !== String) throw "password is not of the proper type";
-  if (password.length < 6 ) throw "usernapasswordme too short";
+  if (password.length < 6 ) throw "user password too short";
 }
 
 function validateImage(image) {
