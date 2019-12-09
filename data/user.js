@@ -84,7 +84,7 @@ async function getUser(id){
 
 async function changePassword(id, newPassword){
   validateId(id);
-  validatePassword(passnewPasswordword);
+  validatePassword(newPassword);
   
   const parsedId = ObjectId.createFromHexString(id);
   const newbcryptjsPassword = await bcryptjs.hash(newPassword, saltRounds);

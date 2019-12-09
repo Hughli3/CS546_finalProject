@@ -2,7 +2,7 @@
 <link type="text/css" href="/public/vendor/lightbox2/css/lightbox.min.css" rel="stylesheet">
 {{/section}}
 {{!-- Basic Info --}}
-<section class="section">
+<section class="mt-5">
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -11,33 +11,33 @@
                 {{else}}
                 <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
                 {{/if}}
+                <div class="text-center">
+                    <button data-toggle="modal" class="btn btn-secondary my-3" data-target="#update-avatar-modal">Change avatar</button>
+                </div>
             </div>
             <div class="col-9">
-                <h1><span id="dog-name">{{ dog.name }}</span></h1>
-                <button data-toggle="modal" class="btn btn-primary" data-target="#update-avatar-modal">Change avatar</a>
-                <button id="edit-dog-profile-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
-            
+                <h1><span id="dog-name">{{ dog.name }}</span></h1>            
                 <h4>Type: <span id="dog-type">{{ dog.type }} </span> Gender: <span id="dog-gender">{{ dog.gender }}</span> Age: <span id="dog-age">{{ dog.age }}</span> </h4>
                 <h4> </h4>
                 <h4>Birthday: <span id="dog-dob">{{ dog.dob }}</span></h4>
-
                 <h4>Owner: {{ dog.owner }}</h2>
+                <button id="edit-dog-profile-button" class="btn btn-primary my-2" data-toggle="modal" data-target="#edit-dog-profile-modal">Edit</button>
             </div>
         </div>
     </div>
 </section>
 
 {{!-- Health --}}
-<section>
+<section class="m-5">
     <div class="container">
         <h1>Health</h1>
-        <button id="add-height-weight-button" class="btn btn-primary" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
         {{#if dog.heightWeight}}
-        <h4>Weight: {{ dog.weight }} Height: {{ dog.height }} BMI: {{ dog.bmi }} LastUpdate: {{ dog.lastHeightWeightUpdate }}</h4>
-        <h4>Health condition: good</h4>
+        <h4>Weight: <span id="dog-weight">{{ dog.weight }}</span> Height: <span id="dog-height">{{ dog.height }}</span> BMI: <span id="dog-bmi">{{ dog.bmi }}</span> Health condition: Good</h4>
+        <h4>LastUpdate: {{ dog.lastHeightWeightUpdate }}</h4>
         {{else}}
         <h3>Please update weight and height of the dog to see health data.</h3>
         {{/if}}
+        <button id="add-height-weight-button" class="btn btn-primary my-2" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
         <div class="row">
             <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
             <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
@@ -46,7 +46,7 @@
 </section>
 
 {{!-- Photo --}}
-<section>
+<section class="m-4">
     <div class="container">
         <h1>Photos</h1>
         <button class="btn btn-primary" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
@@ -60,33 +60,52 @@
             </div>
             {{/each}}
         </div>
-
-        {{#if dog.isPhotoLastPage}}
-        <button id="load-more-photos" style="display: none" current-page="1" class="btn btn-primary">Load More</button>
-        {{else}}
-        <button id="load-more-photos" current-page="1" class="btn btn-primary">Load More</button>
-        {{/if}}
-
+        <div class="text-center">
+            {{#if dog.isPhotoLastPage}}
+            <button id="load-more-photos" style="display: none" current-page="1" class="btn btn-secondary">Load More</button>
+            {{else}}
+            <button id="load-more-photos" current-page="1" class="btn btn-secondary">Load More</button>
+            {{/if}}
+        </div>
     </div>
 </section>
 
 {{!-- Comment --}}
-<section>
+<section class="m-4">
     <div class="container">
         <h1>Comment</h1>
         <div class="comment-container">
         {{#each comments}}
-            <div class="card single-comment">
-                <img class="avatar" src="{{user.avatar}}">
-                <p>{{content}}</p>
-                <p>Author: {{user.username}} {{date}}</p>
+            <div class="row single-comment">
+                <div class="col-2">
+                    {{#if user.avatar}}
+                    <img class="avatar" src="{{user.avatar}}">
+                    {{else}}
+                    <img class="avatar" src="/public/img/dog/1.jpg">
+                    {{/if}}
+                </div>
+                <div class="col-10">
+                    <div class="comment-content">
+                        <p>{{content}}</p>
+                        <p class="comment-data">
+                            <a href="#">{{user.username}}</a>
+                            <span class="comment-date">{{date}}</span>
+                        </p>
+                    </div>
+                </div>
             </div>
         {{/each}}
+            <div class="text-center">
+                <button class="btn btn-secondary">Load more</button>
+            </div>
         </div>
-        <form>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Write a large text here ..."></textarea>
-            <button class="btn btn-primary">Submit</button>
-        </form>
+        <div class="comment-form-container my-4">
+            <form id="comment-form">
+                <label for="comment-form-content">Comment</label>
+                <textarea class="form-control" class="comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
+                <button class="btn btn-primary btn-comment" type="submit">Post comment</button>
+            </form>
+        </div>
     </div>
 </section>
 
