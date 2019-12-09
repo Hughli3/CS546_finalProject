@@ -118,11 +118,84 @@ $(function() {
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
+                console.log("fail updating photos");
                 console.log(data);
             }
         });
     });
+
+    $("#load-more-comments").click(function() {
+        let page = $("#load-more-comments").attr("current-page");
+        let nextPage = parseInt(page) + 1;
+
+        $.ajax({
+            method: "GET",
+            url: urlpath + "/comments?page=" + nextPage,
+            success: function(data){
+                if (data.status == "success") {
+                    $("#load-more-comments").attr("current-page", nextPage);
+                    for (let comment of data.comments) {
+                        addComment(comment);
+                    }
+                    if (data.isLastPage) $("#load-more-comments").hide();
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating comments");
+                console.log(data);
+            }
+        });
+    });
+
+    $('#comment-form').submit(function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: urlpath + "/comments",
+            contentType: "application/json",
+            data: JSON.stringify({
+                content: $("#comment-form-content").val()
+            }),
+            success: function(data){
+                if (data.status == "success") {
+                    $("#comments").empty();
+                    for (let comment of data.comments) {
+                        addComment(comment);
+                    }
+                    if (data.isLastPage) $("#load-more-comments").hide();
+                    else $("#load-more-comments").show();
+                    $("#load-more-comments").attr("current-page", "1");
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail posting comment");
+                console.log(data);
+            }
+        });
+    });
+
+    function addComment(comment) {
+        let commentContainer = $('<div class="row single-comment">');
+        let avatarContainer = $('<div class="col-2">');
+        let avatar = $('<img class="avatar" src="' + comment.user.avatar + '">');
+        avatarContainer.append(avatar);
+        let contentContainer = $('<div class="col-10">');
+        let contentInnerContainer = $('<div class="comment-content">');
+        contentInnerContainer.append('<p>' + comment.content + '</p>');
+        let contentDataContainer = $('<p class="comment-data">');
+        contentDataContainer.append('<a href="/user/' + comment.user.username + '">' + comment.user.username + '</a> ');
+        contentDataContainer.append('<span class="comment-date">' + comment.date + '</span>');
+        contentInnerContainer.append(contentDataContainer);
+        contentContainer.append(contentInnerContainer);
+        commentContainer.append(avatarContainer);
+        commentContainer.append(contentContainer);
+        $("#comments").append(commentContainer);
+    }
 
     function addDogPhoto(id, photo) {
         let imgContainer = $('<div class="col-lg-3 col-6 my-3 dog-img-container">');

@@ -62,9 +62,8 @@ async function addComment(content, user, dog) {
   const commentsCollection = await comments();
   const insertInfo = await commentsCollection.insertOne(comment);
   if (insertInfo.insertedCount === 0) throw "could not add comments";
-  const commentId = insertInfo.insertedId;
 
-  return await getComment(ObjectId(commentId).toString());
+  return await getCommentsByDog(dog);
 }
 
 async function getComment(id){
@@ -121,7 +120,7 @@ async function getCommentsByUser(user){
   await validateUser(user);
 
   const commentsCollection = await comments();
-  const comment = await commentsCollection.find({user: user}).toArray();
+  const comment = await commentsCollection.find({user: user}).sort({date: -1}).toArray();
 
   return comment
 }
@@ -130,7 +129,7 @@ async function getCommentsByDog(dog){
   await validateDog(dog);
 
   const commentsCollection = await comments();
-  const commentInfo = await commentsCollection.find({dog: dog}).toArray();
+  const commentInfo = await commentsCollection.find({dog: dog}).sort({date: -1}).toArray();
 
   for (let comment of commentInfo) {
     const usersCollection = await users();
