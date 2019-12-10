@@ -63,7 +63,7 @@ $(function() {
         let button = $('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>')
         let card = $('<div class="card">');
         let a = $('<a href="/dog/' + id + '">');
-        let img = $('<img src="/public/img/dog/1.jpg" class="card-img-top" alt="dog avatar">');
+        let img = $('<img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="dog avatar">');
         if (avatar) {
             img = $('<img src="' + avatar + '" class="card-img-top" alt="dog avatar">');
         }

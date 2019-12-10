@@ -194,7 +194,7 @@ async function removeDog(id){
 
 async function getAllDogs(){
   const dogsCollection = await dogs();
-  const allDogs = await dogsCollection.find().toArray();
+  const allDogs = await dogsCollection.find().sort({ $natural: -1 }).toArray();
   if (!allDogs) throw 'no dog found';
 
   for(let dog of allDogs) {
@@ -225,8 +225,8 @@ async function getDog(id){
 
   if(dog.heightWeight && dog.heightWeight.length) {
     dog.weightList = [], dog.bmiList = [], dog.healthDateList = [];
-    dog.weight = dog.heightWeight[0].weight;
-    dog.height = dog.heightWeight[0].height;
+    dog.weight = dog.heightWeight[dog.heightWeight.length - 1].weight;
+    dog.height = dog.heightWeight[dog.heightWeight.length - 1].height;
     dog.bmi = Math.round(dog.weight / dog.height * 100) / 100;
     dog.lastHeightWeightUpdate = convertDateToString(dog.heightWeight[0].date);
     for (let hw of dog.heightWeight) {

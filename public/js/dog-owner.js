@@ -77,7 +77,7 @@ $(function() {
                 if (data.status == "success") {
                     $("#photos").empty();
                     for(let photo of data.photos) {
-                        addDogPhoto(photo.id, photo.photo);
+                        addDogPhoto(photo.id, photo.photo, true);
                     }
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
@@ -105,7 +105,7 @@ $(function() {
                 if (data.status == "success") {
                     $("#load-more-photos").data("current-page", nextPage);
                     for (let photo of data.photos) {
-                        addDogPhoto(photo.id, photo.photo);
+                        addDogPhoto(photo.id, photo.photo, true);
                     }
                     if (data.isLastPage) {
                         $("#load-more-photos").hide();
@@ -177,16 +177,6 @@ $(function() {
         });
     });
 
-
-    function addDogPhoto(id, photo) {
-        let imgContainer = $('<div class="col-lg-3 col-6 my-3 dog-img-container">');
-        let lightboxContainer = $('<a href="' + photo + '" data-alt="dog photos" data-lightbox="photos">');
-        lightboxContainer.append('<img id="' + id + '" src="' + photo + '" class="dog-img img-fluid rounded w-100" alt="dog photos" />');
-        imgContainer.append('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>');
-        imgContainer.append(lightboxContainer);
-        $("#photos").append(imgContainer);
-    }
-
     $('body').on('click', '.dog-img-container button', function() {
         let photoId = $(this).next().find('img').attr('id');
         $.ajax({
@@ -198,7 +188,7 @@ $(function() {
                     if (data.photos.length) {
                         console.log(data.photos);
                         for(let photo of data.photos) {
-                            addDogPhoto(photo.id, photo.photo);
+                            addDogPhoto(photo.id, photo.photo, true);
                         }
                     } else {
                         $("#no-data-found-alert-photo").show();
@@ -231,9 +221,11 @@ $(function() {
             }}),
             success: function(data){
                 if (data.status == "success") {
-                    console.log(data);
                     updateLabelAndData(bmiChart, data.dog.healthDateList, data.dog.bmiList);
                     updateLabelAndData(weightChart, data.dog.healthDateList, data.dog.weightList);
+                    $('#no-data-found-alert-health').hide();
+                    $('#dog-health-info').show();
+                    updateDogHealthInfo(data.dog.weight, data.dog.height, data.dog.bmi, "good", data.dog.lastHeightWeightUpdate);
                 } else {
                     console.log(data);
                 }

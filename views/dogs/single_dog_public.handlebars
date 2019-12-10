@@ -9,7 +9,7 @@
                 {{#if dog.avatar}}
                 <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
                 {{else}}
-                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
+                <img src="/public/img/avatar/default-dog.png" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
                 {{/if}}
             </div>
             <div class="col-9">
@@ -72,7 +72,7 @@
                     {{#if user.avatar}}
                     <img class="avatar" src="{{user.avatar}}">
                     {{else}}
-                    <img class="avatar" src="/public/img/dog/1.jpg">
+                    <img class="avatar" src="/public/img/avatar/default-user.png">
                     {{/if}}
                 </div>
                 <div class="col-10">
@@ -102,19 +102,10 @@
     </div>
 </section>
 
-
 {{#section 'script'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
 <script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
 <script src="/public/js/main.js"></script>
-<script src="/public/js/dogPublic.js"></script>
-<script>
-    lightbox.option({
-        'fadeDuration': 200,
-        'imageFadeDuration': 200,
-        'showImageNumberLabel': false,
-        'resizeDuration': 200,
-        'wrapAround': true
-    })
-</script>
+<script src="/public/js/dog-main.js"></script>
+<script src="/public/js/dog-public.js"></script>
 {{/section}}
