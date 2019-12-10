@@ -87,3 +87,8 @@ p.no-data-found-alert {
     width: 300px;
     z-index: 9999;
 }
+
+.hide-chart {
+    height: 0 !important;
+    overflow: hidden;
+}

@@ -1,5 +1,35 @@
 $(function() {
-    let urlpath = window.location.pathname;
+    let updateDogHealthInfo = function(weight, height, bmi, condition, date) {
+        $('#dog-weight').text(weight);
+        $('#dog-height').text(height);
+        $('#dog-bmi').text(bmi);
+        $('#dog-health').text(condition);
+        $('#dog-date').text(date);
+    }
+
+    $("#update-avatar-form").submit(function(event) {
+        event.preventDefault();
+        $('#update-avatar-modal').modal('toggle'); 
+
+        $.ajax({
+            method: "POST",
+            url: urlpath + "/avatar",
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function(data){
+                if (data.status == "success") {
+                    $("#dog-avatar").attr("src", data.avatar);
+                } else {
+                    console.log(data);
+                }
+            },
+            error: function(data){
+                console.log("fail updating avatar");
+                console.log(data);
+            }
+        });
+    });    
 
     $("#edit-dog-profile-button").click(function() {
         $("#edit-dog-form-name").val($("#dog-name").text());
@@ -39,26 +69,33 @@ $(function() {
         });
     });
 
-    $("#update-avatar-form").submit(function(event) {
+    $('#add-height-weight-form').submit(function(event) {
         event.preventDefault();
-        $('#update-avatar-modal').modal('toggle'); 
-
+    
         $.ajax({
             method: "POST",
-            url: urlpath + "/avatar",
-            data: new FormData(this),
-            contentType: false,
-            processData: false,
+            url: window.location.pathname + "/heightWeight",
+            contentType: "application/json",
+            data: JSON.stringify({ heightWeight : {
+                height: parseFloat($("#add-height-weight-form-height").val()),
+                weight: parseFloat($("#add-height-weight-form-weight").val())
+            }}),
             success: function(data){
                 if (data.status == "success") {
-                    $("#dog-avatar").attr("src", data.avatar);
+                    $('#add-height-weight-modal').modal('toggle');
+                    success("height weight have been updated");
+                    updateLabelAndData(bmiChart, data.dog.healthDateList, data.dog.bmiList);
+                    updateLabelAndData(weightChart, data.dog.healthDateList, data.dog.weightList);
+                    $('#no-data-found-alert-health').hide();
+                    $('#dog-health-info').show();
+                    $('#dog-health-charts').removeClass('hide-chart');
+                    updateDogHealthInfo(data.dog.weight, data.dog.height, data.dog.bmi, "good", data.dog.lastHeightWeightUpdate);
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
+                error("fail updating height weight");
             }
         });
     });
@@ -94,89 +131,7 @@ $(function() {
         });
     });
 
-    $("#load-more-photos").click(function() {
-        let page = $("#load-more-photos").data("current-page");
-        let nextPage = parseInt(page) + 1;
-
-        $.ajax({
-            method: "GET",
-            url: urlpath + "/photos?page=" + nextPage,
-            success: function(data){
-                if (data.status == "success") {
-                    $("#load-more-photos").data("current-page", nextPage);
-                    for (let photo of data.photos) {
-                        addDogPhoto(photo.id, photo.photo, true);
-                    }
-                    if (data.isLastPage) {
-                        $("#load-more-photos").hide();
-                    }
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail updating photos");
-                console.log(data);
-            }
-        });
-    });
-
-    $("#load-more-comments").click(function() {
-        let page = $("#load-more-comments").data("current-page");
-        let nextPage = parseInt(page) + 1;
-
-        $.ajax({
-            method: "GET",
-            url: urlpath + "/comments?page=" + nextPage,
-            success: function(data){
-                if (data.status == "success") {
-                    $("#load-more-comments").data("current-page", nextPage);
-                    for (let comment of data.comments) {
-                        addComment(comment);
-                    }
-                    if (data.isLastPage) $("#load-more-comments").hide();
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail updating comments");
-                console.log(data);
-            }
-        });
-    });
-
-    $('#comment-form').submit(function(event) {
-        event.preventDefault();
-
-        $.ajax({
-            method: "POST",
-            url: urlpath + "/comments",
-            contentType: "application/json",
-            data: JSON.stringify({
-                content: $("#comment-form-content").val()
-            }),
-            success: function(data){
-                if (data.status == "success") {
-                    $("#comments").empty();
-                    for (let comment of data.comments) {
-                        addComment(comment);
-                    }
-                    if (data.isLastPage) $("#load-more-comments").hide();
-                    else $("#load-more-comments").show();
-                    $("#load-more-comments").data("current-page", "1");
-                    $("#no-data-found-alert-comment").hide();
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail posting comment");
-                console.log(data);
-            }
-        });
-    });
-
+    // delete photo
     $('body').on('click', '.dog-img-container button', function() {
         let photoId = $(this).next().find('img').attr('id');
         $.ajax({
@@ -206,34 +161,9 @@ $(function() {
             }
         });
     });
-
-    $('#add-height-weight-form').submit(function(event) {
-        event.preventDefault();
-        $('#add-height-weight-modal').modal('toggle'); 
     
-        $.ajax({
-            method: "POST",
-            url: window.location.pathname + "/heightWeight",
-            contentType: "application/json",
-            data: JSON.stringify({ heightWeight : {
-                height: parseFloat($("#add-height-weight-form-height").val()),
-                weight: parseFloat($("#add-height-weight-form-weight").val())
-            }}),
-            success: function(data){
-                if (data.status == "success") {
-                    updateLabelAndData(bmiChart, data.dog.healthDateList, data.dog.bmiList);
-                    updateLabelAndData(weightChart, data.dog.healthDateList, data.dog.weightList);
-                    $('#no-data-found-alert-health').hide();
-                    $('#dog-health-info').show();
-                    updateDogHealthInfo(data.dog.weight, data.dog.height, data.dog.bmi, "good", data.dog.lastHeightWeightUpdate);
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
-            }
-        });
-    });
+    initLoadMorePhoto(true);
+
+    initSubmitCommentForm();
+    initLoadMoreComment();
 });

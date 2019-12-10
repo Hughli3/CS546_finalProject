@@ -11,5 +11,5 @@ function success(data) {
     const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
     message.append(close);
     message.append(data);
-    message.appendTo($('body')).show().delay(1000).fadeOut(300);
+    message.appendTo($('body')).show().delay(2000).fadeOut(300);
 }

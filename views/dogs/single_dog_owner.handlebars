@@ -66,7 +66,7 @@
                 </div>
             </div>
             <button id="add-height-weight-button" class="btn btn-primary my-3" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
-            <div class="row">
+            <div id="dog-health-charts" class="row {{#unless dog.heightWeight}}hide-chart{{/unless}}">
                 <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
                 <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
             </div> 
@@ -270,7 +270,7 @@
 </div>
 
 {{#section 'script'}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="/public/vendor/chartjs/Chart.js"></script>
 <script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
 <script src="/public/js/main.js"></script>
 <script src="/public/js/dog-main.js"></script>
