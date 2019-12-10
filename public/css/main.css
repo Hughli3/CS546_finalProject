@@ -48,11 +48,6 @@
     margin: 0px;
 }
 
-.single-comment .comment-data {
-    padding: 0px;
-    margin: 0px;
-}
-
 .single-comment .comment-date {
     font-size: 12px;
 }
@@ -82,4 +77,13 @@ p.no-data-found-alert {
 
 #comment-form label {
     font-size: 24px;
+}
+
+.alert-message {
+    position: fixed;
+    top: 5%;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    z-index: 9999;
 }

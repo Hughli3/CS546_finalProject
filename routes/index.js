@@ -279,7 +279,7 @@ const constructorMethod = (app) => {
   });
 
   app.post('/signup', async (req, res) => {
-    await usersData.createANewUser(req.body.username, req.body.password, null, null);
+    await usersData.addUser(req.body.username, req.body.password);
     res.redirect('/login');
   });
 
