@@ -92,3 +92,7 @@ p.no-data-found-alert {
     height: 0 !important;
     overflow: hidden;
 }
+
+.footer .nav .nav-item .nav-link {
+    color: #333 !important;
+}

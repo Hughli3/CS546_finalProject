@@ -39,111 +39,38 @@
     </div>
 </section>
 
-{{!-- Health --}}
-<section class="m-4">
-    <div class="container">
-        <h1>Health</h1>
-        <div class="dog-health-container">
-            {{#unless dog.heightWeight}}
-            <p id="no-data-found-alert-health" class="no-data-found-alert">Please update weight and height of the dog to see health data.</p>
-            {{/unless}}
-            <div id="dog-health-info" class="dog-health-info" {{#unless dog.heightWeight}}style="display: none;"{{/unless}}>
-                <div class="dog-health-info-basic">
-                    <h2>Weight</h2>
-                    <p id="dog-weight">{{ dog.weight }}</p>
-                    <h2>Height</h2>
-                    <p id="dog-height">{{ dog.height }}</p> 
-                    <h2>BMI</h2>
-                    <p id="dog-bmi">{{ dog.bmi }}</p>
-                </div>
-                <div class="dog-health-info-condition">
-                    <h2>Health Condition</h2>
-                    <p id="dog-health">Good</p>
-                </div>
-                <div class="dog-health-info-date">
-                    <h2>Last Update</h2>
-                    <p id="dog-date">{{ dog.lastHeightWeightUpdate }}</p>
-                </div>
+{{!-- modal for update avatar --}}
+<div class="modal fade" id="update-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="update-avatar-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload avatar</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
-            <button id="add-height-weight-button" class="btn btn-primary my-3" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
-            <div id="dog-health-charts" class="row {{#unless dog.heightWeight}}hide-chart{{/unless}}">
-                <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
-                <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
-            </div> 
-        </div>
-    </div>
-</section>
 
-{{!-- Photo --}}
-<section class="m-4">
-    <div class="container">
-        <h1>Photos</h1>
-        <p {{#if photos}}style="display: none"{{/if}} id="no-data-found-alert-photo" class="no-data-found-alert">No photos found. Welcome to upload your lovely photos.</p>
-        <button class="btn btn-primary my-2" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
-        <div id="photos" class="row">
-            {{#each photos}}
-            <div class="col-lg-3 col-6 my-3 dog-img-container">
-                <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>
-                <a href="{{ photo }}" data-alt="dog photos" data-lightbox="photos">
-                    <img id="{{ id }}" src="{{ photo }}" class="dog-img img-fluid rounded w-100" alt="dog photos">
-                </a>
-            </div>
-            {{/each}}
-        </div>
-        <div class="text-center">
-            <button id="load-more-photos" data-current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
-        </div>
-    </div>
-</section>
+            <form id="update-avatar-form" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input id="update-avatar-form-file" type="file" class="" name="avatar" accept="image/*">
+                    <label class="" for="update-avatar-form-file">Select file</label>
+                </div>
 
-{{!-- Comment --}}
-<section class="m-4">
-    <div class="container">
-        <h1>Comment</h1>
-        {{#unless comments}}
-        <p id="no-data-found-alert-comment" class="no-data-found-alert">No comments found.</p>
-        {{/unless}}
-        <div id="comments" class="comment-container">
-        {{#each comments}}
-            <div class="row single-comment">
-                <div class="col-2">
-                    {{#if user.avatar}}
-                    <img class="avatar" src="{{user.avatar}}">
-                    {{else}}
-                    <img class="avatar" src="/public/img/avatar/default-user.png">
-                    {{/if}}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
                 </div>
-                <div class="col-10">
-                    <div class="comment-content">
-                        <p>{{content}}</p>
-                        <p class="comment-data">
-                            <a href="#">{{user.username}}</a>
-                            <span class="comment-date">{{date}}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {{/each}}
-        </div>
-        <div class="text-center">
-            <button id="load-more-comments" data-current-page="1" {{#if isCommentLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load more</button>
-        </div>
-        <div class="comment-form-container my-4">
-            <form id="comment-form">
-                <label for="comment-form-content">Comment</label>
-                <textarea class="form-control comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
-                <button class="btn btn-primary btn-comment" type="submit">Post comment</button>
             </form>
         </div>
     </div>
-</section>
+</div>
 
 {{!-- modal for edit profile --}}
 <div class="modal fade" id="edit-dog-profile-modal" tabindex="-1" role="dialog" aria-labelledby="edit-dog-profile-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Edit profile</h6>
+                <h3 class="modal-title">Edit Profile</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -188,37 +115,47 @@
     </div>
 </div>
 
-{{!-- modal for upload photo --}}
-<div class="modal fade" id="upload-photo-modal" tabindex="-1" role="dialog" aria-labelledby="upload-photo-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">Upload photo</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+{{!-- Health --}}
+<section class="m-4">
+    <div class="container">
+        <h1>Health</h1>
+        <div class="dog-health-container">
+            {{#unless dog.heightWeight}}
+            <p id="no-data-found-alert-health" class="no-data-found-alert">Please update weight and height of the dog to see health data.</p>
+            {{/unless}}
+            <div id="dog-health-info" class="dog-health-info" {{#unless dog.heightWeight}}style="display: none;"{{/unless}}>
+                <div class="dog-health-info-basic">
+                    <h2>Weight</h2>
+                    <p id="dog-weight">{{ dog.weight }}</p>
+                    <h2>Height</h2>
+                    <p id="dog-height">{{ dog.height }}</p> 
+                    <h2>BMI</h2>
+                    <p id="dog-bmi">{{ dog.bmi }}</p>
+                </div>
+                <div class="dog-health-info-condition">
+                    <h2>Health Condition</h2>
+                    <p id="dog-health">Good</p>
+                </div>
+                <div class="dog-health-info-date">
+                    <h2>Last Update</h2>
+                    <p id="dog-date">{{ dog.lastHeightWeightUpdate }}</p>
+                </div>
             </div>
-
-            <form id="upload-photo-form" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="file" class="btn btn-primary" name="photo" accept="image/*">
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
-                </div>
-            </form>
+            <button id="add-height-weight-button" class="btn btn-primary my-3" data-toggle="modal" data-target="#add-height-weight-modal">Add Weight/Height</button>
+            <div id="dog-health-charts" class="row {{#unless dog.heightWeight}}hide-chart{{/unless}}">
+                <canvas class="col-lg-6" id="bmi-chart" height="350"></canvas>
+                <canvas class="col-lg-6" id="weight-chart" height="350"></canvas>
+            </div> 
         </div>
     </div>
-</div>
+</section>
 
 {{!-- modal for add height weight --}}
 <div class="modal fade" id="add-height-weight-modal" tabindex="-1" role="dialog" aria-labelledby="add-height-weight-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Update health information</h6>
+                <h3 class="modal-title">Update health information</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -243,21 +180,42 @@
     </div>
 </div>
 
-{{!-- modal for update avatar --}}
-<div class="modal fade" id="update-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="update-avatar-modal" aria-hidden="true">
+{{!-- Photo --}}
+<section class="m-4">
+    <div class="container">
+        <h1>Photos</h1>
+        <p {{#if photos}}style="display: none"{{/if}} id="no-data-found-alert-photo" class="no-data-found-alert">No photos found. Welcome to upload your lovely photos.</p>
+        <button class="btn btn-primary my-2" data-toggle="modal" data-target="#upload-photo-modal">Upload photo</button>
+        <div id="photos" class="row">
+            {{#each photos}}
+            <div class="col-lg-3 col-6 my-3 dog-img-container">
+                <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>
+                <a href="{{ photo }}" data-alt="dog photos" data-lightbox="photos">
+                    <img id="{{ id }}" src="{{ photo }}" class="dog-img img-fluid rounded w-100" alt="dog photos">
+                </a>
+            </div>
+            {{/each}}
+        </div>
+        <div class="text-center">
+            <button id="load-more-photos" data-current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
+        </div>
+    </div>
+</section>
+
+{{!-- modal for upload photo --}}
+<div class="modal fade" id="upload-photo-modal" tabindex="-1" role="dialog" aria-labelledby="upload-photo-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Upload avatar</h6>
+                <h2 class="modal-title">Upload photo</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
 
-            <form id="update-avatar-form" enctype="multipart/form-data">
+            <form id="upload-photo-form" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <input id="update-avatar-form-file" type="file" class="" name="avatar" accept="image/*">
-                    <label class="" for="update-avatar-form-file">Select file</label>
+                    <input type="file" class="btn btn-primary" name="photo" accept="image/*">
                 </div>
 
                 <div class="modal-footer">
@@ -269,12 +227,54 @@
     </div>
 </div>
 
+{{!-- Comment --}}
+<section class="m-4">
+    <div class="container">
+        <h1>Comment</h1>
+        {{#unless comments}}
+        <p id="no-data-found-alert-comment" class="no-data-found-alert">No comments found.</p>
+        {{/unless}}
+        <div id="comments" class="comment-container">
+        {{#each comments}}
+            <div class="row single-comment">
+                <div class="col-2">
+                    {{#if user.avatar}}
+                    <img class="avatar" src="{{user.avatar}}">
+                    {{else}}
+                    <img class="avatar" src="/public/img/avatar/default-user.png">
+                    {{/if}}
+                </div>
+                <div class="col-10">
+                    <div class="comment-content">
+                        <p>{{content}}</p>
+                        <p class="comment-data">
+                            <a href="#">{{user.username}}</a>
+                            <span class="comment-date">{{date}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+        <div class="text-center">
+            <button id="load-more-comments" data-current-page="1" {{#if isCommentLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load more</button>
+        </div>
+        <div class="comment-form-container my-4">
+            <form id="comment-form">
+                <label for="comment-form-content">Comment</label>
+                <textarea class="form-control comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
+                <button class="btn btn-primary btn-comment" type="submit">Post comment</button>
+            </form>
+        </div>
+    </div>
+</section>
+
 {{#section 'script'}}
 <script src="/public/vendor/chartjs/Chart.js"></script>
 <script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
+<script src="/public/js/health-chart.js"></script>
 <script src="/public/js/main.js"></script>
 <script src="/public/js/dog-main.js"></script>
-<script src="/public/js/health-chart.js"></script>
 <script src="/public/js/dog-owner.js"></script>
 {{#if dog.heightWeight}}
 <script>
