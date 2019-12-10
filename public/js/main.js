@@ -1,122 +1,64 @@
-$(function() {
-    let updateAvatarForm = $("#update-avatar-form");
-    let userId = $("#user-id").val();
-
-    updateAvatarForm.submit(function(event) {
-        event.preventDefault();
-        $('#update-avatar-modal').modal('toggle'); 
-
-        $.ajax({
-            method: "POST",
-            url:  "/user/" + userId + "/avatar",
-            data: new FormData(this),
-            contentType: false,
-            processData: false,
-            success: function(data){
-                if (data.status == "success") {
-                    $("#user-avatar").attr("src", data.avatar);
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail uploading image");
-                console.log(data);
-            }
-        });
+function updateLabelAndData(chart, label, data) {
+    chart.data.labels = label;
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data = data;
     });
+    chart.update();
+}
 
-    let addDogForm = $("#add-dog-form");
+function addLabel(chart, label) {
+    chart.data.labels.push(label);
+    chart.update();
+}
 
-    addDogForm.submit(function(event) {
-        event.preventDefault();
-        $('#add-dog-modal').modal('toggle'); 
-
-        $.ajax({
-            method: "POST",
-            url: "/dog",
-            contentType: "application/json",
-            data: JSON.stringify({
-                name: $("#add-dog-form-name").val(),
-                type: $("#add-dog-form-type").val(),
-                gender: $("#add-dog-form-gender").val(),
-                dob: $("#add-dog-form-dob").val()
-            }),
-            success: function(data){
-                if (data.status == "success") {
-                    addDog(data.dog._id, data.dog.name, data.dog.gender, data.dog.type, data.dog.age, data.dog.avatar);
-                    $('#no-data-found-alert-dog').hide();
-                    error("good");
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail adding dog");
-                console.log(data);
-            }
-        });
+function addData(chart, data) {
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
     });
-  
-    function addDog(id, name, gender, type, age, avatar) {
-        let dogContainer = $('<div class="col-md-3 mb-4 dog-container">');
-        let button = $('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>')
-        let card = $('<div class="card">');
-        let a = $('<a href="/dog/' + id + '">');
-        let img = $('<img src="/public/img/dog/1.jpg" class="card-img-top" alt="dog avatar">');
-        if (avatar) {
-            img = $('<img src="' + avatar + '" class="card-img-top" alt="dog avatar">');
-        }
-        let cardbody = $('<div class="card-body">');
-        let cardtitle = $('<h1 class="card-title display-4 mb-0">' + name + '</h1>');
-        let cardtest = $('<p class="card-text">' + gender + ' ' + type + ' ' + age +' y/o</p>');
-        cardbody.append(cardtitle).append(cardtest);
-        a.append(img).append(cardbody);
-        card.append(a);
-        dogContainer.append(button);
-        dogContainer.append(card);
+    chart.update();
+}
 
-        $('#dogs-container').prepend(dogContainer);
-    }
+function addComment(comment) {
+    let commentContainer = $('<div class="row single-comment">');
+    let avatarContainer = $('<div class="col-2">');
+    let avatar = $('<img class="avatar" src="' + comment.user.avatar + '">');
+    avatarContainer.append(avatar);
+    let contentContainer = $('<div class="col-10">');
+    let contentInnerContainer = $('<div class="comment-content">');
+    contentInnerContainer.append('<p>' + comment.content + '</p>');
+    let contentDataContainer = $('<p class="comment-data">');
+    contentDataContainer.append('<a href="/user/' + comment.user.username + '">' + comment.user.username + '</a> ');
+    contentDataContainer.append('<span class="comment-date">' + comment.date + '</span>');
+    contentInnerContainer.append(contentDataContainer);
+    contentContainer.append(contentInnerContainer);
+    commentContainer.append(avatarContainer);
+    commentContainer.append(contentContainer);
+    $("#comments").append(commentContainer);
+}
 
-    $('body').on('click', '.dog-container button', function() {
-        let dogSingleContainer = $(this).parent();
-        let dogContainer = dogSingleContainer.parent();
-        let dogURI = $(this).next().find('a').attr('href');
-        $.ajax({
-            method: "DELETE",
-            url: dogURI,
-            success: function(data){
-                if (data.status == "success") {
-                    dogSingleContainer.remove();
-                    if (dogContainer.children().length === 0) {
-                        $('#no-data-found-alert-dog').show();
-                    }
-                    success("good");
-                } else {
-                    console.log(data);
-                }
-            },
-            error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
-            }
-        });
-    });
+function addDogPhoto(id, photo, isShowDelete) {
+    let imgContainer = $('<div class="col-lg-3 col-6 my-3 dog-img-container">');
+    let lightboxContainer = $('<a href="' + photo + '" data-alt="dog photos" data-lightbox="photos">');
+    lightboxContainer.append('<img id="' + id + '" src="' + photo + '" class="dog-img img-fluid rounded w-100" alt="dog photos" />');
+    if (isShowDelete) {
+        imgContainer.append('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-photo position-absolute">delete</button>');
+    }
+    imgContainer.append(lightboxContainer);
+    $("#photos").append(imgContainer);
+}
 
-    function error(data) {
-        const message = $('<div class="alert alert-danger alert-message">');
-        const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
-        message.append(close);
-        message.append(data);
-        message.appendTo($('body')).show().delay(3000).fadeOut(400);
-    }
-    
-    function success(data) {
-        const message = $('<div class="alert alert-success alert-message">');
-        const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
-        message.append(close);
-        message.append(data);
-        message.appendTo($('body')).show().delay(1000).fadeOut(300);
-    }
-});
+function error(data) {
+    const message = $('<div class="alert alert-danger alert-message">');
+    const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
+    message.append(close);
+    message.append(data);
+    message.appendTo($('body')).show().delay(3000).fadeOut(400);
+}
+
+function success(data) {
+    const message = $('<div class="alert alert-success alert-message">');
+    const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
+    message.append(close);
+    message.append(data);
+    message.appendTo($('body')).show().delay(1000).fadeOut(300);
+}

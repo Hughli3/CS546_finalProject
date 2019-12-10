@@ -1,0 +1,120 @@
+{{#section 'style'}}
+<link type="text/css" href="/public/vendor/lightbox2/css/lightbox.min.css" rel="stylesheet">
+{{/section}}
+{{!-- Basic Info --}}
+<section class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                {{#if dog.avatar}}
+                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
+                {{else}}
+                <img src="/public/img/dog/1.jpg" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
+                {{/if}}
+            </div>
+            <div class="col-9">
+                <div class="dog-info-container">
+                    <h1><span id="dog-name">{{ dog.name }}</span></h1>
+                    <h2>Type</h2>
+                    <p id="dog-type">{{ dog.type }}</p>
+                    <h2>Gender</h2>
+                    <p id="dog-gender">{{ dog.gender }}</p>
+                    <h2>Age</h2>
+                    <p id="dog-age">{{ dog.age }}</p>
+                    <div>
+                        <h2>Birthday</h2>
+                        <p id="dog-dob">{{ dog.dob }}</p>
+                    </div>
+                    <div>
+                        <h2>Owner</h2>
+                        <p id="dog-owner">{{ dog.owner }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{!-- Photo --}}
+<section class="m-4">
+    <div class="container">
+        <h1>Photos</h1>
+        {{#if photos}}        
+        <div id="photos" class="row">
+            {{#each photos}}
+            <div class="col-lg-3 col-6 my-3 dog-img-container">
+                <a href="{{ photo }}" data-alt="dog photos" data-lightbox="photos">
+                    <img id="{{ id }}" src="{{ photo }}" class="dog-img img-fluid rounded w-100" alt="dog photos">
+                </a>
+            </div>
+            {{/each}}
+        </div>
+        <div class="text-center">
+            <button id="load-more-photos" data-current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
+        </div>
+        {{else}}
+        <p id="no-data-found-alert-photo" class="no-data-found-alert">No photos found. Welcome to upload your lovely photos.</p>
+        {{/if}}
+    </div>
+</section>
+
+{{!-- Comment --}}
+<section class="m-4">
+    <div class="container">
+        <h1>Comment</h1>
+        {{#unless comments}}
+        <p id="no-data-found-alert-comment" class="no-data-found-alert">No comments found.</p>
+        {{/unless}}
+        <div id="comments" class="comment-container">
+        {{#each comments}}
+            <div class="row single-comment">
+                <div class="col-2">
+                    {{#if user.avatar}}
+                    <img class="avatar" src="{{user.avatar}}">
+                    {{else}}
+                    <img class="avatar" src="/public/img/dog/1.jpg">
+                    {{/if}}
+                </div>
+                <div class="col-10">
+                    <div class="comment-content">
+                        <p>{{content}}</p>
+                        <p class="comment-data">
+                            <a href="#">{{user.username}}</a>
+                            <span class="comment-date">{{date}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+        <div class="text-center">
+            <button id="load-more-comments" data-current-page="1" {{#if isCommentLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load more</button>
+        </div>
+        {{#if username}}
+        <div class="comment-form-container my-4">
+            <form id="comment-form">
+                <label for="comment-form-content">Comment</label>
+                <textarea class="form-control comment-form-content" name="content" id="comment-form-content" rows="3" placeholder="Write a large text here ..."></textarea>
+                <button class="btn btn-primary btn-comment" type="submit">Post comment</button>
+            </form>
+        </div>
+        {{/if}}
+    </div>
+</section>
+
+
+{{#section 'script'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
+<script src="/public/js/main.js"></script>
+<script src="/public/js/dogPublic.js"></script>
+<script>
+    lightbox.option({
+        'fadeDuration': 200,
+        'imageFadeDuration': 200,
+        'showImageNumberLabel': false,
+        'resizeDuration': 200,
+        'wrapAround': true
+    })
+</script>
+{{/section}}

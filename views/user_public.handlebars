@@ -1,0 +1,107 @@
+<section class="my-5">
+    <div class="container">    
+        <div class="row">
+            <div class="col-3">
+                <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/public/img/dog/1.jpg{{/if}}" id="user-avatar" class="img-fluid rounded-circle avatar" alt="user avatar" width="300">                
+            </div>
+            <div class="col-9">
+                <h1>{{user.username}}</h1>
+                <div>
+                    <button class="btn btn-secondary my-3" data-toggle="modal" data-target="#update-avatar-modal">Change avatar</button>
+                    <button class="btn btn-secondary my-3" data-toggle="modal" data-target="#change-passsword-modal">Change password</button>
+                </div>
+                <div>
+                    <button class="btn btn-primary my-3" data-toggle="modal" data-target="#add-dog-modal">Add a dog</button>
+                </div>
+            </div>  
+        </div> 
+    </div>
+</section>
+
+<section class="my-5">
+    <div class="container">
+        <h1>Your dogs</h1>
+        <p {{#if user.dogs}}style="display: none"{{/if}} id="no-data-found-alert-dog" class="no-data-found-alert">No dogs found. Please add your dogs.</p>
+        <div id="dogs-container" class="row dogs-container">
+            {{#each user.dogs}}
+            <div class="col-md-3 mb-4 dog-container">
+                <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>
+                <div class="card">
+                    <a href="/dog/{{_id}}" >
+                        {{#if avatar}}
+                        <img src="{{ avatar }}" class="card-img-top" alt="dog avatar">
+                        {{else}}
+                        <img src="/public//img/dog/1.jpg" class="card-img-top" alt="dog avatar">
+                        {{/if}}
+                        <div class="card-body">
+                            <h1 class="card-title display-4 mb-0">{{name}}</h1>
+                            <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>
+                        </div>
+                    </a>
+                </div>
+            </div>    
+            {{/each}} 
+        </div>
+    </div>   
+</section>
+
+{{!-- add dog --}}
+<div class="modal fade" id="add-dog-modal" tabindex="-1" role="dialog" aria-labelledby="add-dog-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-add-dog">Add a dog</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="add-dog-form">
+                <div class="modal-body">
+                    <label for="add-dog-form-name">Name</label>
+                    <input type="text" id="add-dog-form-name" class="form-control" placeholder="name" name="name">
+                    <label for="add-dog-form-type">Type</label>
+                    <input type="text" id="add-dog-form-type" class="form-control" placeholder="type" name="type">
+                    <label for="add-dog-form-gender">Gender</label>
+                    <input type="text" id="add-dog-form-gender" class="form-control" placeholder="gender" name="gender">
+                    <label for="add-dog-form-dob">Date of Birth</label>
+                    <input type="text" id="add-dog-form-dob" class="form-control" placeholder="date of birth" name="dob">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{!-- upload avatar --}}
+<div class="modal fade" id="update-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="update-avatar-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Upload avatar</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="update-avatar-form" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="file" class="btn btn-primary" name="avatar" accept="image/*">
+                    <input type="hidden" id="user-id" name="user-id" value="{{user._id}}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#section 'script'}}
+<script src="/public/js/user.js"></script>
+{{/section}}

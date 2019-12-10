@@ -129,28 +129,31 @@ const constructorMethod = (app) => {
   });
 
   app.get('/dog/:id', async (req, res) => {
-    let dogId = req.params.id;
-
     try{
-        let dog = await dogData.getDog(dogId);
-        let photoPagedData = await getFirstPageOfPhotos(dog.photos);
+      let dogId = req.params.id;
 
-        let comments = await commentData.getCommentsByDog(dogId);
-        let commentPagedData = pagination(comments, 1, 3);
+      let dog = await dogData.getDog(dogId);
+      let photoPagedData = await getFirstPageOfPhotos(dog.photos);
 
-        data = {
-          title: "Single Dog", 
-          dog: dog,          
-          photos: photoPagedData.photos,
-          isPhotoLastPage: photoPagedData.isLastPage,
-          comments : commentPagedData.data,
-          isCommentLastPage: commentPagedData.isLastPage,
-          username : req.session.username,
-        }
+      let comments = await commentData.getCommentsByDog(dogId);
+      let commentPagedData = pagination(comments, 1, 3);
 
-        res.render('dogs/single_dog', data);
+      data = {
+        title: "Single Dog", 
+        dog: dog,          
+        photos: photoPagedData.photos,
+        isPhotoLastPage: photoPagedData.isLastPage,
+        comments : commentPagedData.data,
+        isCommentLastPage: commentPagedData.isLastPage,
+        username : req.session.username,
+      }
+
+      if (dog.owner === req.session.username)
+        res.render('dogs/single_dog_owner', data);
+      else
+        res.render('dogs/single_dog_public', data);
     } catch (e) {
-        res.json({error: e});
+      res.json({error: e});
     }
   });
 
