@@ -135,7 +135,8 @@ const breed = {
 'Welsh springer spaniel': null,
 'Wirehaired pointing griffon': null,
 'Xoloitzcuintli': null,
-'Yorkshire terrier': null
+'Yorkshire terrier': null,
+"Other": null
 }
 
 // console.log("Yorkshire terrier" in breed)
