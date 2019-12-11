@@ -4,7 +4,6 @@ $(function() {
 
     updateAvatarForm.submit(function(event) {
         event.preventDefault();
-        $('#update-avatar-modal').modal('toggle'); 
 
         $.ajax({
             method: "POST",
@@ -14,14 +13,15 @@ $(function() {
             processData: false,
             success: function(data){
                 if (data.status == "success") {
+                    $('#update-avatar-modal').modal('toggle'); 
                     $("#user-avatar").attr("src", data.avatar);
-                } else {
-                    console.log(data);
+                    
+                } else if (data.status == "error") {
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail uploading image");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });
@@ -70,7 +70,7 @@ $(function() {
         }
         avatarContainer.append(img);
         let cardbody = $('<div class="card-body">');
-        let cardtitle = $('<h1 class="card-title display-4 mb-0">' + name + '</h1>');
+        let cardtitle = $('<h2 class="card-title display-4 mb-0">' + name + '</h2>');
         let cardtest = $('<p class="card-text">' + gender + ' ' + type + ' ' + age +' y/o</p>');
         cardbody.append(cardtitle).append(cardtest);
         a.append(avatarContainer).append(cardbody);
@@ -104,5 +104,15 @@ $(function() {
                 console.log(data);
             }
         });
+    });
+
+    $('#user-avatar-upload-btn').click(function() {
+        $('#user-avatar-upload').click();
+    });
+
+    $('#user-avatar-upload').change(function() {
+        let file = $(this).val().split('\\');
+        let fileName = file[file.length - 1];
+        $('#uploaded-file-name').text(fileName);
     });
 });

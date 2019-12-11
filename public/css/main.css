@@ -138,6 +138,8 @@ p.no-data-found-alert {
 
 label {
     color: #32315d;
+    font-size: 16px;
+    margin: 6px 0;
 }
 
 .signup-login-section {
@@ -146,7 +148,16 @@ label {
 }
 
 .tooltip-inner {
-    min-width: 350px; /* the minimum width */
+    min-width: 50px;
+    max-width: 350px;
     text-align: left;
     padding: 10px 25px;
+}
+
+.uploaded-file-name {
+    font-size: 16px;
+    font-weight: 400;
+    color: #32315d;
+    word-break: break-word;
+    display: contents;
 }
