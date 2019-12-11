@@ -1,11 +1,11 @@
-<section class="section bg-gradient-default">
-  <div class="container pt-lg-md">
+<section class="section bg-default signup-login-section">
+  <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-5">
         <div class="card bg-secondary shadow border-0">
           <div class="card-body px-lg-5 py-lg-5">
             <h1 class="text-center mb-4">Signup</h1>
-            <form method="post" action="/signup">
+            <form id="signup-form" method="post" action="/signup">
               <div class="form-group">
                 <label for="username">Username</label>
                 <div class="input-group input-group-alternative mb-3">
@@ -24,12 +24,13 @@
                   <input class="form-control" placeholder="Password" id="password" name="password" type="password">
                 </div>
               </div>
-              <div class="row my-4">
-                <div class="col-12">
-                  <div class="custom-control custom-control-alternative custom-checkbox">
-                    <input class="custom-control-input" id="customCheckRegister" type="checkbox">
-                    <label class="custom-control-label" for="customCheckRegister"><span>I agree with the <a href="#">Privacy Policy</a></span></label>
+              <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <div class="input-group input-group-alternative">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
                   </div>
+                  <input class="form-control" placeholder="Reenter password" id="confirm-password" name="confirm-password" type="password">
                 </div>
               </div>
               <div class="text-center">
@@ -42,3 +43,12 @@
     </div>
   </div>
 </section>
+
+{{#section 'script'}}
+<script src="/public/js/signup.js"></script>
+{{#if error}}
+<script>
+error("{{error}}");
+</script>
+{{/if}}
+{{/section}}

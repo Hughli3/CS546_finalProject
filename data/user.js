@@ -18,15 +18,17 @@ function validateId(id){
 }
 
 function validateUsername(username){
-  if (!username) throw "Username is undefinded";
-  if (username.constructor !== String) throw "Username is not of the proper type";
-  if (username.length < 4 ) throw "Username too short";
+  if (!username) throw "username is undefinded";
+  if (username.constructor !== String) throw "username is not of the proper type";
+  if (username.length < 6 ) throw "length of username is less than 6";
+  let letterNumber = /^[0-9a-zA-Z]+$/;
+  if (!username.match(letterNumber)) throw "username should contain only letter and number";
 }
 
 function validatePassword(password){
   if (!password) throw "password is undefinded";
-  if (password.constructor !== String) throw "Password is not of the proper type";
-  if (password.length < 6 ) throw "User password too short";
+  if (password.constructor !== String) throw "password is not of the proper type";
+  if (password.length < 8 ) throw "length of password is less than 8";
 }
 
 function validateImage(image) {
@@ -50,7 +52,7 @@ async function addUser(username, password){
   const usersCollection = await users();
   username = username.toLowerCase();
   const findUser = await usersCollection.findOne({ username: username });
-  if (findUser) throw "username already exists";
+  if (findUser) throw "username has been used by other users";
 
   const bcryptjsPassword = await bcryptjs.hash(password, saltRounds);
   let user = {
@@ -133,6 +135,7 @@ async function comparePassword(username, password) {
   validatePassword(password);
 
   const usersCollection = await users();
+  username = username.toLowerCase();
   const userInfo = await usersCollection.findOne({username:username});
   if (!userInfo) throw 'invalid username/password';
 

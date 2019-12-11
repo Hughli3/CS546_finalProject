@@ -113,3 +113,34 @@ p.no-data-found-alert {
     min-height: 100%;
     object-fit: cover;
 }
+
+.form-control {
+    color: #32315d !important;
+}
+
+.alert-danger {
+    background-color: #b73a51;
+}
+
+.alert-success {
+    background-color: #008b17;
+}
+
+.close {
+    opacity: .9;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.close:hover, .close:focus {
+    color: #fff;
+}
+
+label {
+    color: #32315d;
+}
+
+.signup-login-section {
+    height: 100vh;
+    min-height: 670px;
+}

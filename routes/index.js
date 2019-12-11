@@ -281,9 +281,13 @@ const constructorMethod = (app) => {
     res.render('signup', {title: "Signup", hideFooter: true});
   });
 
-  app.post('/signup', async (req, res) => {
-    await usersData.addUser(req.body.username, req.body.password);
-    res.redirect('/login');
+  app.post('/signup', notLoginRequired, async (req, res) => {
+    try {
+      await usersData.addUser(req.body.username, req.body.password);
+      res.redirect('/login');
+    } catch (e) {
+      res.status(401).render('signup', {title: "Signup", error: e, hideFooter: true});
+    }
   });
 
   app.get('/logout', loginRequired, function(req, res) {
@@ -298,9 +302,9 @@ const constructorMethod = (app) => {
   app.post('/login', notLoginRequired, async (req, res) => {
     try {
       await login(req);
-      return res.redirect('/profile');
+      return res.redirect('/profile');  
     } catch (e) {
-      res.status(401).render('login', {title: "Login", error: "Invalid username and/or password"});
+      res.status(401).render('login', {title: "Login", error: "Invalid username and/or password", hideFooter: true});
     }
   });
 
