@@ -2,7 +2,7 @@ const dbConnection = require('../config/mongoConnection');
 const dogData = require('../data/dogs');
 const userData = require('../data/user');
 const commentsData = require('../data/comments');
-
+const breedData = require("../data/breed");
 
 const main = async () => {
     const db = await dbConnection();
@@ -50,7 +50,7 @@ const main = async () => {
     // console.log(updateDog);
     // dogOne.dateOfBirth
 
-
+    // console.log(breedData.allDogsType());
      // =================================
     //  Create some comments
 

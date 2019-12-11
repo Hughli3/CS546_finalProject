@@ -140,6 +140,11 @@ const breed = {
 
 // console.log("Yorkshire terrier" in breed)
 
+function allDogsType(){
+    
+    return Object.keys(breed);
+}
 module.exports = {
-    breed: breed
+    breed,
+    allDogsType
 };
