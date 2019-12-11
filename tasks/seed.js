@@ -30,7 +30,7 @@ const main = async () => {
         dog = await dogData.addDog(
             "Painting",
             "Male",
-            "1988-03-19",
+            "2019-03-19",
             "Samoyed",
             userId
         );

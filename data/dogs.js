@@ -114,7 +114,10 @@ function validateType(type){
 
   // const dogType = firstUpperCase(type.toLowerCase());
   // change type to lower case and transfer its first digit to Upper case
-  if (!type in breedData.breed ){
+  // console.log(type);
+  // console.log(type in breedData.breed);
+  if (!(type in breedData.breed) ){
+    console.log("here")
     throw "Type is not available";
   }
 }
@@ -132,11 +135,16 @@ async function validateOwner(owner){
 
 
 function validateDob(dob) {
-  let today = new Date();
   if (!dob) throw "Date of birth is undefinded";
   if (isNaN(Date.parse(dob))) throw "Date of birth is invalid";
-  if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35)
-    throw "Date of birth is invalid, dog age should less than 35 and greater than 0";
+ 
+  dateOfBirth = Date.parse(dob);
+  dateOfBirth = new Date(dateOfBirth);
+
+  let today = new Date();
+  
+  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) throw `Please input a real birth date of your dog`;
+
 }
 
 
