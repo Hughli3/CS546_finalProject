@@ -101,7 +101,7 @@ function validateGender(gender){
   if (!gender) throw "gender is undefinded";
   if (gender.constructor !== String) throw "gender is not a string";
   const genderType = new Set();
- ["Male", "Female","Other"].forEach(x => genderType.add(x));
+  ["male", "female","other"].forEach(x => genderType.add(x));
   if (!genderType.has(gender.toLowerCase())){
     throw "Gender should be male, female or other";
   }

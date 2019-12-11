@@ -1,21 +1,21 @@
 $(function() {
-    let updateAvatarForm = $("#update-avatar-form");
-    let userId = $("#user-id").val();
-
-    updateAvatarForm.submit(function(event) {
+    $("#update-avatar-form").submit(function(event) {
         event.preventDefault();
-
         $.ajax({
             method: "POST",
-            url:  "/user/" + userId + "/avatar",
+            url:  "/user/avatar",
             data: new FormData(this),
             contentType: false,
             processData: false,
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     $('#update-avatar-modal').modal('toggle'); 
                     $("#user-avatar").attr("src", data.avatar);
-                    
+                    success("avatar is changed");
                 } else if (data.status == "error") {
                     error(data.errorMessage);
                 }
@@ -26,12 +26,8 @@ $(function() {
         });
     });
 
-    let addDogForm = $("#add-dog-form");
-
-    addDogForm.submit(function(event) {
+    $("#add-dog-form").submit(function(event) {
         event.preventDefault();
-        $('#add-dog-modal').modal('toggle'); 
-
         $.ajax({
             method: "POST",
             url: "/dog",
@@ -43,17 +39,21 @@ $(function() {
                 dob: $("#add-dog-form-dob").val()
             }),
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
+                    $('#add-dog-modal').modal('toggle'); 
                     addDog(data.dog._id, data.dog.name, data.dog.gender, data.dog.type, data.dog.age, data.dog.avatar);
                     $('#no-data-found-alert-dog').hide();
-                    error("good");
+                    success("new dog is added");
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail adding dog");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });
@@ -114,5 +114,42 @@ $(function() {
         let file = $(this).val().split('\\');
         let fileName = file[file.length - 1];
         $('#uploaded-file-name').text(fileName);
+    });
+
+    $('#change-password-form').submit(function(event){
+        event.preventDefault();
+        if ($("#change-password-form-new-password").val().length < 8) {
+            error("length of password is less than 8");
+            return;
+        }
+        if ($("#change-password-form-new-password").val() != $("#change-password-form-confirm-new-password").val()) {
+            error("password and confirm password are different");
+            return;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/user/password",
+            contentType: "application/json",
+            data: JSON.stringify({
+                oldpassword: $("#change-password-form-old-password").val(),
+                newpassword: $("#change-password-form-new-password").val()
+            }),
+            success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
+                if (data.status == "success") {
+                    $('#change-password-modal').modal('toggle'); 
+                    success("password is changed");
+                } else {
+                    error(data.errorMessage);
+                }
+            },
+            error: function(data){
+                error("fail connecting to server");
+            }
+        });
     });
 });

@@ -25,6 +25,14 @@ const constructorMethod = (app) => {
     next();
   }
 
+  const loginRequiredJson = (req, res, next) => {
+    if (!req.session.userid) {
+      res.json({redirect: '/login'});
+      return;
+    }
+    next();
+  }
+
   const notLoginRequired = (req, res, next) => {
     if (req.session.userid) {
       res.redirect('/profile');
@@ -113,7 +121,7 @@ const constructorMethod = (app) => {
     }
   });
 
-  app.post('/dog', loginRequired, async (req, res) => {
+  app.post('/dog', loginRequiredJson, async (req, res) => {
     try{
       let gender = req.body.gender;
       let type = req.body.type;
@@ -308,6 +316,22 @@ const constructorMethod = (app) => {
     }
   });
 
+  app.post('/user/password', loginRequiredJson, async (req, res) => {
+    try {
+      await usersData.comparePassword(req.session.username, req.body.oldpassword);
+    } catch (e) {
+      res.json({status: "error", errorMessage: "invalid old password"});
+      return;
+    }
+
+    try {
+      await usersData.changePassword(req.session.userid, req.body.newpassword);
+      res.json({status: "success"});
+    } catch (e) {
+      res.json({status: "error", errorMessage: e});
+    }
+  });
+
   // ===== Dog modification =====
   app.get('/dog/add', async (req, res) => {
     let allDogs = dogData.getAllDogs();
@@ -319,10 +343,9 @@ const constructorMethod = (app) => {
     res.render('updatePhoto', {title: "update photo"});
   });
 
-  app.post('/user/:id/avatar', upload.single('avatar'), async (req, res) => {
-    let userId = req.params.id;
+  app.post('/user/avatar', loginRequiredJson, upload.single('avatar'), async (req, res) => {
     try {
-      let user = await usersData.updateAvatar(userId, req.file);
+      let user = await usersData.updateAvatar(req.session.userid, req.file);
       res.json({status: "success", avatar: user.avatar});
     } catch (e) {
       res.json({status: "error", errorMessage: e});

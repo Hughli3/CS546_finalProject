@@ -91,7 +91,7 @@ async function getUser(id){
 }
 
 async function changePassword(id, newPassword){
-  validateId(id);
+  validateId(id);  
   validatePassword(newPassword);
   
   const parsedId = ObjectId.createFromHexString(id);
