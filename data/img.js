@@ -16,6 +16,21 @@ function isString (name){
         throw `${name || "Provided string"} is not a string.`
       }
 }
+
+
+function validateImage(image) {
+  if(!image) throw "image is undefinded";
+  const imageType = new Set(['jpg', 'jpeg','png']);
+  const fileType = image.mimetype.split("/");
+  
+  // console.log(fileType);
+  // console.log(fileType[1] in imageType);
+  if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
+    fs.unlinkSync(image.path);
+    // console.log("this run");
+    throw "file is not in proper type image";
+  }
+}
 //========================================
 function chunkSubstr(str) {
   let size = 261120
@@ -31,6 +46,7 @@ function chunkSubstr(str) {
 
 async function createGridFS(file){
   if (!file) throw "file is not exist.";
+  validateImage(file);
   let base64Data = await base64Img.base64Sync(file.path);
   if (base64Data.length > 16777216) {
     throw "This Size is larger than 16MB";
