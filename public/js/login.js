@@ -1,4 +1,4 @@
-$(function() {
+$(function() {    
     $('#login-form').submit(function(event) {
         console.log("a");
         let letterNumber = /^[0-9a-zA-Z]+$/;

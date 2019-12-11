@@ -144,3 +144,9 @@ label {
     height: 100vh;
     min-height: 670px;
 }
+
+.tooltip-inner {
+    min-width: 350px; /* the minimum width */
+    text-align: left;
+    padding: 10px 25px;
+}

@@ -1,3 +1,5 @@
+$('[data-toggle="tooltip"]').tooltip();
+
 function error(data) {
     const message = $('<div class="alert alert-danger alert-message">');
     const close = $('<button type="button" class="close" data-dismiss="alert">&times</button>');
