@@ -31,12 +31,12 @@ function calculateAge(date) {
 }
 
 
-function calculateAccerateAge(date) {
-  let ageDifMs = Date.now() - date.getTime();
-  let ageDate = new Date(ageDifMs);
-  console.log(ageDate);
-  return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
+// function calculateAccerateAge(date) {
+//   let ageDifMs = Date.now() - date.getTime();
+//   let ageDate = new Date(ageDifMs);
+//   console.log(ageDate);
+//   return Math.abs(ageDate.getUTCFullYear() - 1970);
+// }
 
 
 function getDogHealthCondition(dogType, age, weight, gender){
@@ -141,6 +141,7 @@ function validateDob(dob) {
 
 
 function validateImage(image) {
+  // Only accept 'jpg', 'jpeg','png' 
   if(!image) throw "image is undefinded";
   const imageType = new Set(['jpg', 'jpeg','png']);
   const fileType = image.mimetype.split("/");

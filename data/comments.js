@@ -8,11 +8,14 @@ const imgData = require("./img");
 const ObjectId = require('mongodb').ObjectID;
 
 //========================================
-// Validate functions
+// Helper functions
 function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 }
 
+
+//========================================
+// Validate functions
 function validateId(id){
   if (!id) throw "id is undefinded";
   if (id.constructor !== String) throw "id is not a string";
