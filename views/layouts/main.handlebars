@@ -71,7 +71,8 @@
   <main>
     {{{ body }}}
   </main>
-
+  
+  {{#unless hideFooter}}
   <footer class="footer has-cards">
     <div class="container">
       <hr>
@@ -91,6 +92,7 @@
       </div>
     </div>
   </footer>
+  {{/unless}}
 
   <script src="/public/vendor/jquery/jquery.min.js"></script>
   <script src="/public/vendor/bootstrap/bootstrap.min.js"></script>

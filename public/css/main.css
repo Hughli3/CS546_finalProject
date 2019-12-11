@@ -40,6 +40,7 @@
     background: #e7f0ff;
     border-radius: 15px;
     margin-left: 16px;
+    word-break: break-word;
 }
 
 .single-comment .comment-content p {
@@ -95,4 +96,20 @@ p.no-data-found-alert {
 
 .footer .nav .nav-item .nav-link {
     color: #333 !important;
+}
+
+.avatar-container {
+    width: 100%;
+    padding-bottom: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.avatar-container img {
+    position: absolute;
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
 }

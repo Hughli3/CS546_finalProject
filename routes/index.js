@@ -278,7 +278,7 @@ const constructorMethod = (app) => {
   });
 
   app.get('/signup', notLoginRequired, async (req, res) => {
-    res.render('signup', {title: "Signup"});
+    res.render('signup', {title: "Signup", hideFooter: true});
   });
 
   app.post('/signup', async (req, res) => {
@@ -292,7 +292,7 @@ const constructorMethod = (app) => {
   });
 
   app.get('/login', notLoginRequired, async (req, res) => {
-    res.render('login', {title: "Login"});
+    res.render('login', {title: "Login", hideFooter: true});
   });
 
   app.post('/login', notLoginRequired, async (req, res) => {

@@ -2,7 +2,9 @@
     <div class="container">    
         <div class="row">
             <div class="col-3">
-                <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/public/img/avatar/default-user.png{{/if}}" id="user-avatar" class="img-fluid rounded-circle avatar" alt="user avatar" width="300">                
+                <div class="avatar-container">
+                    <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/public/img/avatar/default-user.png{{/if}}" id="user-avatar" class="img-fluid avatar" alt="user avatar" width="300">                
+                </div>
             </div>
             <div class="col-9">
                 <h1>{{user.username}}</h1>
@@ -28,11 +30,13 @@
                 <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>
                 <div class="card">
                     <a href="/dog/{{_id}}" >
-                        {{#if avatar}}
-                        <img src="{{ avatar }}" class="card-img-top" alt="dog avatar">
-                        {{else}}
-                        <img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="dog avatar">
-                        {{/if}}
+                        <div class="avatar-container">
+                            {{#if avatar}}
+                            <img src="{{ avatar }}" class="card-img-top" alt="dog avatar">
+                            {{else}}
+                            <img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="dog avatar">
+                            {{/if}}
+                        </div>
                         <div class="card-body">
                             <h1 class="card-title display-4 mb-0">{{name}}</h1>
                             <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>
