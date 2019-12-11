@@ -10,7 +10,7 @@ const bcryptjs = require("bcryptjs");
 const fs = require("fs");
 const saltRounds = 5;
 //========================================
-// Check input
+// Validate functions
 function validateId(id){
   if (!id) throw "id is undefinded";
   if (id.constructor !== String) throw "id is not a string";
@@ -18,23 +18,29 @@ function validateId(id){
 }
 
 function validateUsername(username){
-  if (!username) throw "username is undefinded";
-  if (username.constructor !== String) throw "username is not of the proper type";
-  if (username.length < 4 ) throw "username too short";
+  if (!username) throw "Username is undefinded";
+  if (username.constructor !== String) throw "Username is not of the proper type";
+  if (username.length < 4 ) throw "Username too short";
 }
 
 function validatePassword(password){
   if (!password) throw "password is undefinded";
-  if (password.constructor !== String) throw "password is not of the proper type";
-  if (password.length < 6 ) throw "user password too short";
+  if (password.constructor !== String) throw "Password is not of the proper type";
+  if (password.length < 6 ) throw "User password too short";
 }
 
 function validateImage(image) {
   if(!image) throw "image is undefinded";
-  if(image.mimetype.split("/")[0] != "image") {
+  const imageType = new Set(['jpg', 'jpeg','png']);
+  const fileType = image.mimetype.split("/");
+  
+  // console.log(fileType);
+  // console.log(fileType[1] in imageType);
+  if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
     fs.unlinkSync(image.path);
-    throw "file is not in proper type image";
-  }  
+    // console.log("this run");
+    throw "File is not in proper type image";
+  }
 }
 //========================================
 async function addUser(username, password){

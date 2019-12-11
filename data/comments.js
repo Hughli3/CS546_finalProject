@@ -8,7 +8,7 @@ const imgData = require("./img");
 const ObjectId = require('mongodb').ObjectID;
 
 //========================================
-// Check input
+// Validate functions
 function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 }
@@ -45,7 +45,7 @@ async function validateDog(dog){
 }
 
 //========================================
-// body functions here
+// Body functions here
 
 async function addComment(content, user, dog) {
   validateContent(content);

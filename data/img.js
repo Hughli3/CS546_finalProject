@@ -10,7 +10,7 @@ const fsFiles = mongoCollections.fsFiles;
 const fsChunks = mongoCollections.fsChunks;
 
 //========================================
-// Check input
+// Validate functions
 function isString (name){
     if (name.constructor !== String){
         throw `${name || "Provided string"} is not a string.`
@@ -32,6 +32,7 @@ function validateImage(image) {
   }
 }
 //========================================
+// Body functions
 function chunkSubstr(str) {
   let size = 261120
   const numChunks = Math.ceil(str.length / size)

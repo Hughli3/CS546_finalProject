@@ -31,15 +31,37 @@ function calculateAge(date) {
 }
 
 
-function getDogHealthCondition(dogType, weight){
-  if(breedData.dogType === null){
-    // if we don't have this type of dog data, we use general data to compute
+function calculateAccerateAge(date) {
+  let ageDifMs = Date.now() - date.getTime();
+  let ageDate = new Date(ageDifMs);
+  console.log(ageDate);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
+
+function getDogHealthCondition(dogType, age, weight, gender){
+  if(breedData.dogType === null || !weight){
+    // if we don't have this type of dog data
+    return "Not available";
+  }else if (age < 1){
+    return "Not available";
+  }else{
+    const dogData = breedData.breed;
+    const stdMin = dogData[dogType][gender].wMin;
+    const stdMax = dogData[dogType][gender].wMax;
+
+    if (weight > stdMin & weight < stdMax){
+      return "IDEAL";
+    }else if( weight < stdMin){
+      return "TOO THIN";
+    }else{
+      return "TOO HEAVY";
+    }
   }
 } 
 
 // ======================================================
-// validate functions
+// Validate functions
 function validateHeightWeight (hw) {
   if (!hw) throw "heightWeight is undefinded";
   validateHeight(hw.height);
@@ -86,15 +108,13 @@ function validateGender(gender){
 }
 
 
-
-
 function validateType(type){
   if (!type) throw "type is undefinded";
   if (type.constructor !== String) throw "type is not a string";
 
-  const dogType = firstUpperCase(type.toLowerCase());
+  // const dogType = firstUpperCase(type.toLowerCase());
   // change type to lower case and transfer its first digit to Upper case
-  if (!dogType in breedData.breed ){
+  if (!type in breedData.breed ){
     throw "Type is not available";
   }
 }
@@ -113,10 +133,10 @@ async function validateOwner(owner){
 
 function validateDob(dob) {
   let today = new Date();
-  if (!dob) throw "date of birth is undefinded";
-  if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
+  if (!dob) throw "Date of birth is undefinded";
+  if (isNaN(Date.parse(dob))) throw "Date of birth is invalid";
   if (today - dob < 0 || (today - dob)/ (1000 * 24 * 60 * 60 * 366) > 35)
-    throw "date of birth is invalid, dog age should less than 35 and greater than 0";
+    throw "Date of birth is invalid, dog age should less than 35 and greater than 0";
 }
 
 
@@ -130,16 +150,13 @@ function validateImage(image) {
   if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
     fs.unlinkSync(image.path);
     // console.log("this run");
-    throw "file is not in proper type image";
+    throw "File is not in proper type image";
   }
 }
 
 
-
-
-
 // ======================================================
-// Main body
+// Body functions
 async function addDog(name, gender, dob, type, owner){
   validateName(name);
   validateGender(gender);
@@ -246,6 +263,7 @@ async function getDog(id){
   dog.owner = owner.username;
   dog.age = calculateAge(dog.dob);
   dog.dob = convertDateToString(dog.dob);
+  
   if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
 
   if(dog.heightWeight && dog.heightWeight.length) {
@@ -260,6 +278,7 @@ async function getDog(id){
       dog.healthDateList.push(convertDateToString(hw.date));
     }
   }
+  dog.healthCondition = getDogHealthCondition(dog.type, dog.age, dog.weight, dog.gender)
 
   return dog;
 }
