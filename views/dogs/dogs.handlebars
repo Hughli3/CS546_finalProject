@@ -6,11 +6,13 @@
       <div class="col-md-3 mb-4">
           <div class="card">
               <a href="/dog/{{_id}}" >
-                {{#if avatar}}
-                <img src="{{ avatar }}" class="card-img-top" alt="Dog profile photo">
-                {{else}}
-                <img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="Dog profile photo">
-                {{/if}}
+                <div class="avatar-container">
+                  {{#if avatar}}
+                  <img src="{{ avatar }}" class="card-img-top" alt="dog avatar">
+                  {{else}}
+                  <img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="dog avatar">
+                  {{/if}}
+                </div>
                 <div class="card-body">
                     <h2 class="display-4">{{name}}</h2>
                     <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>

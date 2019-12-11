@@ -7,9 +7,9 @@
         <div class="row">
             <div class="col-3">
                 {{#if dog.avatar}}
-                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
+                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog avatar">
                 {{else}}
-                <img src="/public/img/avatar/default-dog.png" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog's avatar">
+                <img src="/public/img/avatar/default-dog.png" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog avatar">
                 {{/if}}
             </div>
             <div class="col-9">
@@ -69,11 +69,13 @@
         {{#each comments}}
             <div class="row single-comment">
                 <div class="col-2">
-                    {{#if user.avatar}}
-                    <img class="avatar" src="{{user.avatar}}">
-                    {{else}}
-                    <img class="avatar" src="/public/img/avatar/default-user.png">
-                    {{/if}}
+                    <div class="avatar-container">
+                        {{#if user.avatar}}
+                        <img class="img-fluid avatar" alt="user avatar" src="{{user.avatar}}">
+                        {{else}}
+                        <img class="img-fluid avatar" alt="user avatar" src="/public/img/avatar/default-user.png">
+                        {{/if}}
+                    </div>
                 </div>
                 <div class="col-10">
                     <div class="comment-content">

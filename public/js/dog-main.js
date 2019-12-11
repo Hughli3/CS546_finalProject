@@ -32,11 +32,13 @@ let addData = function(chart, data) {
 let addComment = function(comment) {
     let commentContainer = $('<div class="row single-comment">');
     let avatarContainer = $('<div class="col-2">');
-    let avatar = $('<img class="avatar" src="/public/img/avatar/default-user.png">');
+    let avatarImgContainer = $('<div class="avatar-container">')
+    let avatarImg = $('<img class="img-fluid avatar" alt="user avatar" src="/public/img/avatar/default-user.png">');
     if (comment.user.avatar) {
-        avatar = $('<img class="avatar" src="' + comment.user.avatar + '">');
+        avatarImg = $('<img class="img-fluid avatar" alt="user avatar" src="' + comment.user.avatar + '">');
     }
-    avatarContainer.append(avatar);
+    avatarImgContainer.append(avatarImg);
+    avatarContainer.append(avatarImgContainer);
     let contentContainer = $('<div class="col-10">');
     let contentInnerContainer = $('<div class="comment-content">');
     contentInnerContainer.append('<p>' + comment.content + '</p>');
