@@ -141,7 +141,7 @@ const breed = {
 // console.log("Yorkshire terrier" in breed)
 
 function allDogsType(){
-    
+    // return all dog types in one array
     return Object.keys(breed);
 }
 module.exports = {

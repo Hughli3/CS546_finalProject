@@ -8,8 +8,38 @@ const breedData = require("./breed");
 const ObjectId = require('mongodb').ObjectID;
 const fs = require('fs');
 
+
+
+
 // ======================================================
-// check input
+// Helper functions
+function firstUpperCase(str) {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+}
+
+
+
+function convertDateToString(date) {
+  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+}
+
+
+function calculateAge(date) {
+  let ageDifMs = Date.now() - date.getTime();
+  let ageDate = new Date(ageDifMs);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
+
+function getDogHealthCondition(dogType, weight){
+  if(breedData.dogType === null){
+    // if we don't have this type of dog data, we use general data to compute
+
+  }
+} 
+
+// ======================================================
+// validate functions
 function validateHeightWeight (hw) {
   if (!hw) throw "heightWeight is undefinded";
   validateHeight(hw.height);
@@ -56,9 +86,6 @@ function validateGender(gender){
 }
 
 
-function firstUpperCase(str) {
-  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
-}
 
 
 function validateType(type){
@@ -71,7 +98,6 @@ function validateType(type){
     throw "Type is not available";
   }
 }
-
 
 
 async function validateOwner(owner){
@@ -96,25 +122,24 @@ function validateDob(dob) {
 
 function validateImage(image) {
   if(!image) throw "image is undefinded";
-  if(image.mimetype.split("/")[0] != "image") {
+  const imageType = new Set(['jpg', 'jpeg','png']);
+  const fileType = image.mimetype.split("/");
+  
+  // console.log(fileType);
+  // console.log(fileType[1] in imageType);
+  if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
     fs.unlinkSync(image.path);
+    // console.log("this run");
     throw "file is not in proper type image";
   }
 }
 
 
-function convertDateToString(date) {
-  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-}
 
 
-function calculateAge(date) {
-  let ageDifMs = Date.now() - date.getTime();
-  let ageDate = new Date(ageDifMs);
-  return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
 
 // ======================================================
+// Main body
 async function addDog(name, gender, dob, type, owner){
   validateName(name);
   validateGender(gender);
