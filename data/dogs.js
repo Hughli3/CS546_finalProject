@@ -18,7 +18,6 @@ function firstUpperCase(str) {
 }
 
 
-
 function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 }
@@ -29,14 +28,6 @@ function calculateAge(date) {
   let ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
-
-
-// function calculateAccerateAge(date) {
-//   let ageDifMs = Date.now() - date.getTime();
-//   let ageDate = new Date(ageDifMs);
-//   console.log(ageDate);
-//   return Math.abs(ageDate.getUTCFullYear() - 1970);
-// }
 
 
 function getDogHealthCondition(dogType, age, weight, gender){
@@ -135,16 +126,16 @@ async function validateOwner(owner){
 
 
 function validateDob(dob) {
-  if (!dob) throw "Date of birth is undefinded";
-  if (isNaN(Date.parse(dob))) throw "Date of birth is invalid";
+  if (!dob) throw "date of birth is undefinded";
+  if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
  
   dateOfBirth = Date.parse(dob);
   dateOfBirth = new Date(dateOfBirth);
 
   let today = new Date();
-  
-  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) throw `Please input a real birth date of your dog`;
-
+  today.setHours(0,0,0,0);
+  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) 
+    throw "invalid date of birth";
 }
 
 
