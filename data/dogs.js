@@ -13,8 +13,8 @@ const fs = require('fs');
 
 // ======================================================
 // Helper functions
-function firstUpperCase(str) {
-  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+function firstLetterUpperCase(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 
@@ -30,23 +30,22 @@ function calculateAge(date) {
 }
 
 
-function getDogHealthCondition(dogType, age, weight, gender){
-  if(breedData.dogType === null || !weight){
-    // if we don't have this type of dog data
-    return "Not available";
+function getDogHealthCondition(dog, age, weight, gender){
+  if(breedData.dog === null || !weight){
+    return "not available";
   }else if (age < 1){
-    return "Not available";
+    return "not available";
   }else{
     const dogData = breedData.breed;
-    const stdMin = dogData[dogType][gender].wMin;
-    const stdMax = dogData[dogType][gender].wMax;
+    const stdMin = dogData[dog][gender].wMin;
+    const stdMax = dogData[dog][gender].wMax;
 
     if (weight > stdMin & weight < stdMax){
-      return "IDEAL";
+      return "excellent";
     }else if( weight < stdMin){
-      return "TOO THIN";
+      return "too thin";
     }else{
-      return "TOO HEAVY";
+      return "too heavy";
     }
   }
 } 
@@ -108,8 +107,7 @@ function validateType(type){
   // console.log(type);
   // console.log(type in breedData.breed);
   if (!(type in breedData.breed) ){
-    console.log("here")
-    throw "Type is not available";
+    throw "invalid type";
   }
 }
 
@@ -145,12 +143,9 @@ function validateImage(image) {
   const imageType = new Set(['jpg', 'jpeg','png']);
   const fileType = image.mimetype.split("/");
   
-  // console.log(fileType);
-  // console.log(fileType[1] in imageType);
   if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
     fs.unlinkSync(image.path);
-    // console.log("this run");
-    throw "File is not in proper type image";
+    throw "image is not in proper type";
   }
 }
 
@@ -167,7 +162,7 @@ async function addDog(name, gender, dob, type, owner){
   let dog = {
     name: name,
     type: type,
-    gender: gender,
+    gender: firstLetterUpperCase(gender.toLowerCase()),
     dob: new Date(Date.parse(dob)),
     avatar: null,
     owner: owner,
