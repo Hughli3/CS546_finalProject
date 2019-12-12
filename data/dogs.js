@@ -40,6 +40,11 @@ function getDogHealthCondition(dog, age, weight, gender){
     if(stdMin === null || stdMax === null){
       return "Not available";
     }
+
+    if (stdMin == stdMax){
+      stdMin = stdMin - 5;
+      stdMax = stdMax + 5;
+    }
     if (weight > stdMin & weight < stdMax){
       return "excellent";
     }else if( weight < stdMin){
