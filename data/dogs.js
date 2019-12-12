@@ -28,8 +28,8 @@ function calculateAge(date) {
 }
 
 
-function getDogHealthCondition(dog, age, weight, gender){
-  if(breedData.dog === null || !weight){
+function getDogHealthCondition(dogType, age, weight, gender){
+  if(breedData.dogType === null || !weight){
     return "not available";
   }else if (age < 1){
     return "not available";
