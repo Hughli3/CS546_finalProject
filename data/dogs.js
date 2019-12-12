@@ -9,8 +9,6 @@ const ObjectId = require('mongodb').ObjectID;
 const fs = require('fs');
 
 
-
-
 // ======================================================
 // Helper functions
 function firstUpperCase(str) {
@@ -49,7 +47,9 @@ function getDogHealthCondition(dogType, age, weight, gender){
     const dogData = breedData.breed;
     const stdMin = dogData[dogType][gender].wMin;
     const stdMax = dogData[dogType][gender].wMax;
-
+    if(stdMin === null || stdMax === null){
+      return "Not available";
+    } 
     if (weight > stdMin & weight < stdMax){
       return "IDEAL";
     }else if( weight < stdMin){
