@@ -74,14 +74,14 @@ let weightChart = new Chart($('#weight-chart'), {
                 display: true,
                 scaleLabel: {
                     display: true,
-                    labelString: 'Weight'
+                    labelString: 'Date'
                 }
             }],
             yAxes: [{
                 display: true,
                 scaleLabel: {
                     display: true,
-                    labelString: 'Date'
+                    labelString: 'Weight'
                 }
             }]
         }
