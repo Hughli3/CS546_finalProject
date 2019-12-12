@@ -139,7 +139,7 @@ p.no-data-found-alert {
 label {
     color: #32315d;
     font-size: 16px;
-    margin: 6px 0;
+    margin-bottom: 6px;
 }
 
 .signup-login-section {
@@ -172,6 +172,7 @@ input[type='radio']:checked + label {
 
 input[type='radio'] + label {
     display: block;
+    margin: 6px 0;
 }
 
 .radio-group {
@@ -194,4 +195,8 @@ input[type=radio] {
     position: absolute;
     visibility: hidden;
     display: none;
+}
+
+.custom-select {
+    box-shadow: none;
 }

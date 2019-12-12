@@ -155,4 +155,10 @@ $(function() {
             }
         });
     });
+
+    $('#add-dog-form-dob').datepicker({
+        format: "yyyy-mm-dd",
+        orientation: "top",
+        autoclose: true
+    });
 });

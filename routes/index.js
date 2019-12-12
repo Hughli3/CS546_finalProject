@@ -2,6 +2,7 @@ const dogData = require("../data/dogs");
 const usersData = require("../data/user");
 const imgData = require("../data/img");
 const commentData = require("../data/comments");
+const breedData = require("../data/breed");
 const multer  = require('multer');
 const session = require('express-session')
 const upload = multer({dest:'./public/img/upload'});
@@ -274,10 +275,12 @@ const constructorMethod = (app) => {
   app.get('/profile', loginRequired, async (req, res) => {
     try {
       let user = await usersData.getUser(req.session.userid);
+      let types = breedData.getBreeds();
       data = {
         title: "Profile",
         username : req.session.username,
-        user
+        user : user,
+        types : types
       }
       res.render('profile', data);
     } catch (e) {
