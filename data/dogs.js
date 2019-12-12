@@ -75,6 +75,7 @@ function validateWeight(weight){
   if (!weight) throw "weight is undefinded";
   if (typeof weight != "number") throw "weight is not of the proper type";
   if (weight <= 0 ) throw "weight is not a positive number";
+  if (weight > 300) throw "The heaviest dog in the world is 235lb. Does your dog weigh so much?"
 }
 
 
@@ -82,6 +83,7 @@ function validateHeight(height){
   if (!height) throw "height is undefinded";
   if (typeof height != "number") throw "height is not of the proper type";
   if (height <= 0 ) throw "height is not a positive number";
+  if (height > 60) throw "The highest dog in the world is 42.1 inches high(shoulder height). Is your dog taller than him so much?"
 }
 
 
