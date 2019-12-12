@@ -4,6 +4,7 @@ const static = express.static(__dirname + '/public');
 const configRoutes = require('./routes');
 const app = express();
 
+app.set('views', __dirname + '/views')
 app.use(express.json());
 app.use('/public', static);
 app.use(express.urlencoded({extended: true}));
