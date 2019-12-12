@@ -200,3 +200,14 @@ input[type=radio] {
 .custom-select {
     box-shadow: none;
 }
+
+p.card-text {
+    font-size: 15px;
+    margin: 0px;
+    color: #475dda;
+    font-weight: 400;
+}
+
+.card-text-gender {
+    color: #32315d;
+}

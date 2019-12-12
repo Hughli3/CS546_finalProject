@@ -3,7 +3,7 @@
     <h1 class="mb-5">All dogs</h1>
     <div class="row">
       {{#each dogs}}
-      <div class="col-md-3 mb-4">
+      <div class="col-lg-3 col-md-4 col-6 mb-4">
           <div class="card">
               <a href="/dog/{{_id}}" >
                 <div class="avatar-container">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <h2 class="display-4">{{name}}</h2>
-                    <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>
+                    <p class="card-text"><span class="card-text-gender">{{gender}}</span> {{type}}</p>
                 </div>
               </a>
           </div>

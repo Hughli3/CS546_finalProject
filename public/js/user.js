@@ -59,7 +59,7 @@ $(function() {
     });
   
     function addDog(id, name, gender, type, age, avatar) {
-        let dogContainer = $('<div class="col-md-3 mb-4 dog-container">');
+        let dogContainer = $('<div class="col-lg-3 col-md-4 col-6 mb-4 dog-container">');
         let button = $('<button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>')
         let card = $('<div class="card">');
         let a = $('<a href="/dog/' + id + '">');
@@ -71,7 +71,7 @@ $(function() {
         avatarContainer.append(img);
         let cardbody = $('<div class="card-body">');
         let cardtitle = $('<h2 class="card-title display-4 mb-0">' + name + '</h2>');
-        let cardtest = $('<p class="card-text">' + gender + ' ' + type + ' ' + age +' y/o</p>');
+        let cardtest = $('<p class="card-text"><span class="card-text-gender">' + gender + '</span> ' + type + '</p>');
         cardbody.append(cardtitle).append(cardtest);
         a.append(avatarContainer).append(cardbody);
         card.append(a);

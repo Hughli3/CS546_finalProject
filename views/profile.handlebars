@@ -150,7 +150,7 @@
         <p {{#if user.dogs}}style="display: none"{{/if}} id="no-data-found-alert-dog" class="no-data-found-alert">No dogs found. Please add your dogs.</p>
         <div id="dogs-container" class="row dogs-container">
             {{#each user.dogs}}
-            <div class="col-md-3 mb-4 dog-container">
+            <div class="col-lg-3 col-md-4 col-6 mb-4 dog-container">
                 <button type="button" class="btn btn-danger btn-sm btn-round btn-shadow btn-delete-dog position-absolute">delete</button>
                 <div class="card">
                     <a href="/dog/{{_id}}" >
@@ -163,7 +163,7 @@
                         </div>
                         <div class="card-body">
                             <h2 class="card-title display-4 mb-0">{{name}}</h2>
-                            <p class="card-text">{{gender}} {{type}} {{age}} y/o</p>
+                            <p class="card-text"><span class="card-text-gender">{{gender}}</span> {{type}}</p>
                         </div>
                     </a>
                 </div>
