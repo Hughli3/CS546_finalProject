@@ -110,10 +110,10 @@ $(function() {
     });
 
     $('#user-avatar-upload-btn').click(function() {
-        $('#update-avatar-form-file').click();
+        $('#user-avatar-upload').click();
     });
 
-    $('#update-avatar-form-file').change(function() {
+    $('#user-avatar-upload').change(function() {
         let file = $(this).val().split('\\');
         let fileName = file[file.length - 1];
         $('#uploaded-file-name').text(fileName);
