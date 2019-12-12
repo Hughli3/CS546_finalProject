@@ -38,7 +38,7 @@ function getDogHealthCondition(dogType, age, weight, gender){
     const stdMin = dogData[dogType][gender].wMin;
     const stdMax = dogData[dogType][gender].wMax;
     if(stdMin === null || stdMax === null){
-      return "Not available";
+      return "not available";
     }
 
     if (stdMin == stdMax){
