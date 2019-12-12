@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
       else
         res.render('dogs/single_dog_public', data);
     } catch (e) {
-      res.render('dogs/single_dog_public', {error: e});
+      res.render('404', {title: "Not Found", username : req.session.username});
     }
 });
 
