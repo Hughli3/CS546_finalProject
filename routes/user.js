@@ -18,7 +18,25 @@ router.get('/', middleware.loginRequired, async (req, res) => {
     }
     res.render('profile', data);
   } catch (e) {
-    res.render('profile', {error: e});
+    res.status(404)
+    res.render('404', {title: "Not Found", username : req.session.username});
+  }
+});
+
+router.get('/:username', async (req, res) => {
+  try {
+    let username = req.params.username;
+
+    let user = await usersData.getUserByUsername(username);
+    data = {
+      title: user.username,
+      username : req.session.username,
+      user : user
+    }
+    res.render('single_user', data);
+  } catch (e) {
+    res.status(404)
+    res.render('404', {title: "Not Found", username : req.session.username});
   }
 });
 

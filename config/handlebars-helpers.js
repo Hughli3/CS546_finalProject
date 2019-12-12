@@ -23,9 +23,18 @@ module.exports = {
         }
         return accum;
     },
+
     section: function(name, block) { 
       if (!this._sections) this._sections = {};
       this._sections[name] = block.fn(this); 
       return null;
+    },
+
+    greaterThan: function (v1, v2, options) {
+      'use strict';
+      if (v1>v2) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
     }
   }

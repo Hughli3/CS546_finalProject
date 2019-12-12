@@ -67,13 +67,33 @@ async function addUser(username, password){
   return getUser(insertInfo.insertedId.toString());
 }
 
-
 async function getUser(id){
   validateId(id);
 
   const usersCollection = await users();
   const parsedId = ObjectId.createFromHexString(id);
   const userInfo = await usersCollection.findOne({ _id: parsedId });
+  if (userInfo == null) throw "Could not find user successfully";
+
+  let dogslist = [];
+  for (let dog of userInfo.dogs) {
+    dogslist.push(await dogData.getDog(dog));
+  }
+  userInfo.dogs = dogslist;
+
+  if (userInfo.avatar) {
+    let avatar = await imgData.getPhotoDataId(userInfo.avatar);
+    userInfo.avatar = avatar;
+  }
+  
+  return userInfo;
+}
+
+async function getUserByUsername(username){
+  validateUsername(username);
+
+  const usersCollection = await users();
+  const userInfo = await usersCollection.findOne({ username: username });
   if (userInfo == null) throw "Could not find user successfully";
 
   let dogslist = [];
@@ -223,6 +243,7 @@ module.exports = {
     updateAvatar,
     changePassword,
     comparePassword,
+    getUserByUsername,
     // removeUser,
     // updateTheUser,
     // getAllDogs

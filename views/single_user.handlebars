@@ -1,0 +1,48 @@
+<section class="my-5">
+    <div class="container">    
+        <div class="row">
+            <div class="col-4 col-lg-2">
+                <div class="avatar-container">
+                    <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/public/img/avatar/default-user.png{{/if}}" id="user-avatar" class="img-fluid avatar" alt="user avatar" width="300">                
+                </div>
+            </div>
+            <div class="col-8 col-lg-10 user-description">
+                <h1>{{user.username}}</h1>
+                {{#if user.dogs}}
+                <p>This user has {{user.dogs.length}} {{#greaterThan user.dogs.length 1}}dogs{{else}}dog{{/greaterThan}}</p>                
+                {{else}}
+                <p>This user doesn't have dog</p>
+                {{/if}}
+            </div>
+        </div> 
+    </div>
+</section>
+
+{{#if user.dogs}}
+<section class="my-5">
+    <div class="container">
+        <h1>All dogs</h1>
+        <div id="dogs-container" class="row dogs-container">
+            {{#each user.dogs}}
+            <div class="col-lg-3 col-md-4 col-6 mb-4 dog-container">
+                <div class="card">
+                    <a href="/dog/{{_id}}" >
+                        <div class="avatar-container">
+                            {{#if avatar}}
+                            <img src="{{ avatar }}" class="card-img-top" alt="dog avatar">
+                            {{else}}
+                            <img src="/public/img/avatar/default-dog.png" class="card-img-top" alt="dog avatar">
+                            {{/if}}
+                        </div>
+                        <div class="card-body">
+                            <h2 class="card-title display-4 mb-0">{{name}}</h2>
+                            <p class="card-text"><span class="card-text-gender">{{gender}}</span> {{type}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>    
+            {{/each}} 
+        </div>
+    </div>   
+</section>
+{{/if}}

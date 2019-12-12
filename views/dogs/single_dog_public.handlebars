@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <h2>Owner</h2>
-                        <p id="dog-owner">{{ dog.owner }}</p>
+                        <p id="dog-owner"><a href="/user/{{ dog.owner }}">{{ dog.owner }}</a></p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <div class="comment-content">
                         <p>{{content}}</p>
                         <p class="comment-data">
-                            <a href="#">{{user.username}}</a>
+                            <a href="/user/{{user.username}}">{{user.username}}</a>
                             <span class="comment-date">{{date}}</span>
                         </p>
                     </div>

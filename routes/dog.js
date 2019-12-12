@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
       let commentPagedData = helper.pagination(comments, 1, 3);
 
       data = {
-        title: "Single Dog", 
+        title: dog.name, 
         dog: dog,          
         photos: photoPagedData.photos,
         isPhotoLastPage: photoPagedData.isLastPage,

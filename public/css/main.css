@@ -1,5 +1,10 @@
 .footer.has-cards {
-    margin-top: -525px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.footer.has-cards:before {
+    display: none;
 }
 
 .btn-delete-photo {
@@ -209,5 +214,11 @@ p.card-text {
 }
 
 .card-text-gender {
+    color: #32315d;
+}
+
+.user-description p {
+    font-size: 22px;
+    font-weight: 400;
     color: #32315d;
 }
