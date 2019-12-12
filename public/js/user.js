@@ -35,7 +35,7 @@ $(function() {
             data: JSON.stringify({
                 name: $("#add-dog-form-name").val(),
                 type: $("#add-dog-form-type").val(),
-                gender: $("#add-dog-form-gender").val(),
+                gender: $("input[name='gender']:checked").val(),
                 dob: $("#add-dog-form-dob").val()
             }),
             success: function(data){

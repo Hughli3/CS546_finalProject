@@ -161,3 +161,37 @@ label {
     word-break: break-word;
     display: contents;
 }
+
+input[type='radio']:checked + label {
+    width: 100%;
+    background: #475dda;
+    color: #fff;
+    margin: 0px;
+    padding: 6px 0;
+}
+
+input[type='radio'] + label {
+    display: block;
+}
+
+.radio-group {
+    border: solid 1px #cad1d7;
+    display: block;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.radio-group div {
+    float: left;
+    border-left: 1px solid #cad1d7;
+}
+
+.radio-group div:first-child {
+    border: 0;
+}
+
+input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+    display: none;
+}
