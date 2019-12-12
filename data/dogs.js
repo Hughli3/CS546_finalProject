@@ -9,8 +9,6 @@ const ObjectId = require('mongodb').ObjectID;
 const fs = require('fs');
 
 
-
-
 // ======================================================
 // Helper functions
 function firstLetterUpperCase(str) {
@@ -37,9 +35,16 @@ function getDogHealthCondition(dog, age, weight, gender){
     return "not available";
   }else{
     const dogData = breedData.breed;
-    const stdMin = dogData[dog][gender].wMin;
-    const stdMax = dogData[dog][gender].wMax;
+    const stdMin = dogData[dogType][gender].wMin;
+    const stdMax = dogData[dogType][gender].wMax;
+    if(stdMin === null || stdMax === null){
+      return "Not available";
+    }
 
+    if (stdMin == stdMax){
+      stdMin = stdMin - 5;
+      stdMax = stdMax + 5;
+    }
     if (weight > stdMin & weight < stdMax){
       return "excellent";
     }else if( weight < stdMin){
@@ -48,7 +53,7 @@ function getDogHealthCondition(dog, age, weight, gender){
       return "too heavy";
     }
   }
-} 
+}
 
 // ======================================================
 // Validate functions
@@ -126,23 +131,23 @@ async function validateOwner(owner){
 function validateDob(dob) {
   if (!dob) throw "date of birth is undefinded";
   if (isNaN(Date.parse(dob))) throw "date of birth is invalid";
- 
+
   dateOfBirth = Date.parse(dob);
   dateOfBirth = new Date(dateOfBirth);
 
   let today = new Date();
   today.setHours(0,0,0,0);
-  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35) 
+  if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35)
     throw "invalid date of birth";
 }
 
 
 function validateImage(image) {
-  // Only accept 'jpg', 'jpeg','png' 
+  // Only accept 'jpg', 'jpeg','png'
   if(!image) throw "image is undefinded";
   const imageType = new Set(['jpg', 'jpeg','png']);
   const fileType = image.mimetype.split("/");
-  
+
   if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
     fs.unlinkSync(image.path);
     throw "image is not in proper type";
@@ -175,7 +180,7 @@ async function addDog(name, gender, dob, type, owner){
   const dogId = insertedInfo.insertedId;
 
   const usersCollection = await users();
-  const updateInfo = await usersCollection.updateOne({ _id: ObjectId.createFromHexString(owner) }, 
+  const updateInfo = await usersCollection.updateOne({ _id: ObjectId.createFromHexString(owner) },
                                         {$push: {dogs: { $each: [ ObjectId(dogId).toString() ], $position: 0}}});
   if (updateInfo.modifiedCount === 0) throw "could not add the dog to the user";
 
@@ -259,7 +264,7 @@ async function getDog(id){
   dog.owner = owner.username;
   dog.age = calculateAge(dog.dob);
   dog.dob = convertDateToString(dog.dob);
-  
+
   if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
 
   if(dog.heightWeight && dog.heightWeight.length) {
@@ -316,7 +321,7 @@ async function addPhotos(id, file){
   let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
   fs.unlinkSync(file.path);
-  const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, 
+  const updateInfo = await dogsCollection.updateOne({ _id: parsedId },
                           { $push: {photos: { $each: [ photoId.toString() ], $position: 0}}});
   if (updateInfo.modifiedCount === 0) throw "could not add a new photo successfully";
 
