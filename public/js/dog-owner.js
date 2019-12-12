@@ -89,7 +89,7 @@ $(function() {
                     $('#no-data-found-alert-health').hide();
                     $('#dog-health-info').show();
                     $('#dog-health-charts').removeClass('hide-chart');
-                    updateDogHealthInfo(data.dog.weight, data.dog.height, data.dog.bmi, "good", data.dog.lastHeightWeightUpdate);
+                    updateDogHealthInfo(data.dog.weight, data.dog.height, data.dog.bmi, data.dog.healthCondition, data.dog.lastHeightWeightUpdate);
                 } else {
                     error(data.errorMessage);
                 }
