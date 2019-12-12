@@ -37,7 +37,7 @@ function getDogHealthCondition(dogType, age, weight, gender){
     return "not available";
   }
   
-  if(dogType === "Other"){
+  if(gender === "Other"){
     return "not available";
   } 
     
