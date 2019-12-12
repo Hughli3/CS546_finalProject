@@ -31,28 +31,35 @@ function calculateAge(date) {
 function getDogHealthCondition(dogType, age, weight, gender){
   if(breedData.dogType === null || !weight){
     return "not available";
-  }else if (age < 1){
-    return "not available";
-  }else{
-    const dogData = breedData.breed;
-    const stdMin = dogData[dogType][gender].wMin;
-    const stdMax = dogData[dogType][gender].wMax;
-    if(stdMin === null || stdMax === null){
-      return "not available";
-    }
-
-    if (stdMin == stdMax){
-      stdMin = stdMin - 5;
-      stdMax = stdMax + 5;
-    }
-    if (weight > stdMin & weight < stdMax){
-      return "excellent";
-    }else if( weight < stdMin){
-      return "too thin";
-    }else{
-      return "too heavy";
-    }
   }
+  
+  if (age < 1){
+    return "not available";
+  }
+  
+  if(dogType === "Other"){
+    return "not available";
+  } 
+    
+  const dogData = breedData.breed;
+  const stdMin = dogData[dogType][gender].wMin;
+  const stdMax = dogData[dogType][gender].wMax;
+  if(stdMin === null || stdMax === null){
+    return "not available";
+  }
+
+  if (stdMin == stdMax){
+    stdMin = stdMin - 5;
+    stdMax = stdMax + 5;
+  }
+  if (weight > stdMin & weight < stdMax){
+    return "excellent";
+  }else if( weight < stdMin){
+    return "too thin";
+  }else{
+    return "too heavy";
+  }
+  
 }
 
 // ======================================================

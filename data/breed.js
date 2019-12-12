@@ -50,7 +50,7 @@ const breed = {
 'Bernese mountain dog': null,
 'Bichon frise': null,
 'Black and tan coonhound': null,
-'Black russian terrier:{}': null,
+'Black russian terrier': null,
 'Bloodhound': null,
 'Bluetick coonhound': null,
 'Border collie': null,
