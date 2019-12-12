@@ -29,7 +29,8 @@ function calculateAge(date) {
 
 
 function getDogHealthCondition(dogType, age, weight, gender){
-  if(breedData.dogType === null || !weight){
+  const dogData = breedData.breed;
+  if(dogData[dogType] === null || !weight){
     return "not available";
   }
   
@@ -41,7 +42,7 @@ function getDogHealthCondition(dogType, age, weight, gender){
     return "not available";
   } 
     
-  const dogData = breedData.breed;
+  
   const stdMin = dogData[dogType][gender].wMin;
   const stdMax = dogData[dogType][gender].wMax;
   if(stdMin === null || stdMax === null){
