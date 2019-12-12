@@ -75,6 +75,10 @@ let initSubmitCommentForm = function() {
                 content: $("#comment-form-content").val()
             }),
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     $("#comments").empty();
                     for (let comment of data.comments) {
@@ -85,13 +89,13 @@ let initSubmitCommentForm = function() {
                     $("#load-more-comments").data("current-page", "1");
                     $("#no-data-found-alert-comment").hide();
                     $("#comment-form-content").val('');
+                    success("new comment is posted");
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail posting comment");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });
@@ -120,12 +124,11 @@ let initLoadMoreComment = function() {
                     }
                     if (data.isLastPage) $("#load-more-comments").hide();
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating comments");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });
@@ -149,12 +152,11 @@ let initLoadMorePhoto = function(isShowDelete) {
                         $("#load-more-photos").hide();
                     }
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating photos");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });

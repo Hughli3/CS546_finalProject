@@ -11,10 +11,20 @@ $(function() {
         $('#update-avatar-form-file').click();
     });
 
+    $('#upload-photo-btn').click(function() {
+        $('#upload-photo-form-file').click();
+    });
+
     $('#update-avatar-form-file').change(function() {
         let file = $(this).val().split('\\');
         let fileName = file[file.length - 1];
-        $('#uploaded-file-name').text(fileName);
+        $('#uploaded-avatar-name').text(fileName);
+    });
+
+    $('#upload-photo-form-file').change(function() {
+        let file = $(this).val().split('\\');
+        let fileName = file[file.length - 1];
+        $('#uploaded-photo-name').text(fileName);
     });
 
     $("#update-avatar-form").submit(function(event) {
@@ -27,6 +37,10 @@ $(function() {
             contentType: false,
             processData: false,
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     $('#update-avatar-modal').modal('toggle'); 
                     $("#dog-avatar").attr("src", data.avatar);
@@ -96,6 +110,10 @@ $(function() {
                 weight: parseFloat($("#add-height-weight-form-weight").val())
             }}),
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     $('#add-height-weight-modal').modal('toggle');
                     updateLabelAndData(bmiChart, data.dog.healthDateList, data.dog.bmiList);
@@ -110,14 +128,13 @@ $(function() {
                 }
             },
             error: function(data){
-                error("fail updating height weight");
+                error("fail connecting to server");
             }
         });
     });
 
     $("#upload-photo-form").submit(function(event) {
         event.preventDefault();
-        $('#upload-photo-modal').modal('toggle'); 
 
         $.ajax({
             method: "POST",
@@ -126,7 +143,12 @@ $(function() {
             contentType: false,
             processData: false,
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
+                    $('#upload-photo-modal').modal('toggle'); 
                     $("#photos").empty();
                     for(let photo of data.photos) {
                         addDogPhoto(photo.id, photo.photo, true);
@@ -134,14 +156,13 @@ $(function() {
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
                     $("#load-more-photos").data("current-page", "1");
-                    $("#no-data-found-alert-photo").hide();
+                    success("new photo is uploaded");
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });
@@ -153,6 +174,10 @@ $(function() {
             method: "DELETE",
             url: urlpath + "/photo/" + photoId,
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     $("#photos").empty();
                     if (data.photos.length) {
@@ -166,13 +191,13 @@ $(function() {
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
                     $("#load-more-photos").data("current-page", "1");
+                    success("photo is deleted");
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });

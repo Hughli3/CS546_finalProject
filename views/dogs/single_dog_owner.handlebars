@@ -57,7 +57,7 @@
                     <div class="form-group">
                         <label for="update-avatar-form-file">Avatar</label>
                         <div id="dog-avatar-upload-btn" class="btn btn-primary">Choose file</div>
-                        <p id="uploaded-file-name" class="uploaded-file-name"></p>
+                        <p id="uploaded-avatar-name" class="uploaded-file-name"></p>
                         <input type="file" id="update-avatar-form-file" class="btn btn-primary d-none" name="avatar" accept="image/*">
                     </div>    
                 </div>
@@ -231,7 +231,12 @@
 
             <form id="upload-photo-form" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <input type="file" class="btn btn-primary" name="photo" accept="image/*">
+                    <div class="form-group">
+                        <label for="upload-photo-form-file">Photo</label>
+                        <div id="upload-photo-btn" class="btn btn-primary">Choose file</div>
+                        <p id="uploaded-photo-name" class="uploaded-file-name"></p>
+                        <input type="file" id="upload-photo-form-file" class="btn btn-primary d-none" name="photo" accept="image/*">
+                    </div>    
                 </div>
 
                 <div class="modal-footer">
