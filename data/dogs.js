@@ -17,7 +17,7 @@ function firstLetterUpperCase(str) {
 
 
 function convertDateToString(date) {
-  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+  return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
 }
 
 
@@ -209,15 +209,25 @@ async function updateDog(id, dog){
   return await this.getDog(id);
 }
 
+async function checkOwner(ownerId, dogId){
+  validateId(ownerId);
+  validateId(dogId);
 
-async function removeDog(owner, id){
+  const dogsCollection = await dogs();
+  const parsedId = ObjectId.createFromHexString(dogId);
+  const dog = await dogsCollection.findOne({_id:parsedId});
+  if (!dog) throw "could not find dog successfully";
+
+  if (dog.owner != ownerId) throw "invalid permission, owner doesn't match";
+}
+
+async function removeDog(id){
   validateId(id);
 
   const dogsCollection = await dogs();
   const parsedId = ObjectId.createFromHexString(id);
   const removedData = await dogsCollection.findOne({_id:parsedId});
   if (!removedData) throw "could not find dog successfully";
-  if (removedData.owner != owner) throw "could not delete dog because wrong owner received";
 
   await commentData.deleteCommentsByDog(id);
 
@@ -389,5 +399,6 @@ module.exports = {
   removeDog,
   addPhotos,
   removePhoto,
+  checkOwner
   // getAllComments
 }
