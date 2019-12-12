@@ -211,13 +211,14 @@ async function updateDog(id, dog){
 }
 
 
-async function removeDog(id){
+async function removeDog(owner, id){
   validateId(id);
 
   const dogsCollection = await dogs();
   const parsedId = ObjectId.createFromHexString(id);
   const removedData = await dogsCollection.findOne({_id:parsedId});
   if (!removedData) throw "could not find dog successfully";
+  if (removedData.owner != owner) throw "could not delete dog because wrong owner received";
 
   await commentData.deleteCommentsByDog(id);
 

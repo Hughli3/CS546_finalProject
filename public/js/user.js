@@ -89,19 +89,22 @@ $(function() {
             method: "DELETE",
             url: dogURI,
             success: function(data){
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
                 if (data.status == "success") {
                     dogSingleContainer.remove();
                     if (dogContainer.children().length === 0) {
                         $('#no-data-found-alert-dog').show();
                     }
-                    success("good");
+                    success("dog is deleted");
                 } else {
-                    console.log(data);
+                    error(data.errorMessage);
                 }
             },
             error: function(data){
-                console.log("fail updating avatar");
-                console.log(data);
+                error("fail connecting to server");
             }
         });
     });

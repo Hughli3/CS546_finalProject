@@ -165,11 +165,11 @@ const constructorMethod = (app) => {
     }
   });
 
-  app.delete('/dog/:id', async (req, res) => {
+  app.delete('/dog/:id', loginRequiredJson, async (req, res) => {
     try{
       let dogId = req.params.id;
-      await dogData.removeDog(dogId);
-      res.json({ status: "success" });
+      await dogData.removeDog(req.session.userid, dogId);
+      res.json({status: "success"});
     } catch (e) {
       res.json({status: "error", errorMessage: e});
     }
