@@ -21,8 +21,8 @@ const constructorMethod = (app) => {
   });
   
   app.use('*', function(req, res) {
-    res.sendStatus(404);
-    return;
+    res.status(404)
+    res.render('404', {title: "Not Found", username : req.session.username});
   });
 };
 
