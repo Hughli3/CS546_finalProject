@@ -23,7 +23,8 @@ router.get('/', async (req, res) => {
       };
       res.render('dogs/dogs', data);
     } catch (e) {
-      res.render('dogs/dogs', {error: "fail loading dogs"});
+      res.status(500);
+      res.render('error', {title: "Server Internal Error", errorCode: 500, username: req.session.username});
     }
 });
 
@@ -68,8 +69,8 @@ router.get('/:id', async (req, res) => {
       else
         res.render('dogs/single_dog_public', data);
     } catch (e) {
-      res.status(404)
-      res.render('404', {title: "Not Found", username : req.session.username});
+      res.status(404);
+      res.render('error', {title: "Not Found", errorCode: 404, username: req.session.username});
     }
 });
 

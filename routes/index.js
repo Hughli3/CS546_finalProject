@@ -23,13 +23,13 @@ const constructorMethod = (app) => {
       };
       res.render('home', data);
     } catch (e) {
-      console.log(e);
+      res.render('error', {title: 500, errorCode: 500, username: req.session.username});
     }
   });
   
   app.use('*', function(req, res) {
-    res.status(404)
-    res.render('404', {title: "Not Found", username : req.session.username});
+    res.status(404);
+    res.render('error', {title: "Not Found", errorCode: 404, username: req.session.username});
   });
 };
 

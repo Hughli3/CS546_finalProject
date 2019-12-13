@@ -18,8 +18,8 @@ router.get('/', middleware.loginRequired, async (req, res) => {
     }
     res.render('user/single_user_owner', data);
   } catch (e) {
-    res.status(404)
-    res.render('404', {title: "Not Found", username : req.session.username});
+    res.status(500);
+    res.render('error', {title: "Server Internal Error", errorCode: 500, username: req.session.username});
   }
 });
 
@@ -35,8 +35,8 @@ router.get('/:username', async (req, res) => {
     }
     res.render('user/single_user_public', data);
   } catch (e) {
-    res.status(404)
-    res.render('404', {title: "Not Found", username : req.session.username});
+    res.status(404);
+    res.render('error', {title: "Not Found", errorCode: 404, username: req.session.username});
   }
 });
 
