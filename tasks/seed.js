@@ -83,6 +83,17 @@ const main = async () => {
        const userFive = await userData.addUser(user5.username, user5.password);
    
        console.log("user4 created");
+    
+    // =================================
+    // update seed img
+    let imgInfo = { mimetype: 'image/jpeg',
+            filename: '1',
+            path: '../tasks/seedImg/1.jpg',
+        }
+    console.log(imgInfo);
+        
+    let seedimgid = await imgData.createGridFS(imgInfo)
+    console.log(seedimgid);
 
     // =================================
     //  Create a dog
