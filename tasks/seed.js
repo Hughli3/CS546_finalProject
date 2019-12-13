@@ -254,10 +254,10 @@ const main = async () => {
     //Photo by Julian Dutton on Unsplash
     console.log("Hill's dog3 created");
     
-    let dog3Id = userId5dog3._id.toString()
+    let dog1Id = userId5dog1._id.toString()
     for (let i = 0; i < 20; i++) {
         let heightWeight = {height: i + 1, weight: i + 2}
-        dog = await dogData.addHeightWeight(dog3Id, heightWeight)};
+        dog = await dogData.addHeightWeight(dog1Id, heightWeight)};
     console.log("UserId5dog3 hw created")
     
     let dog2Id = userId5dog2._id.toString()
@@ -266,10 +266,10 @@ const main = async () => {
         dog = await dogData.addHeightWeight(dog2Id, heightWeight)};
     console.log("UserId5dog2 hw created")
 
-    let dog1Id = userId5dog1._id.toString()
+    let dog3Id = userId5dog3._id.toString()
     for (let i = 0; i < 20; i++) {
         let heightWeight = {height: i + 1, weight: (3 * i) + 20}
-        dog = await dogData.addHeightWeight(dog1Id, heightWeight)};
+        dog = await dogData.addHeightWeight(dog3Id, heightWeight)};
     console.log("UserId5dog2 hw created")
 
     // =================================
