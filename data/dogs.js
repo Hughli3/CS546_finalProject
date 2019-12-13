@@ -363,40 +363,21 @@ async function removePhoto(dogId, photoId){
   return getDog(dogId);
 }
 
-// async function getAllComments(dogId){
-//   // Get all comments of this dog
-//   validateId(dogId);
+async function getPopularDogs() {
+  const dogsCollection = await dogs();
+  const allDogs = await dogsCollection.aggregate([
+    {$match: {"avatar":{$ne:null}}},
+    {$sample: {size: 4}}
+  ]).toArray();
+  if (!allDogs) throw 'no dog found';
 
-//   const dogsCollection = await dogs();
-//   const commentsCollection = await comments();
-//   const usersCollection = await users();
+  for(let dog of allDogs) {
+    if (dog.avatar) dog.avatar = await imgData.getPhotoDataId(dog.avatar);
+    dog.age = calculateAge(dog.dob);
+  }
 
-//   let parsedUserId = ObjectId.createFromHexString(dogId);
-//   const dog = await dogsCollection.findOne({_id: parsedUserId});
-//   if (!dog) throw "dog not found";
-
-//   let allComments = [];
-//   if (!dog.comments || !dog.comments.length) return [];
-
-//   for (let commentId of dog.comments){
-//     let parsedCommentId = ObjectId.createFromHexString(commentId);
-//     let comment = await commentsCollection.findOne({_id:parsedCommentId})
-//     if (!comment) throw "could not find the comment successfully";
-
-//     let parsedUserId = ObjectId.createFromHexString(comment.author);
-//     let user = await usersCollection.findOne({_id:parsedUserId});
-//     if (!user) throw "could not find the user successfully";
-
-//     allComments.push({
-//       author: user.username,
-//       content: comment.content,
-//       avatar: user.avatar,
-//       id: comment._id
-//     });
-//   }
-
-//   return allComments;
-// }
+  return allDogs;
+}
 
 
 module.exports = {
@@ -409,6 +390,7 @@ module.exports = {
   removeDog,
   addPhotos,
   removePhoto,
-  checkOwner
+  checkOwner,
+  getPopularDogs
   // getAllComments
 }

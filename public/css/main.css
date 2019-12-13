@@ -222,3 +222,11 @@ p.card-text {
     font-weight: 400;
     color: #32315d;
 }
+
+.text-warning {
+    color: #c54000 !important;
+}
+
+.home-health-management-section h2{
+    font-size: 22px;
+}

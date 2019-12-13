@@ -6,11 +6,13 @@
     <div class="container">
         <div class="row">
             <div class="col-3">
+                <div class="avatar-container">
                 {{#if dog.avatar}}
-                <img src="{{ dog.avatar }}" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog avatar">
+                <img src="{{ dog.avatar }}" class="img-fluid avatar" alt="dog avatar">                
                 {{else}}
-                <img src="/public/img/avatar/default-dog.png" id="dog-avatar" class="img-fluid rounded-circle avatar" alt="dog avatar">
+                <img src="/public/img/avatar/default-dog.png" class="img-fluid avatar" alt="dog avatar">
                 {{/if}}
+                </div>
             </div>
             <div class="col-9">
                 <div class="dog-info-container">
@@ -36,10 +38,10 @@
 </section>
 
 {{!-- Photo --}}
+{{#if photos}}        
 <section class="m-4">
     <div class="container">
         <h1>Photos</h1>
-        {{#if photos}}        
         <div id="photos" class="row">
             {{#each photos}}
             <div class="col-lg-3 col-6 my-3 dog-img-container">
@@ -52,11 +54,9 @@
         <div class="text-center">
             <button id="load-more-photos" data-current-page="1" {{#if isPhotoLastPage}} style="display: none" {{/if}} class="btn btn-secondary">Load More</button>
         </div>
-        {{else}}
-        <p id="no-data-found-alert-photo" class="no-data-found-alert">No photos found.</p>
-        {{/if}}
     </div>
 </section>
+{{/if}}
 
 {{!-- Comment --}}
 <section class="m-4">

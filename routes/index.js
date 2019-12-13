@@ -1,6 +1,7 @@
 const session = require("express-session")
 const middleware = require("./middleware");
 const dogRoutes = require("./dog");
+const dogData = require("../data/dogs");
 const userRoutes = require("./user");
 const accountRoutes = require("./account");
 
@@ -13,11 +14,17 @@ const constructorMethod = (app) => {
   app.use(accountRoutes);
 
   app.get('/', async (req, res) => {
-    data = {
-      title: "Home",
-      username : req.session.username
-    };
-    res.render('home', data);
+    try {
+      let popularDogs = await dogData.getPopularDogs();
+      data = {
+        title: "Home",
+        username : req.session.username,
+        popularDogs: popularDogs
+      };
+      res.render('home', data);
+    } catch (e) {
+      console.log(e);
+    }
   });
   
   app.use('*', function(req, res) {
