@@ -105,8 +105,9 @@
 </section>
 
 {{#section 'script'}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+{{#if photos}}        
 <script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
+{{/if}}
 <script src="/public/js/dog-main.js"></script>
 <script src="/public/js/dog-public.js"></script>
 {{/section}}
