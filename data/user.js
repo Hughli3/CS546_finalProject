@@ -28,6 +28,7 @@ function validatePassword(password){
   if (!password) throw "password is undefinded";
   if (password.constructor !== String) throw "password is not of the proper type";
   if (password.length < 8 ) throw "length of password is less than 8";
+  if (password.length > 31 ) throw "length of password is greater than 31";
 }
 
 //========================================

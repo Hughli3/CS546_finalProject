@@ -91,7 +91,7 @@ function validateId(id){
 function validateName(name){
   if (!name) throw "name is undefinded";
   if (name.constructor !== String) throw "name is not a string";
-  if (name.length > 30) throw "name is too long";
+  if (name.length > 30) throw "length name is greater than 30";
 }
 
 function validateGender(gender){
