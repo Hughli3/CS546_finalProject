@@ -9,17 +9,62 @@ const main = async () => {
     await db.dropDatabase();
     // =================================
     // Create a user 
-    let originPasswrd = "testtest";
+    let originPasswrd1 = "testtest";
 
-    let user = {
+    let user1 = {
         username: 'testuser',
-        password:originPasswrd,
-        name: 'test',
+        password:originPasswrd1,
         avatarId: null
     }
 
-    const userOne = await userData.addUser(user.username, user.password);
-    console.log("user created");
+    const userOne = await userData.addUser(user1.username, user1.password);
+
+    console.log("user1 created");
+
+
+    // user 2
+
+    let originPasswrd2 = "myPassword";
+
+    let user2 = {
+        username: 'LucyLoveDog',
+        password:originPasswrd2,
+        avatarId: null
+    }
+
+    const userTwo = await userData.addUser(user2.username, user2.password);
+
+    console.log("user2 created");
+
+    // user 3
+
+    let originPasswrd3 = "passpass1";
+
+    let user3 = {
+        username: 'MyNameRicky',
+        password:originPasswrd3,
+        avatarId: null
+    }
+
+    const userThree = await userData.addUser(user3.username, user3.password);
+
+    console.log("user3 created");
+
+
+    // user 3
+
+    let originPasswrd3 = "passpass1";
+
+    let user3 = {
+        username: 'MyNameIsMike',
+        password:originPasswrd3,
+        avatarId: null
+    }
+
+    const userThree = await userData.addUser(user3.username, user3.password);
+
+    console.log("user3 created");
+
     // =================================
     //  Create a dog
     // console.log(userOne);
@@ -47,14 +92,11 @@ const main = async () => {
     }
     console.log("heightWeight created");
 
-    // console.log(updateDog);
-    // dogOne.dateOfBirth
-
-    // console.log(breedData.allDogsType());
+   
      // =================================
     //  Create some comments
 
-    let comment;
+
     for (let i = 0; i < 20; i++) {
         comment = await commentsData.addComment("I am a test", userId, dogId);
         // console.log(newComment);

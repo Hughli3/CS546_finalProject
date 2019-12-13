@@ -20,7 +20,9 @@ function convertDateToString(date) {
 function calculateAge(date) {
   let ageDifMs = Date.now() - date.getTime();
   let ageDate = new Date(ageDifMs);
-  return Math.abs(ageDate.getUTCFullYear() - 1970);
+  let yearAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+  // year age 
+  return yearAge;
 }
 
 function getDogHealthCondition(dogType, age, weight, gender){

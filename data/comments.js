@@ -35,6 +35,7 @@ async function validateUser(user){
 function validateContent(content){
   if (!content) throw "content is undefinded";
   if (content.constructor !== String) throw "content is not a string";
+  if (content.length > 160) throw `length of you comment is greater than 160`;
 }
 
 async function validateDog(dog){
