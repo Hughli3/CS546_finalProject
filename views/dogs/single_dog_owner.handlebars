@@ -296,23 +296,25 @@
 <script src="/public/vendor/chartjs/Chart.js"></script>
 <script src="/public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="/public/vendor/lightbox2/js/lightbox.min.js"></script>
-<script src="/public/js/health-chart.js"></script>
-<script src="/public/js/dog-main.js"></script>
-<script src="/public/js/dog-owner.js"></script>
+<script src="/public/js/health_chart.js"></script>
+<script src="/public/js/dog_utils.js"></script>
+<script src="/public/js/pages/dog_owner.js"></script>
+
 {{#if dog.heightWeight}}
 <script>
-    {{#each dog.healthDateList}}
-    addLabel(bmiChart, "{{ this }}");
-    addLabel(weightChart, "{{ this }}");
-    {{/each}}
+{{#each dog.healthDateList}}
+addLabel(bmiChart, "{{ this }}");
+addLabel(weightChart, "{{ this }}");
+{{/each}}
 
-    {{#each dog.bmiList}}
-    addData(bmiChart, {{ this }});
-    {{/each}}
+{{#each dog.bmiList}}
+addData(bmiChart, {{ this }});
+{{/each}}
 
-    {{#each dog.weightList}}
-    addData(weightChart, {{ this }});
-    {{/each}}
+{{#each dog.weightList}}
+addData(weightChart, {{ this }});
+{{/each}}
 </script>
 {{/if}}
+
 {{/section}}

@@ -186,7 +186,6 @@ $(function() {
                 if (data.status == "success") {
                     $("#photos").empty();
                     if (data.photos.length) {
-                        console.log(data.photos);
                         for(let photo of data.photos) {
                             addDogPhoto(photo.id, photo.photo, true);
                         }

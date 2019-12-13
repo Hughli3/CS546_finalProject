@@ -1,12 +1,14 @@
 let urlpath = window.location.pathname;
 
-lightbox.option({
-    'fadeDuration': 200,
-    'imageFadeDuration': 200,
-    'showImageNumberLabel': false,
-    'resizeDuration': 200,
-    'wrapAround': true
-});
+if($("#photos").length) {
+    lightbox.option({
+        'fadeDuration': 200,
+        'imageFadeDuration': 200,
+        'showImageNumberLabel': false,
+        'resizeDuration': 200,
+        'wrapAround': true
+    });
+}
 
 // chart
 let updateLabelAndData = function(chart, label, data) {
