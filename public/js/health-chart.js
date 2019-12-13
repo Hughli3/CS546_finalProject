@@ -81,7 +81,7 @@ let weightChart = new Chart($('#weight-chart'), {
                 display: true,
                 scaleLabel: {
                     display: true,
-                    labelString: 'Weight'
+                    labelString: 'Weight in lb'
                 }
             }]
         }

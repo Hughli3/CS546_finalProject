@@ -61,6 +61,11 @@ $(function() {
         $("input[name=gender][value=" + $("#dog-gender").text() + "]").prop('checked', true);
         $("#edit-dog-form-dob").val($("#dog-dob").text());
     });
+
+    $("#add-height-weight-button").click(function() {
+        $("#add-height-weight-form-weight").val($("#dog-weight").text());
+        $("#add-height-weight-form-height").val($("#dog-height").text());
+    });
   
     $("#edit-dog-form").submit(function(event) {
         event.preventDefault();
