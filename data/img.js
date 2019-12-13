@@ -10,12 +10,6 @@ const fs = require('fs');
 
 //========================================
 // Validate functions
-function isString (name){
-    if (name.constructor !== String){
-        throw `${name || "Provided string"} is not a string.`
-      }
-}
-
 async function validateImage(image) {
   if(!image) throw "image is undefinded";
   const imageType = new Set(['jpg', 'jpeg','png']);
@@ -84,7 +78,7 @@ async function createGridFS(file){
       throw "Could not create a new Chunks";
     }    
   }
-  
+
   fs.unlinkSync(file.path);
   return insertFilesInfo.insertedId;
 }
@@ -102,25 +96,6 @@ async function deletePhoto(id){
   if (deletionInfo1.deletedCount === 0 && deletionInfo2.deletedCount === 0)
       throw "could not delete photo";
 
-  return true;
-}
-
-async function deletePhotos(ids){
-  if (!ids) throw "Your input is not exist.";
-
-  const fsFilesCollection = await fsFiles();
-  const fsChunksCollection = await fsChunks();
-
-  for (let i = 0; i < ids.length; i++) {
-    let nid = ObjectID(ids[i])
-    
-    let deletionInfo1 = await fsFilesCollection.deleteOne({ _id: nid });
-    let deletionInfo2 = await fsChunksCollection.deleteMany({ files_id: nid });
-
-    if (deletionInfo1.deletedCount === 0 && deletionInfo2.deletedCount === 0) {
-      throw `Could not delete user with id of ${nid}`;
-    }
-  }
   return true;
 }
 
@@ -148,38 +123,8 @@ async function getPhotoDataId(id){
   return stringPhotoData
 }
 
-async function getPhotoDataIds(ids){
-  if (!ids) throw "Your input is not exist.";
-  let photos = []
-  const fsChunksCollection = await fsChunks();
-  for (let i = 0; i < ids.length; i++) {
-    let nid = ObjectID(ids[i])
-
-    let PhotoData = await fsChunksCollection.find({ files_id: nid }).toArray();
-    // let PhotoData = await fsChunksCollection.findOne({ files_id: Id });
-    if (PhotoData == null) {
-          throw "Could not find Photo Data successfully";
-    }
-
-    let stringPhotoData = ''
-    for (let i = 0; i < PhotoData.length; i++) {
-      for(let j=0; j < PhotoData.length; j++){
-        if (PhotoData[j].n == i) {
-          // stringPhotoData += PhotoData[i].data.buffer
-          stringPhotoData += PhotoData[i].data.buffer.toString()
-          break
-        }
-      }
-    }
-    photos.push(stringPhotoData)
-  }
-  return photos
-}
-
 module.exports = {
   createGridFS,
   deletePhoto,
-  deletePhotos,
   getPhotoDataId,
-  getPhotoDataIds,
 }

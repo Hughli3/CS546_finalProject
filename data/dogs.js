@@ -204,17 +204,22 @@ async function removeDog(id){
   const removedData = await dogsCollection.findOne({_id:parsedId});
   if (!removedData) throw "could not find dog successfully";
 
+  // delete comment
   await commentData.deleteCommentsByDog(id);
-
+  // delete from user
   const usersCollection = await users();
   const parsedOwnerId = ObjectId.createFromHexString(removedData.owner);
   const updateInfo = await usersCollection.updateOne( { _id: parsedOwnerId }, {$pull: {dogs: id}});
   if (updateInfo.modifiedCount === 0) throw "could not delete the dog in the user";
-
+  // delete photos
+  for (let photoId of removedData.photos) {
+    imgData.deletePhoto(photoId);
+  }
+  // delete avatar
+  if (removedData.avatar) imgData.deletePhoto(removedData.avatar);
+  // delete dog
   const deletionInfo = await dogsCollection.removeOne({ _id: parsedId });
   if (deletionInfo.deletedCount === 0) throw `could not delete dog with id of ${id}`;
-
-  // TODO delete photo
 
   return removedData;
 }
@@ -347,5 +352,4 @@ module.exports = {
   removePhoto,
   checkOwner,
   getPopularDogs
-  // getAllComments
 }
