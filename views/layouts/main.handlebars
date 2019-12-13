@@ -12,18 +12,20 @@
   <link href="/public/vendor/font-awesome/css/all.min.css" rel="stylesheet">
   <link type="text/css" href="/public/css/argon.css" rel="stylesheet">
   <link type="text/css" href="/public/css/main.css" rel="stylesheet">
-  <script src="tota11y.min.js"></script>
   {{{_sections.style}}}
 </head>
 
 <body>
   <header>
-    <nav id="navbar-main" class="navbar navbar-expand-sm navbar-dark bg-default">
+    <nav id="navbar-main" class="navbar navbar-expand-lg navbar-dark bg-default">
       <div class="container">
         <a class="navbar-brand mr-lg-5" href="/">
           <img alt="website logo" src="/public/img/brand/logo.png">
         </a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar_global">          
           <ul class="navbar-nav navbar-nav-hover align-items-center">
             <li class="nav-item">
               <a href="/" class="nav-link">
@@ -38,7 +40,7 @@
               </a>
             </li>
           </ul>
-          <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+          <ul class="navbar-nav align-items-center ml-lg-auto">
             {{#if username}}
             <li class="nav-item dropdown">
               <a href="/user" class="nav-link">
@@ -46,22 +48,37 @@
                 <span class="nav-link-inner--text">{{username}}</span>
               </a>
             </li>
-            <li class="nav-item d-none d-lg-block ml-lg-4">
+            <li class="nav-item d-none d-lg-block ml-4">
               <a href="/logout" class="btn btn-secondary btn-icon">
                 <span class="nav-link-inner--text">Logout</span>
               </a>
             </li> 
+            <li class="nav-item dropdown d-lg-none">
+              <a href="/logout" class="nav-link">
+                <span class="nav-link-inner--text">Logout</span>
+              </a>
+            </li> 
             {{else}}
-            <li class="nav-item d-none d-lg-block ml-lg-4">
+            <li class="nav-item d-none d-lg-block ml-4">
               <a href="/login" class="btn btn-primary btn-icon">
                 <span class="nav-link-inner--text">Login</span>
               </a>
             </li>
+            <li class="nav-item dropdown d-lg-none">
+              <a href="/login" class="nav-link">
+                <span class="nav-link-inner--text">Login</span>
+              </a>
+            </li> 
             <li class="nav-item d-none d-lg-block ml-lg-4">
               <a href="/signup" class="btn btn-secondary btn-icon">
                 <span class="nav-link-inner--text">Signup</span>
               </a>
-            </li>            
+            </li>   
+            <li class="nav-item dropdown d-lg-none">
+              <a href="/signup" class="nav-link">
+                <span class="nav-link-inner--text">Signup</span>
+              </a>
+            </li>          
             {{/if}}
           </ul>
         </div>
