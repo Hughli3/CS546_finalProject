@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/Hughli3/CS546_finalProject#readme",
   "dependencies": {
-    "@khanacademy/tota11y": "^0.2.0",
     "base64-img": "^1.0.4",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
