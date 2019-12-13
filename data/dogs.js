@@ -6,8 +6,6 @@ const imgData = require("./img");
 const commentData = require("./comments");
 const breedData = require("./breed");
 const ObjectId = require('mongodb').ObjectID;
-const fs = require('fs');
-
 
 // ======================================================
 // Helper functions
@@ -15,18 +13,15 @@ function firstLetterUpperCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-
 function convertDateToString(date) {
   return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
 }
-
 
 function calculateAge(date) {
   let ageDifMs = Date.now() - date.getTime();
   let ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
-
 
 function getDogHealthCondition(dogType, age, weight, gender){
   const dogData = breedData.breed;
@@ -71,14 +66,12 @@ function validateHeightWeight (hw) {
   validateWeight(hw.weight);
 }
 
-
 function validateWeight(weight){
   if (!weight) throw "weight is undefinded";
   if (typeof weight != "number") throw "weight is not of the proper type";
   if (weight <= 0 ) throw "weight is not a positive number";
   if (weight > 300) throw "The heaviest dog in the world is 235lb. Does your dog weigh so much?"
 }
-
 
 function validateHeight(height){
   if (!height) throw "height is undefinded";
@@ -87,20 +80,17 @@ function validateHeight(height){
   if (height > 60) throw "The highest dog in the world is 42.1 inches high(shoulder height). Is your dog taller than him so much?"
 }
 
-
 function validateId(id){
   if (!id) throw "id is undefinded";
   if (id.constructor !== String) throw "id is not a string";
   if (!ObjectId.isValid(id)) throw "id is invalid";
 }
 
-
 function validateName(name){
   if (!name) throw "name is undefinded";
   if (name.constructor !== String) throw "name is not a string";
   if (name.length > 30) throw "name is too long";
 }
-
 
 function validateGender(gender){
   if (!gender) throw "gender is undefinded";
@@ -112,20 +102,11 @@ function validateGender(gender){
   }
 }
 
-
 function validateType(type){
   if (!type) throw "type is undefinded";
   if (type.constructor !== String) throw "type is not a string";
-
-  // const dogType = firstUpperCase(type.toLowerCase());
-  // change type to lower case and transfer its first digit to Upper case
-  // console.log(type);
-  // console.log(type in breedData.breed);
-  if (!(type in breedData.breed) ){
-    throw "invalid type";
-  }
+  if (!(type in breedData.breed)) throw "invalid type";
 }
-
 
 async function validateOwner(owner){
   if (!owner) throw "owner is undefinded";
@@ -136,7 +117,6 @@ async function validateOwner(owner){
   const user = await usersCollection.find({_id:parsedOwner});
   if (user == null) thorw `owner with the id ${parsedOwner} is not exist`;
 }
-
 
 function validateDob(dob) {
   if (!dob) throw "date of birth is undefinded";
@@ -150,20 +130,6 @@ function validateDob(dob) {
   if (today - dateOfBirth < 0 || (today - dateOfBirth)/ (1000 * 24 * 60 * 60 * 366) > 35)
     throw "invalid date of birth";
 }
-
-
-function validateImage(image) {
-  // Only accept 'jpg', 'jpeg','png'
-  if(!image) throw "image is undefinded";
-  const imageType = new Set(['jpg', 'jpeg','png']);
-  const fileType = image.mimetype.split("/");
-
-  if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
-    fs.unlinkSync(image.path);
-    throw "image is not in proper type";
-  }
-}
-
 
 // ======================================================
 // Body functions
@@ -196,7 +162,6 @@ async function addDog(name, gender, dob, type, owner){
 
   return await getDog(dogId.toString());
 }
-
 
 async function updateDog(id, dog){
   validateId(id);
@@ -254,7 +219,6 @@ async function removeDog(id){
   return removedData;
 }
 
-
 async function getAllDogs(){
   const dogsCollection = await dogs();
   const allDogs = await dogsCollection.find().sort({ $natural: -1 }).toArray();
@@ -267,7 +231,6 @@ async function getAllDogs(){
 
   return allDogs;
 }
-
 
 async function getDog(id){
   validateId(id);
@@ -304,15 +267,12 @@ async function getDog(id){
   return dog;
 }
 
-
 async function updateAvatar(id, file){
   validateId(id);
-  validateImage(file);
 
   const dogsCollection = await dogs();
   let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
-  fs.unlinkSync(file.path);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update avatar successfully";
 
@@ -332,22 +292,18 @@ async function addHeightWeight(id, hw){
   return await getDog(id);
 }
 
-
 async function addPhotos(id, file){
   validateId(id);
-  validateImage(file);
 
   const dogsCollection = await dogs();
   let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
-  fs.unlinkSync(file.path);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId },
                           { $push: {photos: { $each: [ photoId.toString() ], $position: 0}}});
   if (updateInfo.modifiedCount === 0) throw "could not add a new photo successfully";
 
   return await getDog(id);
 }
-
 
 async function removePhoto(dogId, photoId){
   validateId(dogId);
@@ -378,7 +334,6 @@ async function getPopularDogs() {
 
   return allDogs;
 }
-
 
 module.exports = {
   addDog,

@@ -2,13 +2,12 @@
 // Requires
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
-const dogs = mongoCollections.dogs;
 const ObjectId = require('mongodb').ObjectID;
 const imgData = require("../data/img");
 const dogData = require("../data/dogs");
 const bcryptjs = require("bcryptjs");
-const fs = require("fs");
 const saltRounds = 5;
+
 //========================================
 // Validate functions
 function validateId(id){
@@ -31,19 +30,6 @@ function validatePassword(password){
   if (password.length < 8 ) throw "length of password is less than 8";
 }
 
-function validateImage(image) {
-  if(!image) throw "image is undefinded";
-  const imageType = new Set(['jpg', 'jpeg','png']);
-  const fileType = image.mimetype.split("/");
-  
-  // console.log(fileType);
-  // console.log(fileType[1] in imageType);
-  if(fileType[0] != "image" || ! imageType.has(fileType[1]) ) {
-    fs.unlinkSync(image.path);
-    // console.log("this run");
-    throw "File is not in proper type image";
-  }
-}
 //========================================
 async function addUser(username, password){
   validateUsername(username);
@@ -137,10 +123,8 @@ async function changePassword(id, newPassword){
 
 async function updateAvatar(id, file){
   validateId(id);
-  validateImage(file);
 
   let photoId = await imgData.createGridFS(file);
-  fs.unlinkSync(file.path);
    
   const usersCollection = await users();
   const parsedId = ObjectId.createFromHexString(id);
