@@ -7,6 +7,7 @@ const multer  = require("multer");
 const upload = multer({dest:"./public/img/upload"});
 const middleware = require('./middleware');
 const helper = require('./helper');
+const xss = require("xss");
 
 router.get('/', async (req, res) => {
     try{
@@ -31,7 +32,7 @@ router.post('/', middleware.loginRequiredJson, async (req, res) => {
       let gender = req.body.gender;
       let type = req.body.type;
       let dob = req.body.dob;
-      let name = req.body.name;
+      let name = xss(req.body.name);
       let owner = req.session.userid;
 
       let dog = await dogData.addDog(name, gender, dob, type, owner);
@@ -87,6 +88,8 @@ router.put('/:id', middleware.loginRequiredJson, async (req, res) => {
     try{
       let dogId = req.params.id;
       let dog = req.body.dog;
+      dog.name = xss(dog.name);
+
       await dogData.checkOwner(req.session.userid, dogId);
       dog = await dogData.updateDog(dogId, dog);
       res.json({status: "success", dog: dog});
@@ -161,7 +164,8 @@ router.get('/:id/comments', async (req, res) => {
 router.post('/:id/comments', middleware.loginRequiredJson, async (req, res) => {
     try{
         let dogId = req.params.id;
-        let content = req.body.content;
+        let content = xss(req.body.content);
+
         let comments = await commentData.addComment(content, req.session.userid, dogId);
         let pagedData = helper.pagination(comments, 1, 3);
 
