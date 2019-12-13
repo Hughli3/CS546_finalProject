@@ -6,6 +6,14 @@ const breedData = require("../data/breed");
 
 // =================================
 // helper functions
+async function getFile(path){
+    let imgInfo = { mimetype: 'image/jpeg',
+    filename: 'picture',
+    path : path,
+    }
+    
+    return imgInfo;
+}
 
 
 
@@ -86,14 +94,7 @@ const main = async () => {
     
     // =================================
     // update seed img
-    let imgInfo = { mimetype: 'image/jpeg',
-            filename: '1',
-            path: '../tasks/seedImg/1.jpg',
-        }
-    console.log(imgInfo);
-        
-    let seedimgid = await imgData.createGridFS(imgInfo)
-    console.log(seedimgid);
+
 
     // =================================
     //  Create a dog
@@ -102,7 +103,6 @@ const main = async () => {
     // hugh's dog
     let userId1 = userOne._id.toString();
 
-    
     dog1 = await dogData.addDog(
         "Painting",
         "Male",
@@ -111,6 +111,7 @@ const main = async () => {
         userId1
     );
     
+    // await dogData.updateAvatar(dog1._id.toString(), await getFile('./public/img/dog/demo/user1/dog1.JPG'));
     console.log("hugh's dog1 created");
 
     dog2 = await dogData.addDog(
