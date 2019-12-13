@@ -16,7 +16,7 @@ router.get('/', middleware.loginRequired, async (req, res) => {
       user : user,
       types : types
     }
-    res.render('profile', data);
+    res.render('user/single_user_owner', data);
   } catch (e) {
     res.status(404)
     res.render('404', {title: "Not Found", username : req.session.username});
@@ -33,7 +33,7 @@ router.get('/:username', async (req, res) => {
       username : req.session.username,
       user : user
     }
-    res.render('single_user', data);
+    res.render('user/single_user_public', data);
   } catch (e) {
     res.status(404)
     res.render('404', {title: "Not Found", username : req.session.username});

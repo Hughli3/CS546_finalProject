@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const usersData = require("../data/user");
 const middleware = require('./middleware');
+const xss = require("xss");
 
 router.get('/signup', middleware.notLoginRequired, async (req, res) => {
-  res.render('signup', {title: "Signup", hideFooter: true});
+  res.render('account/signup', {title: "Signup", hideFooter: true});
 });
 
 router.post('/signup', middleware.notLoginRequired, async (req, res) => {
@@ -12,7 +13,7 @@ router.post('/signup', middleware.notLoginRequired, async (req, res) => {
     await usersData.addUser(req.body.username, req.body.password);
     res.redirect('/login');
   } catch (e) {
-    res.status(401).render('signup', {title: "Signup", error: e, hideFooter: true});
+    res.status(401).render('account/signup', {title: "Signup", error: e, hideFooter: true});
   }
 });
 
@@ -22,7 +23,7 @@ router.get('/logout', middleware.loginRequired, function(req, res) {
 });
 
 router.get('/login', middleware.notLoginRequired, async (req, res) => {
-  res.render('login', {title: "Login", hideFooter: true});
+  res.render('account/login', {title: "Login", hideFooter: true});
 });
 
 router.post('/login', middleware.notLoginRequired, async (req, res) => {
@@ -33,7 +34,7 @@ router.post('/login', middleware.notLoginRequired, async (req, res) => {
 
     return res.redirect('/user');  
   } catch (e) {
-    res.status(401).render('login', {title: "Login", error: "Invalid username and/or password", hideFooter: true});
+    res.status(401).render('account/login', {title: "Login", error: "Invalid username and/or password", hideFooter: true});
   }
 });
 
