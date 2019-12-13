@@ -149,78 +149,6 @@ async function comparePassword(username, password) {
   return {userid: userInfo._id, username: userInfo.username};
 }
 
-// async function removeUser(id){
-//     validateId(id);
-
-//     const usersCollection = await users();
-//     const parsedId = ObjectId.createFromHexString(id);
-//     const removedData = await usersCollection.findOne({ _id: parsedId });
-//     if (!removedData) throw "This user is not found.";
-
-//     const deletionInfo = await usersCollection.removeOne({ _id: parsedId });
-//     if (deletionInfo.deletedCount === 0) throw `Could not delete user with id of ${id}`;
-  
-//     const dogsCollection = await dogs();
-//     let dogDeletionInfo = await dogsCollection.remove({ owner: id});
-//     if (dogDeletionInfo.deletedCount === 0) throw `Could not delete dog with owner id of ${id}`;
-
-//     const commmentsCollection = await commments();
-//     let commmentDeletionInfo = await commmentsCollection.remove({ author: id});
-//     if (commmentDeletionInfo.deletedCount === 0) throw `Could not delete comment with author id of ${id}`;
-    
-//     //TODO delete user avatar, dog avatar, dog photo
-//     return removedData;
-// }
-
-// async function getAllDogs(userId){
-//   // return all dogs of this user 
-//   if (!userId) throw "Your input id is not exist.";
-//   isString(userId);
-//   const parsedUserId = ObjectId.createFromHexString(userId);
-//   const usersCollection = await users();
-//   let userInfo = usersCollection.findOne({_id:parsedUserId});
-//   if (userInfo == null ) throw "Could not find user successfully";
-
-//   const dogsCollection = await dogs();
-
-//   allDogs = [];
-//   for (let i = 0; i < userInfo.dogs.length; i++){
-//     let dogId = userInfo.dogs
-//     let parsedDogId = ObjectId.createFromHexString(dogId);
-//     let dogInfo = dogsCollection.findOne({_id:parsedDogId});
-//     if (dogInfo == null ) throw "Could not find dog successfully";
-//     allDogs.push(dogInfo);
-
-//   }
-//   return allDogs;
-  
-// }
-
-
-/*
-// no name data field any more 
-async function updateTheUser(id, newName){
-    if (!id) throw "Your input id is not exist.";
-    if (!newName) throw "Your input name is not exist.";
-    isString(id);
-    isString(newName);
-    const parsedId = ObjectId.createFromHexString(id);
-
-    const usersCollection = await users();
-
-    const updateUser = {
-        name: newName
-      };
-     
-    const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: updateUser});
-
-    if (updateInfo.modifiedCount === 0) {
-        throw "Could not update user successfully";
-      }
-  
-    return await this.get(ObjectId(id).toString());
-}
-*/
 module.exports = {
     addUser,
     getUser,
@@ -228,8 +156,5 @@ module.exports = {
     changePassword,
     comparePassword,
     getUserByUsername,
-    // removeUser,
-    // updateTheUser,
-    // getAllDogs
   }
   

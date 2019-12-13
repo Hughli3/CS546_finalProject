@@ -106,7 +106,6 @@ async function getPhotoDataId(id){
   const fsChunksCollection = await fsChunks();
 
   const PhotoData = await fsChunksCollection.find({ files_id: nid }).toArray();
-  // const PhotoData = await fsChunksCollection.findOne({ files_id: Id });
   if (PhotoData == null) {
         throw "Could not find Photo Data successfully";
   }
