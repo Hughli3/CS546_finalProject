@@ -274,8 +274,14 @@ const main = async () => {
     console.log("Hill's dog3 created");
     
     
-    for (let i = 0; i < 20; i++) {
-        let heightWeight = {height: i + 1, weight: i + 40}
+    for (let i = 0; i < 3; i++) {
+        let heightWeight = {height: i + 1, weight: i + 30, date: "2019-10-21"}
+        dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
+    for (let i = 0; i < 3; i++) {
+        let heightWeight = {height: i + 3, weight: i + 20, date: "2019-1-21"}
+        dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
+    for (let i = 0; i < 3; i++) {
+        let heightWeight = {height: i + 3, weight: i + 12, date: "2019-12-9"}
         dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
     console.log("UserId1dog1 hw created")
 

@@ -60,6 +60,18 @@ function getDogHealthCondition(dogType, age, weight, gender){
   
 }
 
+function ComparableDate(hw1,hw2){
+  if (isNaN(Date.parse(hw1.date))) throw "date1 is invalid";
+  date1 = Date.parse(hw1.date);
+  date1 = new Date(date1);
+
+  if (isNaN(Date.parse(hw2.date))) throw "date2 is invalid";
+  date2 = Date.parse(hw2.date);
+  date2 = new Date(date2);
+
+  return date1 - date2
+}
+
 // ======================================================
 // Validate functions
 function validateHeightWeight (hw) {
@@ -80,6 +92,25 @@ function validateHeight(height){
   if (typeof height != "number") throw "height is not of the proper type";
   if (height <= 0 ) throw "height is not a positive number";
   if (height > 60) throw "The highest dog in the world is 42.1 inches high(shoulder height). Is your dog taller than him so much?"
+}
+
+function validateHeightWeightDate(date, birthday){
+  if (!date) throw "date is undefinded";
+  if (isNaN(Date.parse(date))) throw "date of birth is invalid";
+  date = Date.parse(date);
+  date = new Date(date);
+
+  if (isNaN(Date.parse(birthday))) throw "birthday is invalid";
+  dateOfBirth = Date.parse(birthday);
+  dateOfBirth = new Date(dateOfBirth);
+
+  dateOfBirth.setHours(0,0,0,0);
+
+  let today = new Date();
+  // today.setHours(0,0,0,0);
+  console.log(date);
+  console.log(today);
+  if (today - date < 0 || (date - dateOfBirth) < 0) throw "invalid date of height and weight";
 }
 
 function validateId(id){
@@ -290,11 +321,20 @@ async function updateAvatar(id, file){
 async function addHeightWeight(id, hw){
   validateId(id);
   validateHeightWeight(hw);
-  hw.date = new Date();
+  if (!hw.date) hw.date = new Date();
+  hw.date = new Date(Date.parse(hw.date));
 
   const dogsCollection = await dogs();
   let parsedId = ObjectId.createFromHexString(id);
-  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$push: {heightWeight: hw}});
+  const dogInfo = await dogsCollection.findOne({_id: parsedId});
+
+  validateHeightWeightDate(hw.date,dogInfo.dob);
+
+  let dogHeightWeight = dogInfo.heightWeight;
+  dogHeightWeight.push(hw);
+  dogHeightWeight.sort(ComparableDate);
+  // ComparableDate is a comparable function
+  const updateInfo = await dogsCollection.updateOne({_id: parsedId}, {$set: {heightWeight: dogHeightWeight}});
   if (updateInfo.modifiedCount === 0) throw "Could not update the height/weight successfully";
   return await getDog(id);
 }
