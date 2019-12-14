@@ -21,6 +21,8 @@ $(function() {
                 } else if (data.status == "error") {
                     error(data.errorMessage);
                 }
+                $('input[type="file"]').val('');
+                $('.uploaded-file-name').text('');
             },
             error: function(data){
                 error("fail connecting to server");
@@ -85,7 +87,7 @@ $(function() {
 
     $('body').on('click', '.dog-container button', function() {
         startLoading();
-        
+
         let dogSingleContainer = $(this).parent();
         let dogContainer = dogSingleContainer.parent();
         let dogURI = $(this).next().find('a').attr('href');

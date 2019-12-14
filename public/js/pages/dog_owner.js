@@ -49,6 +49,8 @@ $(function() {
                 } else {
                     error(data.errorMessage);
                 }
+                $('input[type="file"]').val('');
+                $('.uploaded-file-name').text('');
             },
             error: function(data){
                 error("fail connecting to server");
@@ -167,6 +169,8 @@ $(function() {
                 } else {
                     error(data.errorMessage);
                 }
+                $('input[type="file"]').val('');
+                $('.uploaded-file-name').text('');
             },
             error: function(data){
                 error("fail connecting to server");
