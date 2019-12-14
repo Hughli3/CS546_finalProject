@@ -21,8 +21,10 @@ async function uploadDogAvatar(id, filepath){
     let file = getFile(filepath)
     fs.writeFileSync(imgPath, fs.readFileSync(filepath));
     let photo = await dogData.updateAvatar(id, file)
-    fs.rename(imgPath, filepath, function(err) {console.log(err); })
-    
+    fs.rename(imgPath, filepath, function(err) {
+        if (err) console.log(err);
+        console.log('successfully set dog avatar');
+    });
 }
 
 async function uploadUserAvatar(id, filepath){
@@ -30,7 +32,10 @@ async function uploadUserAvatar(id, filepath){
     let file = getFile(filepath)
     fs.writeFileSync(imgPath, fs.readFileSync(filepath));
     let photo = await userData.updateAvatar(id, file)
-    fs.rename(imgPath, filepath, function(err) {console.log(err); })
+    fs.rename(imgPath, filepath, function(err) {
+        if (err) console.log(err);
+        console.log('successfully set user avatar');
+    })
     
 }
 
