@@ -27,6 +27,17 @@ async function uploadDogAvatar(id, filepath){
     });
 }
 
+async function uploadDogPhoto(id, filepath){
+    let imgPath = filepath.split('.')[0]
+    let file = getFile(filepath)
+    fs.writeFileSync(imgPath, fs.readFileSync(filepath));
+    let photo = await dogData.addPhotos(id, file)
+    fs.rename(imgPath, filepath, function(err) {
+        if (err) console.log(err);
+        console.log('successfully set dog avatar');
+    });
+}
+
 async function uploadUserAvatar(id, filepath){
     let imgPath = filepath.split('.')[0]
     let file = getFile(filepath)
@@ -183,6 +194,10 @@ const main = async () => {
     await uploadDogAvatar(user2dog2, 'public/img/dog/demo/user2/dog2.jpg');
     console.log("Lucy's dog2 created");
 
+    await uploadDogPhoto(user2dog2, 'public/img/dog/demo/dog5/dogPhoto1.jpg');
+    await uploadDogPhoto(user2dog2, 'public/img/dog/demo/dog5/dogPhoto2.jpg');
+    console.log("Lucy's dog2 photos added");
+
     userId2dog3 = await dogData.addDog(
         "Sky",
         "Female",
@@ -193,6 +208,10 @@ const main = async () => {
     user2dog3 = userId2dog3._id.toString();
     await uploadDogAvatar(user2dog3, 'public/img/dog/demo/user2/dog3.jpg');
     console.log("Lucy's dog3 created");
+
+    await uploadDogPhoto(user2dog3, 'public/img/dog/demo/dog4/dogPhoto1.jpg');
+    await uploadDogPhoto(user2dog3, 'public/img/dog/demo/dog4/dogPhoto2.jpg');
+    console.log("Lucy's dog3 photos added");
 
 
     // Mike's dog
@@ -206,7 +225,6 @@ const main = async () => {
         userId3
     );
     user3dog1 = userId3dog1._id.toString();
-
     await uploadDogAvatar(user3dog1, 'public/img/dog/demo/user3/dog1.jpg');
     console.log("Mike's dog1 created");
     
@@ -234,6 +252,39 @@ const main = async () => {
     await uploadDogAvatar(user4dog2, 'public/img/dog/demo/user4/dog2.jpg');
     console.log("Green's dog2 created");
 
+    userId4dog3 = await dogData.addDog(
+        "L",
+        "Female",
+        "2015-10-19",
+        "Other",
+        userId4
+    );
+    user4dog3 = userId4dog3._id.toString();
+    await uploadDogAvatar(user4dog3, 'public/img/dog/demo/user4/dog3.jpg');
+    console.log("Green's dog3 created");
+
+    userId4dog4 = await dogData.addDog(
+        "L",
+        "Female",
+        "2015-10-19",
+        "Other",
+        userId4
+    );
+    user4dog4 = userId4dog4._id.toString();
+    await uploadDogAvatar(user4dog4, 'public/img/dog/demo/user4/dog4.jpg');
+    console.log("Green's dog4 created");
+
+    userId4dog5 = await dogData.addDog(
+        "L",
+        "Female",
+        "2015-10-19",
+        "Other",
+        userId4
+    );
+    user4dog5 = userId4dog5._id.toString();
+    await uploadDogAvatar(user4dog5, 'public/img/dog/demo/user4/dog5.jpg');
+    console.log("Green's dog5 created");
+
     // Hill's dog
     
     userId5dog1 = await dogData.addDog(
@@ -246,8 +297,11 @@ const main = async () => {
     user5dog1 = userId5dog1._id.toString();
     await uploadDogAvatar(user5dog1, 'public/img/dog/demo/user5/dog1.jpg');
     //Photo by __ drz __ on Unsplash
- 
     console.log("Hill's dog1 created");
+
+    await uploadDogPhoto(user5dog1, 'public/img/dog/demo/dog3/dogPhoto1.jpg');
+    await uploadDogPhoto(user5dog1, 'public/img/dog/demo/dog3/dogPhoto2.jpg');
+    console.log("Hill's dog1 photos added");
 
     userId5dog2 = await dogData.addDog(
         "O",
@@ -261,6 +315,10 @@ const main = async () => {
     //Photo by Ilya Shishikhin on Unsplash
     console.log("Hill's dog2 created");
 
+    await uploadDogPhoto(user5dog2, 'public/img/dog/demo/dog2/dogPhoto1.jpg');
+    await uploadDogPhoto(user5dog2, 'public/img/dog/demo/dog2/dogPhoto2.jpg');
+    console.log("Hill's dog2 photos added");
+
     userId5dog3 = await dogData.addDog(
         "X",
         "Female",
@@ -272,6 +330,12 @@ const main = async () => {
     await uploadDogAvatar(user5dog3, 'public/img/dog/demo/user5/dog3.jpg');
     //Photo by Julian Dutton on Unsplash
     console.log("Hill's dog3 created");
+
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto1.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto2.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto3.jpg');
+    console.log("Hill's dog3 photos added");
+
     
     
     for (let i = 0; i < 3; i++) {
