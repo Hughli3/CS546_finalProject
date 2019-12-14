@@ -254,23 +254,51 @@ const main = async () => {
     //Photo by Julian Dutton on Unsplash
     console.log("Hill's dog3 created");
     
-    let dog1Id = userId5dog1._id.toString()
-    for (let i = 0; i < 20; i++) {
-        let heightWeight = {height: i + 1, weight: i + 2}
-        dog = await dogData.addHeightWeight(dog1Id, heightWeight)};
-    console.log("UserId5dog3 hw created")
     
-    let dog2Id = userId5dog2._id.toString()
     for (let i = 0; i < 20; i++) {
         let heightWeight = {height: i + 1, weight: i + 40}
-        dog = await dogData.addHeightWeight(dog2Id, heightWeight)};
-    console.log("UserId5dog2 hw created")
+        dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
+    console.log("UserId1dog1 hw created")
 
-    let dog3Id = userId5dog3._id.toString()
     for (let i = 0; i < 20; i++) {
         let heightWeight = {height: i + 1, weight: (3 * i) + 20}
-        dog = await dogData.addHeightWeight(dog3Id, heightWeight)};
+        dog = await dogData.addHeightWeight(user1dog2, heightWeight)};
+    console.log("UserId1dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 2}
+        dog = await dogData.addHeightWeight(user2dog1, heightWeight)};
+    console.log("UserId2dog1 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 40}
+        dog = await dogData.addHeightWeight(user2dog2, heightWeight)};
+    console.log("UserId2dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user2dog3, heightWeight)};
+    console.log("UserId2dog3 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user3dog1, heightWeight)};
+    console.log("UserId3dog1 hw created")
+    
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 2}
+        dog = await dogData.addHeightWeight(user5dog1, heightWeight)};
+    console.log("UserId5dog1 hw created")
+    
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 40}
+        dog = await dogData.addHeightWeight(user5dog2, heightWeight)};
     console.log("UserId5dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user5dog3, heightWeight)};
+    console.log("UserId5dog3 hw created")
 
     // =================================
     //  Create some height and weight
