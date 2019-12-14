@@ -108,8 +108,7 @@ function validateHeightWeightDate(date, birthday){
 
   let today = new Date();
   // today.setHours(0,0,0,0);
-  console.log(date);
-  console.log(today);
+
   if (today - date < 0 || (date - dateOfBirth) < 0) throw "invalid date of height and weight";
 }
 
