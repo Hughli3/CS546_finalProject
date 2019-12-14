@@ -3,17 +3,45 @@ const dogData = require('../data/dogs');
 const userData = require('../data/user');
 const commentsData = require('../data/comments');
 const breedData = require("../data/breed");
+const fs = require("fs");
 
 // =================================
 // helper functions
+function getFile(path){
+    let imgInfo = { mimetype: 'image/jpeg',
+    filename: 'picture',
+    path : path,
+    }
 
+    return imgInfo;
+}
 
+async function uploadDogAvatar(id, filepath){
+    let imgPath = filepath.split('.')[0]
+    let file = getFile(filepath)
+    fs.writeFileSync(imgPath, fs.readFileSync(filepath));
+    let photo = await dogData.updateAvatar(id, file)
+    fs.rename(imgPath, filepath, function(err) {console.log(err); })
+    
+}
+
+async function uploadUserAvatar(id, filepath){
+    let imgPath = filepath.split('.')[0]
+    let file = getFile(filepath)
+    fs.writeFileSync(imgPath, fs.readFileSync(filepath));
+    let photo = await userData.updateAvatar(id, file)
+    fs.rename(imgPath, filepath, function(err) {console.log(err); })
+    
+}
 
 const main = async () => {
     const db = await dbConnection();
     await db.dropDatabase();
     // =================================
     // Create a user 
+
+
+    // user1
     let originPassword1 = "testtest";
 
     let user1 = {
@@ -24,6 +52,8 @@ const main = async () => {
 
     const userOne = await userData.addUser(user1.username, user1.password);
 
+    let userId1 = userOne._id.toString();
+    await uploadUserAvatar(userId1, 'public/img/avatar/demo/user1.jpg');
     console.log("user1 created");
 
 
@@ -72,7 +102,7 @@ const main = async () => {
 
        // user 5
 
-       let originPassword5 = "mysupersupersuperpassword";
+       let originPassword5 = "CS546isGood";
 
        let user5 = {
            username: 'PatrickHill',
@@ -86,23 +116,15 @@ const main = async () => {
     
     // =================================
     // update seed img
-    let imgInfo = { mimetype: 'image/jpeg',
-            filename: '1',
-            path: '../tasks/seedImg/1.jpg',
-        }
-    console.log(imgInfo);
-        
-    let seedimgid = await imgData.createGridFS(imgInfo)
-    console.log(seedimgid);
+
 
     // =================================
     //  Create a dog
     // console.log(userOne);
     
     // hugh's dog
-    let userId1 = userOne._id.toString();
-
     
+
     dog1 = await dogData.addDog(
         "Painting",
         "Male",
@@ -110,6 +132,8 @@ const main = async () => {
         "Samoyed",
         userId1
     );
+    user1dog1 = dog1._id.toString();
+    await uploadDogAvatar(user1dog1, 'public/img/dog/demo/user1/dog1.jpg');
     
     console.log("hugh's dog1 created");
 
@@ -120,7 +144,8 @@ const main = async () => {
         "Samoyed",
         userId1
     );
-    
+    user1dog2 = dog2._id.toString();
+    await uploadDogAvatar(user1dog2, 'public/img/dog/demo/user1/dog2.jpg');
     console.log("hugh's dog2 created");
 
     // Lucy's dog
@@ -134,17 +159,19 @@ const main = async () => {
         "Husky",
         userId2
     );
-    
+    user2dog1 = userId2dog1._id.toString();
+    await uploadDogAvatar(user2dog1, 'public/img/dog/demo/user2/dog1.jpg');
     console.log("Lucy's dog1 created");
 
     userId2dog2 = await dogData.addDog(
         "Rose",
         "Female",
         "2015-06-22",
-        "Labrador retriever",
+        "Golden retriever",
         userId2
     );
-    
+    user2dog2 = userId2dog2._id.toString();
+    await uploadDogAvatar(user2dog2, 'public/img/dog/demo/user2/dog2.jpg');
     console.log("Lucy's dog2 created");
 
     userId2dog3 = await dogData.addDog(
@@ -154,7 +181,8 @@ const main = async () => {
         "Golden retriever",
         userId2
     );
-    
+    user2dog3 = userId2dog3._id.toString();
+    await uploadDogAvatar(user2dog3, 'public/img/dog/demo/user2/dog3.jpg');
     console.log("Lucy's dog3 created");
 
 
@@ -168,7 +196,9 @@ const main = async () => {
         "Afghan hound",
         userId3
     );
-    
+    user3dog1 = userId3dog1._id.toString();
+
+    await uploadDogAvatar(user3dog1, 'public/img/dog/demo/user3/dog1.jpg');
     console.log("Mike's dog1 created");
     
     // Green's dog
@@ -180,7 +210,8 @@ const main = async () => {
         "Alaskan malamute",
         userId4
     );
-    
+    user4dog1 = userId4dog1._id.toString();
+    await uploadDogAvatar(user4dog1, 'public/img/dog/demo/user4/dog1.jpg');
     console.log("Green's dog1 created");
 
     userId4dog2 = await dogData.addDog(
@@ -190,7 +221,8 @@ const main = async () => {
         "Alaskan malamute",
         userId4
     );
-    
+    user4dog2 = userId4dog2._id.toString();
+    await uploadDogAvatar(user4dog2, 'public/img/dog/demo/user4/dog2.jpg');
     console.log("Green's dog1 created");
 
     // Hill's dog
@@ -202,7 +234,10 @@ const main = async () => {
         "Husky",
         userId5
     );
-    
+    user5dog1 = userId5dog1._id.toString();
+    await uploadDogAvatar(user5dog1, 'public/img/dog/demo/user5/dog1.jpg');
+    //Photo by __ drz __ on Unsplash
+ 
     console.log("Hill's dog1 created");
 
     userId5dog2 = await dogData.addDog(
@@ -212,7 +247,9 @@ const main = async () => {
         "Husky",
         userId5
     );
-    
+    user5dog2 = userId5dog2._id.toString();
+    await uploadDogAvatar(user5dog2, 'public/img/dog/demo/user5/dog2.jpg');
+    //Photo by Ilya Shishikhin on Unsplash
     console.log("Hill's dog2 created");
 
     userId5dog3 = await dogData.addDog(
@@ -222,8 +259,56 @@ const main = async () => {
         "Husky",
         userId5
     );
-    
+    user5dog3 = userId5dog3._id.toString();
+    await uploadDogAvatar(user5dog3, 'public/img/dog/demo/user5/dog3.jpg');
+    //Photo by Julian Dutton on Unsplash
     console.log("Hill's dog3 created");
+    
+    
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 40}
+        dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
+    console.log("UserId1dog1 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user1dog2, heightWeight)};
+    console.log("UserId1dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 2}
+        dog = await dogData.addHeightWeight(user2dog1, heightWeight)};
+    console.log("UserId2dog1 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 40}
+        dog = await dogData.addHeightWeight(user2dog2, heightWeight)};
+    console.log("UserId2dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user2dog3, heightWeight)};
+    console.log("UserId2dog3 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user3dog1, heightWeight)};
+    console.log("UserId3dog1 hw created")
+    
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 2}
+        dog = await dogData.addHeightWeight(user5dog1, heightWeight)};
+    console.log("UserId5dog1 hw created")
+    
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: i + 40}
+        dog = await dogData.addHeightWeight(user5dog2, heightWeight)};
+    console.log("UserId5dog2 hw created")
+
+    for (let i = 0; i < 20; i++) {
+        let heightWeight = {height: i + 1, weight: (3 * i) + 20}
+        dog = await dogData.addHeightWeight(user5dog3, heightWeight)};
+    console.log("UserId5dog3 hw created")
 
     // =================================
     //  Create some height and weight
@@ -240,15 +325,38 @@ const main = async () => {
      // =================================
     //  Create some comments
 
+    // For user1's dog 2dogs
+    for (let i = 0; i < 20; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId2, user1dog1);
+        // console.log(newComment);
+    }
 
-    // for (let i = 0; i < 20; i++) {
-    //     comment = await commentsData.addComment("I am a test", userId, dogId);
-    //     // console.log(newComment);
-    // }
+    for (let i = 0; i < 20; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId3, user1dog2);
+        // console.log(newComment);
+    }
+
+    // For user2's dog 3dogs
+
+    for (let i = 0; i < 20; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId1, user2dog1);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 15; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId2, user2dog2);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 10; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId5, user2dog3);
+        // console.log(newComment);
+    }
+
     // console.log(await commentsData.getComment(comment._id.toString()));
     // console.log(await commentsData.deleteCommentsByDog(dogId));
     
-    // console.log("comment created");
+    console.log("comment created");
 
     // let output = await commentsData.getComments(newComment._id.toString());
     // console.log(output);

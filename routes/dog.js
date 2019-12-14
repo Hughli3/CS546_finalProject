@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
 
       data = {
         title: dog.name, 
-        dog: dog,          
+        dog: dog, 
         photos: photoPagedData.photos,
         isPhotoLastPage: photoPagedData.isLastPage,
         comments : commentPagedData.data,
