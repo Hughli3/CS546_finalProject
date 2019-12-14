@@ -38,7 +38,7 @@ npm start
 
 5. User Five
 - Username: PatrickHill
-- Password: mysupersupersuperpassword
+- Password: CS546isGood
 ## Tech used
 - Database: MongoDB
 - Communication: GitHub, WeChat, Trello

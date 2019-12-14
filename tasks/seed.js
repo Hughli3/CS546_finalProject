@@ -102,7 +102,7 @@ const main = async () => {
 
        // user 5
 
-       let originPassword5 = "mysupersupersuperpassword";
+       let originPassword5 = "CS546isGood";
 
        let user5 = {
            username: 'PatrickHill',
