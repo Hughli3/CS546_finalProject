@@ -263,6 +263,11 @@ const main = async () => {
     await uploadDogAvatar(user4dog3, 'public/img/dog/demo/user4/dog3.jpg');
     console.log("Green's dog3 created");
 
+    await uploadDogPhoto(user4dog3, 'public/img/dog/demo/dog1/dogPhoto1.jpg');
+    await uploadDogPhoto(user4dog3, 'public/img/dog/demo/dog1/dogPhoto2.jpg');
+    await uploadDogPhoto(user4dog3, 'public/img/dog/demo/dog1/dogPhoto3.jpg');
+    console.log("Green's dog3 photo added");
+
     userId4dog4 = await dogData.addDog(
         "L",
         "Female",
@@ -331,9 +336,14 @@ const main = async () => {
     //Photo by Julian Dutton on Unsplash
     console.log("Hill's dog3 created");
 
-    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto1.jpg');
-    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto2.jpg');
-    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog1/dogPhoto3.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto1.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto2.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto3.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto4.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto5.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto6.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto7.jpg');
+    await uploadDogPhoto(user5dog3, 'public/img/dog/demo/dog6/dogPhoto8.jpg');
     console.log("Hill's dog3 photos added");
 
     
