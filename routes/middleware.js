@@ -30,7 +30,7 @@ var commentLimiter = new RateLimit({
   store: new MongoStore({uri: dbUri, collectionName: "commentLimiter"}),
   max: settings.limiterConfig.commentLimiter.max,
   windowMs: settings.limiterConfig.commentLimiter.max,
-  message: "tried to post too many comments in a short period, please try again after an hour",
+  message: "tried to post too many comments in a short period, please try again after 20 minutes",
   handler: function (req, res) {
     res.status(this.statusCode);
     res.json({status: "error", errorMessage: this.message});

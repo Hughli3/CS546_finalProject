@@ -9,7 +9,7 @@ module.exports = {
         "collection": "loginLimiter",
         "max": 10,
         "windowMs": 1 * 60 * 1000,
-      },
+      }, 
       "signupLimiter" : {
         "collection": "signupLimiter",
         "max": 5,
@@ -18,7 +18,7 @@ module.exports = {
       "commentLimiter" : {
         "collection": "commentLimiter",
         "max": 5,
-        "windowMs": 60 * 60 * 1000,
+        "windowMs": 10 * 60 * 1000,
       }
     }
 }
