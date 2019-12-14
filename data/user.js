@@ -129,8 +129,12 @@ async function updateAvatar(id, file){
    
   const usersCollection = await users();
   const parsedId = ObjectId.createFromHexString(id);
+  let oldUser = await usersCollection.findOne({ _id: parsedId })
   const updateInfo = await usersCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update user avatar successfully";
+
+  if(oldUser.avatar !== null)
+    await imgData.deletePhoto(oldUser.avatar)
 
   return await getUser(id);
 }

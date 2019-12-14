@@ -308,10 +308,14 @@ async function updateAvatar(id, file){
   validateId(id);
 
   const dogsCollection = await dogs();
+  let oldDog = await dogsCollection.findOne({ _id: parsedId })
   let parsedId = ObjectId.createFromHexString(id);
   let photoId = await imgData.createGridFS(file);
   const updateInfo = await dogsCollection.updateOne({ _id: parsedId }, { $set: {avatar: photoId.toString()}});
   if (updateInfo.modifiedCount === 0) throw "Could not update avatar successfully";
+  
+  if(oldDog.avatar !== null)
+    await imgData.deletePhoto(oldDog.avatar)
 
   return await getDog(id);
 }
