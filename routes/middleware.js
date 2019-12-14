@@ -6,8 +6,8 @@ const dbUri = mongoConfig.serverUrl + mongoConfig.database;
 
 let loginLimiter = new RateLimit({
   store: new MongoStore({uri: dbUri, collectionName: "loginLimiter"}),
-  max: 10,
-  windowMs: 1 * 60 * 1000,
+  max: settings.limiterConfig.loginLimiter.max,
+  windowMs: settings.limiterConfig.loginLimiter.windowMs,
   message: "too many requests in a short period, please try again after 1 minute",
   handler: function (req, res) {
     res.status(this.statusCode);
@@ -17,8 +17,8 @@ let loginLimiter = new RateLimit({
  
 var signupLimiter = new RateLimit({
   store: new MongoStore({uri: dbUri, collectionName: "signupLimiter"}),
-  max: 5,
-  windowMs: 60 * 60 * 1000,
+  max: settings.limiterConfig.signupLimiter.max,
+  windowMs: settings.limiterConfig.signupLimiter.windowMs,
   message: "tried to create too many accounts in a short period, please try again after an hour",
   handler: function (req, res) {
     res.status(this.statusCode);
@@ -28,8 +28,8 @@ var signupLimiter = new RateLimit({
 
 var commentLimiter = new RateLimit({
   store: new MongoStore({uri: dbUri, collectionName: "commentLimiter"}),
-  max: 5,
-  windowMs: 60 * 60 * 1000,
+  max: settings.limiterConfig.commentLimiter.max,
+  windowMs: settings.limiterConfig.commentLimiter.max,
   message: "tried to post too many comments in a short period, please try again after an hour",
   handler: function (req, res) {
     res.json({status: "error", errorMessage: this.message});
