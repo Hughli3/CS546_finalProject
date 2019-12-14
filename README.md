@@ -1,7 +1,10 @@
 # Dog Dog 
 > CS546 Final project
 
-## Dog manegement system
+## Team info
+- Group 8
+- Group members: Xinyu Chen, Zheng Li, Yong Que, Yanzhe Wu
+
 
 ## Setup
 1. Install all dependencies as listed in package.json
