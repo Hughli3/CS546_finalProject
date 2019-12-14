@@ -7,6 +7,11 @@ const mongoCollections = require("../config/mongoCollections");
 const fsFiles = mongoCollections.fsFiles;
 const fsChunks = mongoCollections.fsChunks;
 const fs = require('fs');
+const imagemin = require('imagemin');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngquant = require('imagemin-pngquant');
+const resizeImg = require('resize-img');
+var sizeOf = require('image-size');
 
 //========================================
 // Validate functions
@@ -43,6 +48,27 @@ function chunkSubstr(str) {
 
 async function createGridFS(file){
   await validateImage(file);
+
+  // read file
+  let imageRaw = fs.readFileSync(file.path);
+  // resize
+  var dimensions = sizeOf(imageRaw);
+  let image;
+  if (file.fieldname == "avatar")
+    image = await resizeImg(imageRaw, {width: 400});
+  else if (dimensions.width > 2000)
+    image = await resizeImg(imageRaw, {width: 2000});
+  else if (dimensions.height > 2000)
+    image = await resizeImg(imageRaw, {height: 2000});
+  else
+    image = imageRaw;
+  // compress
+  const buf = await imagemin.buffer(image, { plugins: [
+          imageminMozjpeg({quality: 70}),
+          imageminPngquant({quality: [0.6, 0.8]})]}
+  );
+  // write back
+  fs.writeFileSync(file.path, buf);
 
   const fsFilesCollection = await fsFiles();
   const fsChunksCollection = await fsChunks();

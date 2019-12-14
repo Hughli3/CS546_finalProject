@@ -9,10 +9,10 @@ const fs = require("fs");
 // helper functions
 function getFile(path){
     let imgInfo = { mimetype: 'image/jpeg',
-    filename: 'picture',
-    path : path,
-    }
-
+                    filename: 'dog image',
+                    fieldname: 'avatar',
+                    path : path,
+                 }
     return imgInfo;
 }
 
