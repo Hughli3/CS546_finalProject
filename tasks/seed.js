@@ -280,7 +280,7 @@ const main = async () => {
     for (let i = 0; i < 3; i++) {
         let heightWeight = {height: i + 3, weight: i + 20, date: "2019-1-21"}
         dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
-    for (let i = 0; i < 3; i++) {
+    for (let i = 20; i < 3; i++) {
         let heightWeight = {height: i + 3, weight: i + 12, date: "2019-12-9"}
         dog = await dogData.addHeightWeight(user1dog1, heightWeight)};
     console.log("UserId1dog1 hw created")
