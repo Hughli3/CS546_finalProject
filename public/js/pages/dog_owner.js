@@ -177,6 +177,7 @@ $(function() {
                     if (data.isLastPage) $("#load-more-photos").hide();
                     else $("#load-more-photos").show();
                     $("#load-more-photos").data("current-page", "1");
+                    $("#no-data-found-alert-photo").hide();
                     success("new photo is uploaded");
                 } else {
                     error(data.errorMessage);
