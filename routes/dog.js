@@ -39,6 +39,7 @@ router.post('/', middleware.loginRequiredJson, async (req, res) => {
       let dog = await dogData.addDog(name, gender, dob, type, owner);
       res.json({ status: "success", dog: dog });
     } catch (e) {
+      res.status(400);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -81,6 +82,7 @@ router.delete('/:id', middleware.loginRequiredJson, async (req, res) => {
       await dogData.removeDog(dogId);
       res.json({status: "success"});
     } catch (e) {
+      res.status(500);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -95,6 +97,7 @@ router.put('/:id', middleware.loginRequiredJson, async (req, res) => {
       dog = await dogData.updateDog(dogId, dog);
       res.json({status: "success", dog: dog});
     } catch (e) {
+      res.status(400);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -106,6 +109,7 @@ router.post('/:id/avatar', middleware.loginRequiredJson, upload.single('avatar')
       let dog = await dogData.updateAvatar(dogId, req.file);
       res.json({status: "success", avatar: dog.avatar});
     } catch (e) {
+      res.status(400);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -119,6 +123,7 @@ router.post('/:id/heightWeight', middleware.loginRequiredJson, async (req, res) 
       let dog = await dogData.addHeightWeight(dogId, heightWeight);
       res.json({status: "success", dog: dog});
     } catch (e) {
+      res.status(400);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -128,9 +133,9 @@ router.get('/:id/photos', async (req, res) => {
         let dogId = req.params.id;
         let dog = await dogData.getDog(dogId);
         let pagedData = await helper.getCertainPageOfPhotos(dog.photos, req.query.page, 4);
-
         res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch (e) {
+        res.status(500);
         res.json({status: "error", errorMessage: e});
     }
 });
@@ -145,6 +150,7 @@ router.post("/:id/photos", middleware.loginRequiredJson, upload.single('photo'),
 
       res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch(e) {
+      res.status(400);
       res.json({status: "error", errorMessage: e});
     }
 });
@@ -158,6 +164,7 @@ router.get('/:id/comments', async (req, res) => {
 
         res.json({status: "success", comments: pagedData.data, isLastPage: pagedData.isLastPage});
     } catch (e) {
+        res.status(500);
         res.json({status: "error", errorMessage: e});
     }
 });
@@ -172,6 +179,7 @@ router.post('/:id/comments', middleware.loginRequiredJson, middleware.commentLim
 
         res.json({status: "success", comments: pagedData.data, isLastPage: pagedData.isLastPage});
     } catch (e) {
+        res.status(400);
         res.json({status: "error", errorMessage: e});
     }
 });
@@ -187,6 +195,7 @@ router.delete('/:dogid/photo/:photoid', middleware.loginRequiredJson, async (req
 
       res.json({status: "success", photos: pagedData.photos, isLastPage: pagedData.isLastPage});
     } catch (e) {
+      res.status(500);
       res.json({status: "error", errorMessage: e});
     }
 });

@@ -53,7 +53,11 @@ $(function() {
                 $('.uploaded-file-name').text('');
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });    
@@ -101,7 +105,11 @@ $(function() {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
@@ -136,7 +144,11 @@ $(function() {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
@@ -173,7 +185,11 @@ $(function() {
                 $('.uploaded-file-name').text('');
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
@@ -208,7 +224,11 @@ $(function() {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });

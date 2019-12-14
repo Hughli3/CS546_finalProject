@@ -32,6 +32,7 @@ var commentLimiter = new RateLimit({
   windowMs: settings.limiterConfig.commentLimiter.max,
   message: "tried to post too many comments in a short period, please try again after an hour",
   handler: function (req, res) {
+    res.status(this.statusCode);
     res.json({status: "error", errorMessage: this.message});
   }
 });

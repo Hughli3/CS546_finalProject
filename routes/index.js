@@ -23,6 +23,7 @@ const constructorMethod = (app) => {
       };
       res.render('home', data);
     } catch (e) {
+      res.status(500);
       res.render('error', {title: 500, errorCode: 500, username: req.session.username});
     }
   });

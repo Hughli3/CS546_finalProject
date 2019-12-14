@@ -51,6 +51,7 @@ router.post('/password', middleware.loginRequiredJson, async (req, res) => {
     await usersData.changePassword(req.session.userid, req.body.newpassword);
     res.json({status: "success"});
   } catch (e) {
+    res.status(500);
     res.json({status: "error", errorMessage: e});
   }
 });
@@ -60,6 +61,7 @@ router.post('/avatar', middleware.loginRequiredJson, upload.single('avatar'), as
     let user = await usersData.updateAvatar(req.session.userid, req.file);
     res.json({status: "success", avatar: user.avatar});
   } catch (e) {
+    res.status(500);
     res.json({status: "error", errorMessage: e});
   }
 });

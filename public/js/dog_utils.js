@@ -98,7 +98,11 @@ let initSubmitCommentForm = function() {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
@@ -133,7 +137,11 @@ let initLoadMoreComment = function() {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
@@ -163,7 +171,11 @@ let initLoadMorePhoto = function(isShowDelete) {
                 }
             },
             error: function(data){
-                error("fail connecting to server");
+                if (data.responseJSON) {
+                    error(data.responseJSON.errorMessage);
+                } else {
+                    error("fail connecting to server");
+                }
             }
         });
     });
