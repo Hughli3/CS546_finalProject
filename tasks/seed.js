@@ -73,7 +73,8 @@ const main = async () => {
     }
 
     const userTwo = await userData.addUser(user2.username, user2.password);
-
+    let userId2 = userTwo._id.toString();
+    await uploadUserAvatar(userId2, 'public/img/avatar/demo/user2.jpg');
     console.log("user2 created");
 
     // user 3
@@ -87,7 +88,8 @@ const main = async () => {
     }
 
     const userThree = await userData.addUser(user3.username, user3.password);
-
+    let userId3 = userThree._id.toString();
+    await uploadUserAvatar(userId3, 'public/img/avatar/demo/user3.jpg');
     console.log("user3 created");
 
 
@@ -102,7 +104,8 @@ const main = async () => {
     }
 
     const userFour = await userData.addUser(user4.username, user4.password);
-
+    let userId4 = userFour._id.toString();
+    await uploadUserAvatar(userId4, 'public/img/avatar/demo/user4.jpg');
     console.log("user4 created");
 
        // user 5
@@ -116,7 +119,8 @@ const main = async () => {
        }
    
        const userFive = await userData.addUser(user5.username, user5.password);
-   
+       let userId5 = userFive._id.toString();
+       await uploadUserAvatar(userId5, 'public/img/avatar/demo/user5.jpg');
        console.log("user4 created");
     
     // =================================
@@ -133,7 +137,7 @@ const main = async () => {
     dog1 = await dogData.addDog(
         "Painting",
         "Male",
-        "2019-03-19",
+        "2017-04-19",
         "Samoyed",
         userId1
     );
@@ -154,7 +158,7 @@ const main = async () => {
     console.log("hugh's dog2 created");
 
     // Lucy's dog
-    let userId2 = userTwo._id.toString();
+    
 
     
     userId2dog1 = await dogData.addDog(
@@ -180,7 +184,7 @@ const main = async () => {
     console.log("Lucy's dog2 created");
 
     userId2dog3 = await dogData.addDog(
-        "Rose",
+        "Sky",
         "Female",
         "2016-08-01",
         "Golden retriever",
@@ -192,7 +196,7 @@ const main = async () => {
 
 
     // Mike's dog
-    let userId3 = userThree._id.toString();
+    
     
     userId3dog1 = await dogData.addDog(
         "Ricky",
@@ -207,7 +211,7 @@ const main = async () => {
     console.log("Mike's dog1 created");
     
     // Green's dog
-    let userId4 = userFour._id.toString();
+    
     userId4dog1 = await dogData.addDog(
         "Fierce",
         "Male",
@@ -228,10 +232,10 @@ const main = async () => {
     );
     user4dog2 = userId4dog2._id.toString();
     await uploadDogAvatar(user4dog2, 'public/img/dog/demo/user4/dog2.jpg');
-    console.log("Green's dog1 created");
+    console.log("Green's dog2 created");
 
     // Hill's dog
-    let userId5 = userFive._id.toString();
+    
     userId5dog1 = await dogData.addDog(
         "R",
         "Male",
@@ -331,13 +335,13 @@ const main = async () => {
     //  Create some comments
 
     // For user1's dog 2dogs
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 8; i++) {
         comment = await commentsData.addComment("You are so lovely", userId2, user1dog1);
         // console.log(newComment);
     }
 
     for (let i = 0; i < 20; i++) {
-        comment = await commentsData.addComment("You are so lovely", userId3, user1dog2);
+        comment = await commentsData.addComment("What a cute dog!", userId3, user1dog2);
         // console.log(newComment);
     }
 
@@ -354,10 +358,39 @@ const main = async () => {
     }
 
     for (let i = 0; i < 10; i++) {
-        comment = await commentsData.addComment("You are so lovely", userId5, user2dog3);
+        comment = await commentsData.addComment("How cute!", userId5, user2dog3);
         // console.log(newComment);
     }
 
+    for (let i = 0; i < 10; i++) {
+        comment = await commentsData.addComment("You are so lovely", userId5, user2dog1);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 10; i++) {
+        comment = await commentsData.addComment("It’s adorable.", userId3, user5dog3);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 12; i++) {
+        comment = await commentsData.addComment("How cute! ", userId2, user5dog1);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 12; i++) {
+        comment = await commentsData.addComment("How cute! ", userId2, user3dog1);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 12; i++) {
+        comment = await commentsData.addComment("How cute! ", userId3, user4dog1);
+        // console.log(newComment);
+    }
+
+    for (let i = 0; i < 5; i++) {
+        comment = await commentsData.addComment("How cute! ", userId1, user4dog2);
+        // console.log(newComment);
+    }
     // console.log(await commentsData.getComment(comment._id.toString()));
     // console.log(await commentsData.deleteCommentsByDog(dogId));
     
