@@ -162,7 +162,7 @@ router.get('/:id/comments', async (req, res) => {
     }
 });
 
-router.post('/:id/comments', middleware.loginRequiredJson, async (req, res) => {
+router.post('/:id/comments', middleware.loginRequiredJson, middleware.commentLimiter, async (req, res) => {
     try{
         let dogId = req.params.id;
         let content = xss(req.body.content);

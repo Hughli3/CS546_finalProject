@@ -1,3 +1,41 @@
+const settings = require("../config/settings");
+const mongoConfig = settings.mongoConfig;
+const RateLimit = require('express-rate-limit');
+const MongoStore = require('rate-limit-mongo');
+const dbUri = mongoConfig.serverUrl + mongoConfig.database;
+
+let loginLimiter = new RateLimit({
+  store: new MongoStore({uri: dbUri, collectionName: "loginLimiter"}),
+  max: 10,
+  windowMs: 1 * 60 * 1000,
+  message: "too many requests in a short period, please try again after 1 minute",
+  handler: function (req, res) {
+    res.status(this.statusCode);
+    res.render('account/login', {title: "Login", error: this.message, hideFooter: true});
+  }
+});
+ 
+var signupLimiter = new RateLimit({
+  store: new MongoStore({uri: dbUri, collectionName: "signupLimiter"}),
+  max: 5,
+  windowMs: 60 * 60 * 1000,
+  message: "tried to create too many accounts in a short period, please try again after an hour",
+  handler: function (req, res) {
+    res.status(this.statusCode);
+    res.render('account/signup', {title: "Signup", error: this.message, hideFooter: true});
+  }
+});
+
+var commentLimiter = new RateLimit({
+  store: new MongoStore({uri: dbUri, collectionName: "commentLimiter"}),
+  max: 5,
+  windowMs: 60 * 60 * 1000,
+  message: "tried to post too many comments in a short period, please try again after an hour",
+  handler: function (req, res) {
+    res.json({status: "error", errorMessage: this.message});
+  }
+});
+
 let sessionConfig = {
   name: 'AuthCookie',
   secret: 'cs548dogdog',
@@ -30,6 +68,9 @@ const notLoginRequired = (req, res, next) => {
 }
 
 module.exports = {
+  loginLimiter,
+  signupLimiter,
+  commentLimiter,
   sessionConfig,
   loginRequired,
   loginRequiredJson,

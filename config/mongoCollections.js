@@ -22,6 +22,7 @@ module.exports = {
     comments: getCollectionFn("comments"),
     fsFiles: getCollectionFn("fs.files"),
     fsChunks: getCollectionFn("fs.chunks"),
+    limit: getCollectionFn("limit")
 };
 
 //  function main(){
