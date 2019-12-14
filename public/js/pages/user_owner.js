@@ -1,6 +1,8 @@
 $(function() {
     $("#update-avatar-form").submit(function(event) {
         event.preventDefault();
+        startLoading();
+
         $.ajax({
             method: "POST",
             url:  "/user/avatar",
@@ -13,7 +15,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#update-avatar-modal').modal('toggle'); 
+                    $('#update-avatar-modal').modal('hide'); 
                     $("#user-avatar").attr("src", data.avatar);
                     success("avatar is changed");
                 } else if (data.status == "error") {
@@ -44,7 +46,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#add-dog-modal').modal('toggle'); 
+                    $('#add-dog-modal').modal('hide'); 
                     addDog(data.dog._id, data.dog.name, data.dog.gender, data.dog.type, data.dog.age, data.dog.avatar);
                     $('#no-data-found-alert-dog').hide();
                     success("new dog is added");
@@ -82,6 +84,8 @@ $(function() {
     }
 
     $('body').on('click', '.dog-container button', function() {
+        startLoading();
+        
         let dogSingleContainer = $(this).parent();
         let dogContainer = dogSingleContainer.parent();
         let dogURI = $(this).next().find('a').attr('href');
@@ -144,7 +148,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#change-password-modal').modal('toggle'); 
+                    $('#change-password-modal').modal('hide'); 
                     success("password is changed");
                 } else {
                     error(data.errorMessage);

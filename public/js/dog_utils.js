@@ -68,6 +68,7 @@ let addDogPhoto = function(id, photo, isShowDelete) {
 let initSubmitCommentForm = function() {
     $('#comment-form').submit(function(event) {
         event.preventDefault();
+        startLoading();
 
         $.ajax({
             method: "POST",
@@ -112,6 +113,7 @@ let initSubmitCommentForm = function() {
 
 let initLoadMoreComment = function() {
     $("#load-more-comments").click(function() {
+        startLoading();
         let page = $("#load-more-comments").data("current-page");
         let nextPage = parseInt(page) + 1;
 
@@ -119,6 +121,7 @@ let initLoadMoreComment = function() {
             method: "GET",
             url: urlpath + "/comments?page=" + nextPage,
             success: function(data){
+                endLoading();
                 if (data.status == "success") {
                     $("#load-more-comments").data("current-page", nextPage);
                     for (let comment of data.comments) {
@@ -138,6 +141,7 @@ let initLoadMoreComment = function() {
 
 let initLoadMorePhoto = function(isShowDelete) {
     $("#load-more-photos").click(function() {
+        startLoading();
         let page = $("#load-more-photos").data("current-page");
         let nextPage = parseInt(page) + 1;
 
@@ -145,6 +149,7 @@ let initLoadMorePhoto = function(isShowDelete) {
             method: "GET",
             url: urlpath + "/photos?page=" + nextPage,
             success: function(data){
+                endLoading();
                 if (data.status == "success") {
                     $("#load-more-photos").data("current-page", nextPage);
                     for (let photo of data.photos) {

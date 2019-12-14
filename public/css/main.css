@@ -142,6 +142,16 @@ p.no-data-found-alert {
     color: #fff;
 }
 
+.close-dark {
+    opacity: .9;
+    color: #32315d;
+    margin-left: 10px;
+}
+
+.close-dark:hover, .close-dark:focus {
+    color: #32315d;
+}
+
 label {
     color: #32315d;
     font-size: 16px;

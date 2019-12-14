@@ -29,6 +29,7 @@ $(function() {
 
     $("#update-avatar-form").submit(function(event) {
         event.preventDefault();
+        startLoading();
 
         $.ajax({
             method: "POST",
@@ -42,7 +43,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#update-avatar-modal').modal('toggle'); 
+                    $('#update-avatar-modal').modal('hide'); 
                     $("#dog-avatar").attr("src", data.avatar);
                     success("avatar is updated");
                 } else {
@@ -86,7 +87,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#edit-dog-profile-modal').modal('toggle'); 
+                    $('#edit-dog-profile-modal').modal('hide'); 
                     $("#dog-name").text(data.dog.name);
                     $("#dog-gender").text(data.dog.gender);
                     $("#dog-dob").text(data.dog.dob);
@@ -120,7 +121,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#add-height-weight-modal').modal('toggle');
+                    $('#add-height-weight-modal').modal('hide');
                     updateLabelAndData(bmiChart, data.dog.healthDateList, data.dog.bmiList);
                     updateLabelAndData(weightChart, data.dog.healthDateList, data.dog.weightList);
                     $('#no-data-found-alert-health').hide();
@@ -140,6 +141,7 @@ $(function() {
 
     $("#upload-photo-form").submit(function(event) {
         event.preventDefault();
+        startLoading();
 
         $.ajax({
             method: "POST",
@@ -153,7 +155,7 @@ $(function() {
                     return;
                 }
                 if (data.status == "success") {
-                    $('#upload-photo-modal').modal('toggle'); 
+                    $('#upload-photo-modal').modal('hide'); 
                     $("#photos").empty();
                     for(let photo of data.photos) {
                         addDogPhoto(photo.id, photo.photo, true);
@@ -174,6 +176,7 @@ $(function() {
 
     // delete photo
     $('body').on('click', '.dog-img-container button', function() {
+        startLoading();
         let photoId = $(this).next().find('img').attr('id');
         $.ajax({
             method: "DELETE",
