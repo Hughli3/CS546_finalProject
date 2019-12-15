@@ -99,6 +99,7 @@ $(function() {
                     $("#dog-dob").text(data.dog.dob);
                     $("#dog-type").text(data.dog.type);
                     $("#dog-age").text(data.dog.age);
+                    $("#dog-health").text(data.dog.healthCondition);
                     success("dog is updated");
                 } else {
                     error(data.errorMessage);
