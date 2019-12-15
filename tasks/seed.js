@@ -16,6 +16,15 @@ function getFile(path){
     return imgInfo;
 }
 
+function getFilePhoto(path){
+    let imgInfo = { mimetype: 'image/jpeg',
+                    filename: 'dog image',
+                    fieldname: 'photo',
+                    path : path,
+                 }
+    return imgInfo;
+}
+
 async function uploadDogAvatar(id, filepath){
     let imgPath = filepath.split('.')[0]
     let file = getFile(filepath)
@@ -29,12 +38,12 @@ async function uploadDogAvatar(id, filepath){
 
 async function uploadDogPhoto(id, filepath){
     let imgPath = filepath.split('.')[0]
-    let file = getFile(filepath)
+    let file = getFilePhoto(filepath)
     fs.writeFileSync(imgPath, fs.readFileSync(filepath));
     let photo = await dogData.addPhotos(id, file)
     fs.rename(imgPath, filepath, function(err) {
         if (err) console.log(err);
-        console.log('successfully set dog avatar');
+        console.log('successfully set dog photo');
     });
 }
 
